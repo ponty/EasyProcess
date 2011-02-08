@@ -27,8 +27,6 @@ except ImportError, e:
 
 classifiers = [
     # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
-    "Development Status :: 1 - Planning",
-    "Environment :: Console",
     "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
