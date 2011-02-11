@@ -15,15 +15,20 @@ except ImportError, e:
     debug(str(e))
     ALL_TASKS_LOADED = False
 
-try:
-    sys.path.append(path('.').abspath())
-    from easyprocess import __version__
-    version = __version__
-    open('.version','w').write(version)
-except ImportError, e:
-    version = open('.version','r').read()
+NAME = 'EasyProcess'
+PACKAGE = 'easyprocess'
+URL = 'https://github.com/ponty/easyprocess'
+DESCRIPTION = 'Easy to use python subprocess interface.'
 
-#version = '0.1.3'
+
+try:
+    sys.path.insert(0, path('.').abspath())
+    version = None
+    exec 'from %s import __version__; version = __version__' % PACKAGE
+    open('.version', 'w').write(version)
+except ImportError, e:
+    version = open('.version', 'r').read()
+
 
 classifiers = [
     # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
@@ -44,15 +49,15 @@ entry_points = """
 
 # compatible with distutils of python 2.3+ or later
 setup(
-    name='EasyProcess',
+    name=NAME,
     version=version,
-    description='Easy to use python subprocess interface.',
+    description=DESCRIPTION,
     long_description=open('README.rst', 'r').read(),
     classifiers=classifiers,
     keywords='subprocess interface',
     author='ponty',
     #author_email='zy@gmail.com',
-    url='https://github.com/ponty/easyprocess',
+    url=URL,
     license='BSD',
     packages=find_packages(exclude=['bootstrap', 'pavement', ]),
     include_package_data=True,
@@ -89,26 +94,31 @@ options(
     )
 
 options.setup.package_data = paver.setuputils.find_package_data(
-    'easyprocess', package='easyprocess', only_in_packages=False)
+    PACKAGE, package=PACKAGE, only_in_packages=False)
 
 if ALL_TASKS_LOADED:
     @task
     @needs('generate_setup', 'minilib', 'setuptools.command.sdist')
     def sdist():
         """Overrides sdist to make sure that our setup.py is generated."""
-
+@task
+def html():
+    '''-E rebuild'''
+    sh('sphinx-build  -E -b html -d docs/_build/doctrees docs/ docs/_build/html')
+    
 @task
 def pychecker():
-    sh('pychecker --stdlib --only --limit 100 easyprocess/')
+    sh('pychecker --stdlib --only --limit 100 {package}/'.format(package=PACKAGE))
 
 @task
 def findimports():
     '''list external imports'''
-    sh('findimports easyprocess |grep -v ":"|grep -v easyprocess|sort|uniq')
+    sh('findimports {package} |grep -v ":"|grep -v {package}|sort|uniq'.format(package=PACKAGE))
 
 @task
 def pyflakes():
-    sh('pyflakes easyprocess')
+    sh('pyflakes {package}' + PACKAGE)
+
 
 
 

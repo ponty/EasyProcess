@@ -1,5 +1,6 @@
-from easyprocess import EasyProcess, EasyProcessCheckError
-from nose.tools import eq_
+from easyprocess import EasyProcess, EasyProcessCheckError, \
+    EasyProcessCheckInstalledError
+from nose.tools import eq_, timed
 from unittest import TestCase
 import time
 
@@ -10,8 +11,8 @@ class Test(TestCase):
         eq_(EasyProcess(['ls', '-la']).call().return_code, 0)
     
     def test_check(self):
-        eq_(EasyProcess('ls -la').check(), True)
-        eq_(EasyProcess(['ls', '-la']).check(), True)
+        eq_(EasyProcess('ls -la').check().return_code, 0)
+        eq_(EasyProcess(['ls', '-la']).check().return_code, 0)
         
         self.assertRaises(EasyProcessCheckError, lambda :  EasyProcess('xxxxx').check())
         self.assertRaises(EasyProcessCheckError, lambda :  EasyProcess('sh -c xxxxx').check())
@@ -38,5 +39,23 @@ class Test(TestCase):
         eq_(EasyProcess('echo hello').start().wait().return_code, 0)
         eq_(EasyProcess('echo hello').start().wait().stdout, 'hello')
         
+    def test_xephyr(self):
+        EasyProcess('Xephyr -help').check(return_code=1)
         
+    def test_wrap(self):
+        def f():
+            return EasyProcess('echo hi').call().stdout
+        eq_(EasyProcess('ping 127.0.0.1').wrap(f)(), 'hi')
         
+    def test_install(self):
+        EasyProcess('echo hello').check_installed()
+        self.assertRaises(EasyProcessCheckInstalledError, 
+                          lambda :  EasyProcess('xecho', 
+                                                url='http://xecho',
+                                                ubuntu_package='xecho').check_installed())
+        
+        EasyProcess('echo', 
+                                                url='http://xecho',
+                                                ubuntu_package='xecho').check_installed()
+
+
