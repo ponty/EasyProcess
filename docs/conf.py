@@ -8,9 +8,15 @@ import sys
 project='EasyProcess'
 author='ponty'
 copyright = '2011, ponty'
+PACKAGE = 'easyprocess'
 
-sys.path.insert(0, (path(__file__).dirname().dirname() ).abspath())
-from easyprocess import __version__
+__version__ = None
+py = path('..') / PACKAGE / '__init__.py'
+for line in open(py).readlines():
+    if '__version__' in line:
+        exec line
+        break
+assert __version__    
 release = __version__
 
 #logging.basicConfig(level=logging.DEBUG)
@@ -22,7 +28,7 @@ extensions = [
      'sphinxcontrib.programoutput',
      'sphinxcontrib.programscreenshot',
      'sphinx.ext.graphviz',
-     #'sphinxcontrib.autorun',
+     'sphinxcontrib.autorun',
      #'sphinx.ext.autosummary',
      'sphinx.ext.intersphinx',
     ]

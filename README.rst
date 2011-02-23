@@ -12,6 +12,7 @@ Advantages:
 Basic usage
 ============
 
+    >>> from easyprocess import EasyProcess
     >>> EasyProcess('echo hello').call().stdout
     'hello'
 

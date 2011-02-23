@@ -1,6 +1,6 @@
-from easyprocess import EasyProcess, EasyProcessCheckError, \
-    EasyProcessCheckInstalledError
-from nose.tools import eq_, timed
+from easyprocess import EasyProcess,  \
+    EasyProcessCheckInstalledError, EasyProcessError
+from nose.tools import eq_
 from unittest import TestCase
 import time
 
@@ -14,8 +14,8 @@ class Test(TestCase):
         eq_(EasyProcess('ls -la').check().return_code, 0)
         eq_(EasyProcess(['ls', '-la']).check().return_code, 0)
         
-        self.assertRaises(EasyProcessCheckError, lambda :  EasyProcess('xxxxx').check())
-        self.assertRaises(EasyProcessCheckError, lambda :  EasyProcess('sh -c xxxxx').check())
+        self.assertRaises(EasyProcessError, lambda :  EasyProcess('xxxxx').check())
+        self.assertRaises(EasyProcessError, lambda :  EasyProcess('sh -c xxxxx').check())
 
 
     def test_start(self):

@@ -9,33 +9,42 @@ import subprocess
 import tempfile
 import time
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 log = logging.getLogger(__name__)
 #log=logging
 
-log.debug('EasyProcess version ' + __version__)
+log.debug('version=' + __version__)
 
 # deadlock test fails if USE_FILES=0
 USE_FILES = 1
 
-class EasyProcessCheckError(Exception):
-    """This exception is raised when a process run by check() returns
-    a non-zero exit status or OSError is raised.  
+class EasyProcessError(Exception):
+    """  
     """
-    def __init__(self, easy_process):
+    def __init__(self, easy_process, msg=''):
         self.easy_process = easy_process
+        self.msg = msg
     def __str__(self):
-        msg = 'EasyProcess check failed! \n OSError:{detail} \n cmd:{cmd} \n return code:{return_code} \n stderr:{stderr}'.format(
+        msg = self.msg + '( Exception( {typ}={detail} ) , Process(cmd={cmd} returncode={return_code} stderr="{stderr}"))'.format(
                             cmd=self.easy_process.cmd,
+                            typ=type(self.easy_process.detail),
                             detail=self.easy_process.detail,
                             return_code=self.easy_process.return_code,
                             stderr=self.easy_process.stderr,
                             )
         return msg
+    
+#class EasyProcessCheckError(EasyProcessError):
+#    """This exception is raised when a process run by check() returns
+#    a non-zero exit status or OSError is raised.  
+#    """
+#    def __init__(self, easy_process):
+#        msg = 'EasyProcess check failed!'
+#        EasyProcessError.__init__(self, easy_process, msg)
 
-template = '''cmd:{cmd}
-OSError:{detail}  
+template = '''cmd={cmd}
+OSError={detail}  
 Program install error! '''
 class EasyProcessCheckInstalledError(Exception):
     """This exception is raised when a process run by check() returns
@@ -55,7 +64,7 @@ class EasyProcessCheckInstalledError(Exception):
                 msg += 'sudo apt-get install %s' % self.easy_process.ubuntu_package
         return msg
 
-class EasyProcess():
+class Proc():
     '''
     simple interface for :mod:`subprocess` 
 
@@ -74,6 +83,8 @@ class EasyProcess():
         self._stderr_file = None
         self.url = url
         self.ubuntu_package = ubuntu_package
+        self.is_started = False
+        self.detail = None
 
         if hasattr(cmd, '__iter__'):
             # cmd is string list
@@ -110,12 +121,11 @@ class EasyProcess():
         '''
         Run command with arguments. Wait for command to complete.
         If the exit code was as expected and there is no exception then return, 
-        otherwise raise EasyProcessCheckError.
+        otherwise raise EasyProcessError.
         
         :param return_code: int, expected return code
         :rtype: self
         '''
-        self.detail = None
         try:
             ret = self.call().return_code
             ok = ret == return_code
@@ -124,7 +134,7 @@ class EasyProcess():
             ok = False
             self.detail = detail
         if not ok:
-            raise EasyProcessCheckError(self)
+            raise EasyProcessError(self)
         return self
 
     def check_installed(self):
@@ -138,10 +148,9 @@ class EasyProcess():
         :param return_code: int, expected return code
         :rtype: self
         '''
-        self.detail = None
         try:
             self.call()
-        except OSError as detail:
+        except Exception as detail:
             log.debug('OSError exception')
             self.detail = detail
             raise EasyProcessCheckInstalledError(self)
@@ -162,24 +171,33 @@ class EasyProcess():
         
         :rtype: self
         '''
+        if self.is_started:
+            raise EasyProcessError(self, 'process was started twice!')
+
         if USE_FILES:
             self._stdout_file = tempfile.NamedTemporaryFile(prefix='stdout')
             self._stderr_file = tempfile.NamedTemporaryFile(prefix='stderr')
             #self._stdout_file = open('/tmp/stdout','w+')
             #self._stderr_file = open('/tmp/stderr','w+')
+            stdout = self._stdout_file
+            stderr = self._stderr_file
             
-            self.popen = subprocess.Popen(self.cmd,
-                                  stdout=self._stdout_file,
-                                  stderr=self._stderr_file,
-                                  #shell=1,
-                                  )
         else:
+            stdout = subprocess.PIPE
+            stderr = subprocess.PIPE
+            
+        try:     
             self.popen = subprocess.Popen(self.cmd,
-                                  stdout=subprocess.PIPE,
-                                  stderr=subprocess.PIPE,
+                                  stdout=stdout,
+                                  stderr=stderr,
                                   #shell=1,
                                   )
-        log.debug('process was started (pid:%s)' % (str(self.pid),))
+        except Exception, e:
+            self.detail = e
+            raise EasyProcessError(self, 'start error')
+        
+        log.debug('process was started (pid=%s)' % (str(self.pid),))
+        self.is_started = True
         return self
 
 
@@ -205,14 +223,14 @@ class EasyProcess():
                 return s[:-1]
             else:
                 return s
+            
         if self.popen:
-
             if USE_FILES:    
                 self.popen.wait()
                 self._stdout_file.seek(0)            
                 self._stderr_file.seek(0)            
-                self.stdout=self._stdout_file.read()
-                self.stderr=self._stderr_file.read()
+                self.stdout = self._stdout_file.read()
+                self.stderr = self._stderr_file.read()
             else:
                 # This will deadlock when using stdout=PIPE and/or stderr=PIPE 
                 # and the child process generates enough output to a pipe such 
@@ -229,6 +247,7 @@ class EasyProcess():
             log.debug('return code=' + str(self.return_code))
             log.debug('stdout=' + self.stdout)
             log.debug('stderr=' + self.stderr)
+        self.is_started = False
         return self
             
     def stop(self):
@@ -249,7 +268,10 @@ class EasyProcess():
         
         :rtype: self
         '''
-        log.debug('stopping process (pid:%s cmd:"%s")' % (str(self.pid), self.cmd))
+        if not self.is_started:
+            raise EasyProcessError(self, 'process was stopped twice!')
+        
+        log.debug('stopping process (pid=%s cmd="%s")' % (str(self.pid), self.cmd))
         if self.popen:
             if self.is_alive():
                 log.debug('process is active -> sending SIGTERM')
@@ -275,14 +297,36 @@ class EasyProcess():
 
     def wrap(self, callable, delay=0):
         '''
+        returns a function which:
+        1. start process
+        2. call callable, save result
+        3. stop process
+        4. returns result
         
         :rtype: 
         '''
         def wrapped():
             self.start()   
             if delay:
-                self.sleep(delay)     
-            x = callable()
-            self.stop()
+                self.sleep(delay)
+            x = None
+            try:     
+                x = callable()
+            except Exception, e:
+                self.detail = e
+                msg = 'wrap error, Process(cmd={cmd}({scmd}) returncode={return_code} stderr="{stderr}"))'.format(
+                                    cmd=self.cmd,
+                                    scmd=' '.join(self.cmd),
+                                    return_code=self.return_code,
+                                    stderr=self.stderr,
+                                    )
+                print msg
+                raise
+            finally:
+                self.stop()
             return x
         return wrapped
+
+EasyProcess=Proc
+
+

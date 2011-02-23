@@ -1,8 +1,6 @@
-from easyprocess import EasyProcess, EasyProcessCheckError, \
-    EasyProcessCheckInstalledError
+from easyprocess import EasyProcess
 from nose.tools import eq_, timed
 from unittest import TestCase
-import time
 
 
 class Test(TestCase):

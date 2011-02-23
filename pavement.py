@@ -21,13 +21,14 @@ URL = 'https://github.com/ponty/easyprocess'
 DESCRIPTION = 'Easy to use python subprocess interface.'
 
 
-try:
-    sys.path.insert(0, path('.').abspath())
-    version = None
-    exec 'from %s import __version__; version = __version__' % PACKAGE
-    open('.version', 'w').write(version)
-except ImportError, e:
-    version = open('.version', 'r').read()
+__version__ = None
+py = path('.') / PACKAGE / '__init__.py'
+for line in open(py).readlines():
+    if '__version__' in line:
+        exec line
+        break
+assert __version__    
+version = __version__
 
 
 classifiers = [
@@ -105,7 +106,7 @@ if ALL_TASKS_LOADED:
 def html():
     '''-E rebuild'''
     sh('sphinx-build  -E -b html -d docs/_build/doctrees docs/ docs/_build/html')
-    
+
 @task
 def pychecker():
     sh('pychecker --stdlib --only --limit 100 {package}/'.format(package=PACKAGE))
@@ -117,8 +118,39 @@ def findimports():
 
 @task
 def pyflakes():
-    sh('pyflakes {package}' + PACKAGE)
+    sh('pyflakes {package}'.format(package=PACKAGE))
 
+@task
+def nose():
+    sh('nosetests --with-xunit --verbose')
 
+@task
+def sloccount():
+    sh('sloccount --wide --details {package} tests > sloccount.sc'.format(package=PACKAGE))
 
+@task
+def clean():
+    root=path(__file__).dirname().abspath()
+    ls=[]
+    dls=[]
+    ls+=root.walkfiles('*.pyc')
+    ls+=root.walkfiles('*.html')
+    ls+=root.walkfiles('*.zip')
+    ls+=root.walkfiles('*.css')
+    ls+=root.walkfiles('*.png')
+    ls+=root.walkfiles('*.doctree')
+    ls+=root.walkfiles('*.pickle')
+
+    dls+=[root / 'dist']
+    dls+=root.listdir('*.egg-info')
+
+    for x in ls:
+        x.remove()
+    for x in dls:
+        x.rmtree()
+
+@task
+@needs('sloccount', 'html', 'sdist', 'nose')
+def hudson():
+    pass
 

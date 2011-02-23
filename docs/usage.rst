@@ -1,40 +1,24 @@
 Usage
 ==================
 
-
-::
-
+.. runblock:: pycon
+    
     >>> from easyprocess import EasyProcess
-
-Run program, wait for it to complete, get stdout (command is string)::
-
+    >>> # Run program, wait for it to complete, get stdout (command is string):
     >>> EasyProcess('echo hello').call().stdout
-    'hello'
-
-Run program, wait for it to complete, get stdout (command is list)::
-
+    >>> # Run program, wait for it to complete, get stdout (command is list):
     >>> EasyProcess(['echo','hello']).call().stdout
-    'hello'
-
-Run program, wait for it to complete, get stderr::
-
+    >>> # Run program, wait for it to complete, get stderr:
     >>> EasyProcess('python --version').call().stderr
-    'Python 2.6.6'
-
-Run program, wait for it to complete, get return code::
-
+    >>> # Run program, wait for it to complete, get return code:
     >>> EasyProcess('python --version').call().return_code
-    0
-
-Run program, wait 1 second, stop it, get stdout::
-
+    >>> # Run program, wait 1 second, stop it, get stdout:
     >>> EasyProcess('ping localhost').start().sleep(1).stop().stdout
-    'PING localhost.localdomain (127.0.0.1) 56(84) bytes of data.\n64 bytes from localhost.localdomain (127.0.0.1): icmp_req=1 ttl=64 time=0.026 ms'
-
-Run program, wait for it to complete, check for errors::
-
+    >>> # Run program, wait for it to complete, check for errors:
     >>> EasyProcess('ls').check()
-    True
+
+Exceptions in check::
+
     >>> EasyProcess('bad_command').check()
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
