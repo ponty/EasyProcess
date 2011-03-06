@@ -1,3 +1,5 @@
+* new: alias in ~/.easyprocess.cfg
+
 Release 0.0.3 (02/23/2011)
 ================================
 

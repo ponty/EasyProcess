@@ -2,12 +2,15 @@
 Easy to use python subprocess interface.
 '''
 
+import ConfigParser
 import logging
+import os.path
 import platform
 import shlex
 import subprocess
 import tempfile
 import time
+
 
 __version__ = '0.0.3'
 
@@ -19,6 +22,8 @@ log.debug('version=' + __version__)
 # deadlock test fails if USE_FILES=0
 USE_FILES = 1
 
+CONFIG_FILE = '~/.easyprocess.cfg'
+
 class EasyProcessError(Exception):
     """  
     """
@@ -26,23 +31,15 @@ class EasyProcessError(Exception):
         self.easy_process = easy_process
         self.msg = msg
     def __str__(self):
-        msg = self.msg + '( Exception( {typ}={detail} ) , Process(cmd={cmd} returncode={return_code} stderr="{stderr}"))'.format(
-                            cmd=self.easy_process.cmd,
-                            typ=type(self.easy_process.detail),
-                            detail=self.easy_process.detail,
-                            return_code=self.easy_process.return_code,
-                            stderr=self.easy_process.stderr,
-                            )
-        return msg
+#        msg = self.msg + '( Exception( {typ}={detail} ) , Process(cmd={cmd} returncode={return_code} stderr="{stderr}"))'.format(
+#                            cmd=self.easy_process.cmd,
+#                            typ=type(self.easy_process.detail),
+#                            detail=self.easy_process.detail,
+#                            return_code=self.easy_process.return_code,
+#                            stderr=self.easy_process.stderr,
+#                            )
+        return self.msg + ' ' + repr(self.easy_process)
     
-#class EasyProcessCheckError(EasyProcessError):
-#    """This exception is raised when a process run by check() returns
-#    a non-zero exit status or OSError is raised.  
-#    """
-#    def __init__(self, easy_process):
-#        msg = 'EasyProcess check failed!'
-#        EasyProcessError.__init__(self, easy_process, msg)
-
 template = '''cmd={cmd}
 OSError={detail}  
 Program install error! '''
@@ -71,6 +68,7 @@ class Proc():
     shell is not supported (shell=False)
     
     '''
+    config = None
     
     def __init__(self, cmd, ubuntu_package=None, url=None):
         '''
@@ -85,6 +83,7 @@ class Proc():
         self.ubuntu_package = ubuntu_package
         self.is_started = False
         self.detail = None
+        self.cmd_param = cmd
 
         if hasattr(cmd, '__iter__'):
             # cmd is string list
@@ -95,7 +94,38 @@ class Proc():
             self.cmd = shlex.split(cmd)
             self.cmd_as_string = cmd
         log.debug('command: %s (%s)' % (str(self.cmd), self.cmd_as_string))
+        if not len(cmd):
+            raise EasyProcessError(self, 'empty command!')
+        
+        if not Proc.config:
+            conf_file = os.path.expanduser(CONFIG_FILE)
+            log.debug('reading config: %s' % (conf_file))
+            Proc.config = ConfigParser.RawConfigParser()
+            Proc.config.read(conf_file)
+        
+        self.alias = None
+        try:
+            self.alias = Proc.config.get('path', self.cmd[0])
+        except ConfigParser.NoSectionError:
+            pass
+        except ConfigParser.NoOptionError:
+            pass
+        
+        if self.alias:
+            log.debug('alias found: %s' % (self.alias))
+            self.cmd[0] = self.alias
 
+    def __repr__(self):
+        msg = '<{cls} cmd_param={cmd_param} alias={alias} cmd={cmd} returncode={return_code} stdout="{stdout}" stderr="{stderr}">'.format(
+                            cls=self.__class__.__name__,
+                            cmd_param=self.cmd_param,
+                            cmd=self.cmd,
+                            alias=self.alias,
+                            return_code=self.return_code,
+                            stderr=self.stderr,
+                            stdout=self.stdout,
+                            )
+        return msg
         
     @property
     def pid(self):
@@ -133,6 +163,7 @@ class Proc():
             log.debug('OSError exception')
             ok = False
             self.detail = detail
+            print detail
         if not ok:
             raise EasyProcessError(self)
         return self
@@ -177,8 +208,6 @@ class Proc():
         if USE_FILES:
             self._stdout_file = tempfile.NamedTemporaryFile(prefix='stdout')
             self._stderr_file = tempfile.NamedTemporaryFile(prefix='stderr')
-            #self._stdout_file = open('/tmp/stdout','w+')
-            #self._stderr_file = open('/tmp/stderr','w+')
             stdout = self._stdout_file
             stderr = self._stderr_file
             
@@ -192,9 +221,11 @@ class Proc():
                                   stderr=stderr,
                                   #shell=1,
                                   )
-        except Exception, e:
-            self.detail = e
-            raise EasyProcessError(self, 'start error')
+        except Exception, detail:
+            self.detail = detail
+            #raise EasyProcessError(self, 'start error')
+            print repr(self)
+            raise
         
         log.debug('process was started (pid=%s)' % (str(self.pid),))
         self.is_started = True
@@ -327,6 +358,4 @@ class Proc():
             return x
         return wrapped
 
-EasyProcess=Proc
-
-
+EasyProcess = Proc
