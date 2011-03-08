@@ -10,9 +10,10 @@ import shlex
 import subprocess
 import tempfile
 import time
+import unicodedata
 
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 log = logging.getLogger(__name__)
 #log=logging
@@ -82,12 +83,17 @@ class Proc():
         if hasattr(cmd, '__iter__'):
             # cmd is string list
             self.cmd = cmd
-            self.cmd_as_string = ' '.join(cmd) # TODO: not perfect
         else:
             # cmd is string 
+            # The shlex module currently does not support Unicode input!
+            if  isinstance(cmd, unicode):
+                log.debug('unicode is normalized')
+                cmd = unicodedata.normalize('NFKD', cmd).encode('ascii','ignore')
             self.cmd = shlex.split(cmd)
-            self.cmd_as_string = cmd
-        log.debug('command: %s (%s)' % (str(self.cmd), self.cmd_as_string))
+        self.cmd_as_string = ' '.join(self.cmd) # TODO: not perfect
+        
+        log.debug('param: "%s" command: %s ("%s")' % (str(self.cmd_param), str(self.cmd), self.cmd_as_string))
+        
         if not len(cmd):
             raise EasyProcessError(self, 'empty command!')
         
