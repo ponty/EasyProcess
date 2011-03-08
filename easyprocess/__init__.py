@@ -12,7 +12,7 @@ import tempfile
 import time
 
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 log = logging.getLogger(__name__)
 #log=logging
