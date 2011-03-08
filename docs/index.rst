@@ -1,5 +1,7 @@
 EasyProcess is an easy to use python :mod:`subprocess` interface.
 
+Date: |today|
+
 Contents:
 
 .. toctree::
