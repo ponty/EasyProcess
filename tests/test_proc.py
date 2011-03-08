@@ -59,3 +59,7 @@ class Test(TestCase):
                                                 ubuntu_package='xecho').check_installed()
 
 
+    def test_parse(self):
+        eq_(EasyProcess('ls -la').cmd, ['ls', '-la'])
+        eq_(EasyProcess('ls "abc"').cmd, ['ls', 'abc'])
+        eq_(EasyProcess('ls "ab c"').cmd, ['ls', 'ab c'])
