@@ -22,7 +22,8 @@ log.debug('version=' + __version__)
 # deadlock test fails if USE_FILES=0
 USE_FILES = 1
 
-CONFIG_FILE = '~/.easyprocess.cfg'
+CONFIG_FILE = '.easyprocess.cfg'
+SECTION_LINK = 'link'
 
 class EasyProcessError(Exception):
     """  
@@ -91,14 +92,14 @@ class Proc():
             raise EasyProcessError(self, 'empty command!')
         
         if not Proc.config:
-            conf_file = os.path.expanduser(CONFIG_FILE)
+            conf_file = os.path.join(os.path.expanduser('~'), CONFIG_FILE)
             log.debug('reading config: %s' % (conf_file))
             Proc.config = ConfigParser.RawConfigParser()
             Proc.config.read(conf_file)
         
         self.alias = None
         try:
-            self.alias = Proc.config.get('path', self.cmd[0])
+            self.alias = Proc.config.get(SECTION_LINK, self.cmd[0])
         except ConfigParser.NoSectionError:
             pass
         except ConfigParser.NoOptionError:
