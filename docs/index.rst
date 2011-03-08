@@ -8,7 +8,6 @@ Contents:
     readme
     usage
     api
-    changes
 
 Indices and tables
 ==================
