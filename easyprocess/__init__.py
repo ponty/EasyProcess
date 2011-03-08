@@ -31,17 +31,10 @@ class EasyProcessError(Exception):
         self.easy_process = easy_process
         self.msg = msg
     def __str__(self):
-#        msg = self.msg + '( Exception( {typ}={detail} ) , Process(cmd={cmd} returncode={return_code} stderr="{stderr}"))'.format(
-#                            cmd=self.easy_process.cmd,
-#                            typ=type(self.easy_process.detail),
-#                            detail=self.easy_process.detail,
-#                            return_code=self.easy_process.return_code,
-#                            stderr=self.easy_process.stderr,
-#                            )
         return self.msg + ' ' + repr(self.easy_process)
     
 template = '''cmd={cmd}
-OSError={detail}  
+OSError={oserror}  
 Program install error! '''
 class EasyProcessCheckInstalledError(Exception):
     """This exception is raised when a process run by check() returns
@@ -51,7 +44,7 @@ class EasyProcessCheckInstalledError(Exception):
         self.easy_process = easy_process
     def __str__(self):
         msg = template.format(cmd=self.easy_process.cmd,
-                          detail=self.easy_process.detail,
+                          oserror=self.easy_process.oserror,
                           )
         if self.easy_process.url:
             msg += '\nhome page: ' + self.easy_process.url
@@ -82,7 +75,7 @@ class Proc():
         self.url = url
         self.ubuntu_package = ubuntu_package
         self.is_started = False
-        self.detail = None
+        self.oserror = None
         self.cmd_param = cmd
 
         if hasattr(cmd, '__iter__'):
@@ -116,14 +109,16 @@ class Proc():
             self.cmd[0] = self.alias
 
     def __repr__(self):
-        msg = '<{cls} cmd_param={cmd_param} alias={alias} cmd={cmd} returncode={return_code} stdout="{stdout}" stderr="{stderr}">'.format(
+        msg = '<{cls} cmd_param={cmd_param} alias={alias} cmd={cmd} ({scmd}) oserror={oserror} returncode={return_code} stdout="{stdout}" stderr="{stderr}">'.format(
                             cls=self.__class__.__name__,
                             cmd_param=self.cmd_param,
                             cmd=self.cmd,
+                            oserror=self.oserror,
                             alias=self.alias,
                             return_code=self.return_code,
                             stderr=self.stderr,
                             stdout=self.stdout,
+                            scmd=' '.join(self.cmd),
                             )
         return msg
         
@@ -156,16 +151,18 @@ class Proc():
         :param return_code: int, expected return code
         :rtype: self
         '''
-        try:
-            ret = self.call().return_code
-            ok = ret == return_code
-        except OSError as detail:
-            log.debug('OSError exception')
-            ok = False
-            self.detail = detail
-            print detail
+#        try:
+#            ret = self.call().return_code
+#            ok = ret == return_code
+#        except Exception as e:
+#            log.debug('OSError exception:' + str(oserror))
+#            ok = False
+#            self.oserror = oserror
+
+        ret = self.call().return_code
+        ok = ret == return_code
         if not ok:
-            raise EasyProcessError(self)
+            raise EasyProcessError(self, 'check error, return code is not zero!')
         return self
 
     def check_installed(self):
@@ -181,9 +178,9 @@ class Proc():
         '''
         try:
             self.call()
-        except Exception as detail:
-            log.debug('OSError exception')
-            self.detail = detail
+        except Exception as e:
+            #log.debug('exception:' + str(e))
+            #self.oserror = oserror
             raise EasyProcessCheckInstalledError(self)
         return self
     
@@ -221,11 +218,10 @@ class Proc():
                                   stderr=stderr,
                                   #shell=1,
                                   )
-        except Exception, detail:
-            self.detail = detail
-            #raise EasyProcessError(self, 'start error')
-            print repr(self)
-            raise
+        except OSError, oserror:
+            log.debug('OSError exception:' + str(oserror))
+            self.oserror = oserror
+            raise EasyProcessError(self, 'start error')
         
         log.debug('process was started (pid=%s)' % (str(self.pid),))
         self.is_started = True
@@ -343,16 +339,10 @@ class Proc():
             x = None
             try:     
                 x = callable()
-            except Exception, e:
-                self.detail = e
-                msg = 'wrap error, Process(cmd={cmd}({scmd}) returncode={return_code} stderr="{stderr}"))'.format(
-                                    cmd=self.cmd,
-                                    scmd=' '.join(self.cmd),
-                                    return_code=self.return_code,
-                                    stderr=self.stderr,
-                                    )
-                print msg
-                raise
+            except OSError, oserror:
+                log.debug('OSError exception:' + str(oserror))
+                self.oserror = oserror
+                raise EasyProcessError(self, 'wrap error!')
             finally:
                 self.stop()
             return x
