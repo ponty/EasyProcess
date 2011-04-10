@@ -8,6 +8,7 @@ Advantages:
  - easy interface
  - command can be list or string
  - logging
+ - timeout
 
 Basic usage
 ============

@@ -63,3 +63,10 @@ class Test(TestCase):
         eq_(EasyProcess('ls -la').cmd, ['ls', '-la'])
         eq_(EasyProcess('ls "abc"').cmd, ['ls', 'abc'])
         eq_(EasyProcess('ls "ab c"').cmd, ['ls', 'ab c'])
+
+    def test_stop(self):
+        p = EasyProcess('ls -la').start()
+        time.sleep(0.2)
+        eq_(p.stop().return_code, 0)
+        eq_(p.stop().return_code, 0)
+        eq_(p.stop().return_code, 0)

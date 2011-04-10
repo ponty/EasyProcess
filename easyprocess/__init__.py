@@ -11,9 +11,10 @@ import subprocess
 import tempfile
 import time
 import unicodedata
+import threading
 
 
-__version__ = '0.0.6'
+__version__ = '0.0.7'
 
 log = logging.getLogger(__name__)
 #log=logging
@@ -79,6 +80,7 @@ class Proc():
         self.is_started = False
         self.oserror = None
         self.cmd_param = cmd
+        self._thread = None
 
         if hasattr(cmd, '__iter__'):
             # cmd is string list
@@ -88,7 +90,7 @@ class Proc():
             # The shlex module currently does not support Unicode input!
             if  isinstance(cmd, unicode):
                 log.debug('unicode is normalized')
-                cmd = unicodedata.normalize('NFKD', cmd).encode('ascii','ignore')
+                cmd = unicodedata.normalize('NFKD', cmd).encode('ascii', 'ignore')
             self.cmd = shlex.split(cmd)
         self.cmd_as_string = ' '.join(self.cmd) # TODO: not perfect
         
@@ -191,14 +193,16 @@ class Proc():
             raise EasyProcessCheckInstalledError(self)
         return self
     
-    def call(self):
+    def call(self, timeout=None):
         '''
         Run command with arguments. Wait for command to complete.
-        Same as x.start().wait()
         
         :rtype: self
         '''
-        return self.start().wait()
+        self.start().wait(timeout=timeout)
+        if self.is_alive():
+            self.stop()
+        return self
 
     def start(self):
         '''
@@ -229,9 +233,19 @@ class Proc():
             log.debug('OSError exception:' + str(oserror))
             self.oserror = oserror
             raise EasyProcessError(self, 'start error')
-        
-        log.debug('process was started (pid=%s)' % (str(self.pid),))
         self.is_started = True
+        log.debug('process was started (pid=%s)' % (str(self.pid),))
+
+        def target():
+            log.debug('Thread started')        
+            self._wait4process()
+            log.debug('Thread finished')
+        
+        # original idea from here: 
+        # http://stackoverflow.com/questions/1191374/subprocess-with-timeout
+        self._thread = threading.Thread(target=target)
+        self._thread.start()
+        
         return self
 
 
@@ -241,23 +255,30 @@ class Proc():
         
         :rtype: bool
         '''
+        print self.popen
         if self.popen:
             return self.popen.poll() is None
         else:
             return False
         
-    def wait(self):
+    def wait(self, timeout=None):
         '''
         Wait for command to complete.
         
         :rtype: self
         '''
+
+        if self._thread:
+            self._thread.join(timeout=timeout)
+        return self
+
+    def _wait4process(self):
         def remove_ending_lf(s):
             if s.endswith('\n'):
                 return s[:-1]
             else:
                 return s
-            
+        
         if self.popen:
             if USE_FILES:    
                 self.popen.wait()
@@ -281,7 +302,7 @@ class Proc():
             log.debug('return code=' + str(self.return_code))
             log.debug('stdout=' + self.stdout)
             log.debug('stderr=' + self.stderr)
-        self.is_started = False
+        #self.is_started = False
         return self
             
     def stop(self):
@@ -303,7 +324,7 @@ class Proc():
         :rtype: self
         '''
         if not self.is_started:
-            raise EasyProcessError(self, 'process was stopped twice!')
+            raise EasyProcessError(self, 'process was not started!')
         
         log.debug('stopping process (pid=%s cmd="%s")' % (str(self.pid), self.cmd))
         if self.popen:
