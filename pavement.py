@@ -163,7 +163,7 @@ def clean():
         x.rmtree()
 
 @task
-@needs('sloccount', 'html', 'sdist', 'nose')
+@needs('sloccount', 'html', 'pdf', 'sdist', 'nose')
 def hudson():
     pass
 
