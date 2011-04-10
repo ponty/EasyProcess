@@ -15,8 +15,13 @@ Features:
  - logging
  - timeout
  - unittests
+ - crossplatform, development on linux
+ 
+Known problems:
  - shell is not supported
- - crossplatform but development on linux
+ - large stdout/stderr was not tested, maybe not efficent
+ - stdout/stderr is set only after the subprocess has finished
+ - stop() does not kill whole subprocess tree 
  
 Basic usage
 ============
