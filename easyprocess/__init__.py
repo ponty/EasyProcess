@@ -66,9 +66,10 @@ class Proc():
     '''
     config = None
     
-    def __init__(self, cmd, ubuntu_package=None, url=None):
+    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=200):
         '''
         :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
+        :param max_bytes_to_log: logging of stdout and stderr is limited by this value
         '''
         self.popen = None
         self.stdout = None
@@ -81,6 +82,7 @@ class Proc():
         self.oserror = None
         self.cmd_param = cmd
         self._thread = None
+        self.max_bytes_to_log = max_bytes_to_log
 
         if hasattr(cmd, '__iter__'):
             # cmd is string list
@@ -277,14 +279,27 @@ class Proc():
                 return s[:-1]
             else:
                 return s
+            
+        def read_output(f):
+            half_size = int(self.max_bytes_to_log / 2.0 + 0.5)
+            size = 2 * half_size
+            # -1 for LF
+            if os.path.getsize(f.name) - 1 > size:
+                data = f.read(half_size)
+                f.seek(-half_size - 1, 2)
+                data += '..'
+                data += f.read(half_size)
+            else:
+                data = f.read()
+            return data
         
         if self.popen:
             if USE_FILES:    
                 self.popen.wait()
                 self._stdout_file.seek(0)            
                 self._stderr_file.seek(0)            
-                self.stdout = self._stdout_file.read()
-                self.stderr = self._stderr_file.read()
+                self.stdout = read_output(self._stdout_file)
+                self.stderr = read_output(self._stderr_file)
             else:
                 # This will deadlock when using stdout=PIPE and/or stderr=PIPE 
                 # and the child process generates enough output to a pipe such 
