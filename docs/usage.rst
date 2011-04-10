@@ -13,7 +13,7 @@ Usage
     >>> # Run program, wait for it to complete, get return code:
     >>> EasyProcess('python --version').call().return_code
     >>> # Run program, wait 1 second, stop it, get stdout:
-    >>> EasyProcess('ping localhost').start().sleep(1).stop().stdout
+    >>> print EasyProcess('ping localhost').start().sleep(1).stop().stdout
     >>> # Run program, wait for it to complete, check for errors:
     >>> EasyProcess('ls').check()
 
@@ -39,6 +39,15 @@ Exceptions in check::
      cmd:['sh', '-c', 'bad_command']
      return code:127
      stderr:sh: bad_command: not found
+
+Timeout
+--------
+
+.. runblock:: pycon
+
+    >>> from easyprocess import EasyProcess
+    >>> # Run ping with  timeout
+    >>> print EasyProcess('ping localhost').call(timeout=1).stdout
 
 Logging
 =========
