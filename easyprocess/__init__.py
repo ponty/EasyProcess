@@ -255,7 +255,6 @@ class Proc():
         
         :rtype: bool
         '''
-        print self.popen
         if self.popen:
             return self.popen.poll() is None
         else:
