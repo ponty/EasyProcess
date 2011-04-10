@@ -279,27 +279,14 @@ class Proc():
                 return s[:-1]
             else:
                 return s
-            
-        def read_output(f):
-            half_size = int(self.max_bytes_to_log / 2.0 + 0.5)
-            size = 2 * half_size
-            # -1 for LF
-            if os.path.getsize(f.name) - 1 > size:
-                data = f.read(half_size)
-                f.seek(-half_size - 1, 2)
-                data += '..'
-                data += f.read(half_size)
-            else:
-                data = f.read()
-            return data
-        
+                   
         if self.popen:
             if USE_FILES:    
                 self.popen.wait()
                 self._stdout_file.seek(0)            
                 self._stderr_file.seek(0)            
-                self.stdout = read_output(self._stdout_file)
-                self.stderr = read_output(self._stderr_file)
+                self.stdout = self._stdout_file.read()
+                self.stderr = self._stderr_file.read()
             else:
                 # This will deadlock when using stdout=PIPE and/or stderr=PIPE 
                 # and the child process generates enough output to a pipe such 
@@ -314,8 +301,13 @@ class Proc():
             self.stderr = remove_ending_lf(self.stderr)
             
             log.debug('return code=' + str(self.return_code))
-            log.debug('stdout=' + self.stdout)
-            log.debug('stderr=' + self.stderr)
+            def limit_str(s):
+                if len(s)>self.max_bytes_to_log:
+                    warn = '[rest of output was removed, max_bytes_to_log={max_bytes_to_log}]'.format(max_bytes_to_log=self.max_bytes_to_log)
+                    s = s[:self.max_bytes_to_log] + warn
+                return s
+            log.debug('stdout=' + limit_str(self.stdout))
+            log.debug('stderr=' + limit_str(self.stderr))
         #self.is_started = False
         return self
             
