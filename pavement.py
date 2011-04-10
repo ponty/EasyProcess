@@ -2,6 +2,12 @@
 from paver.easy import *
 from paver.setuputils import setup
 from setuptools import find_packages
+try:
+    from sphinxcontrib import paverutils
+except:
+    import warnings
+    warnings.warn('sphinxcontrib.paverutils was not found, you will not be able to produce documentation')
+
 
 try:
     # Optional tasks, only needed for development
@@ -78,8 +84,15 @@ options(
     sphinx=Bunch(
         docroot='docs',
         builddir="_build",
-        sourcedir=""
+        sourcedir="",
+        #builder='html',
         ),
+    pdf=Bunch(
+        builddir='_build',
+        builder='latex',
+        #confdir='sphinx/web',
+    ),
+
     virtualenv=Bunch(
         packages_to_install=[
             # -*- Virtualenv packages to install: -*-
