@@ -16,12 +16,15 @@ Features:
  - timeout
  - unittests
  - crossplatform, development on linux
+ - global config file with program aliases 
  
 Known problems:
  - shell is not supported
+ - pipes are not support supported
  - large stdout/stderr was not tested, maybe not efficent
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree 
+ - Python 3 is not supported
  
 Basic usage
 ============

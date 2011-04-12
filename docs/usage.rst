@@ -61,6 +61,33 @@ Output:
 .. program-output:: python -m easyprocess.examples.log
     :prompt:
 
+Alias
+======
+
+You can define an alias for EasyProcess calls 
+by editing your config file ($HOME/.easyprocess.cfg)
+This can be used for:
+ * testing defferent version of the same program
+ * redirect calls
+ * program path can be defined here. (Installed programs are not in $PATH on Windows) 
+
+start python and print python version::
+
+	>>> from easyprocess import EasyProcess
+	>>> EasyProcess('python --version').call().stderr
+	'Python 2.6.6'
+
+edit the config file: $HOME/.easyprocess.cfg::
+
+	[link]
+	python=/usr/bin/python2.7
+
+restart python and print python version again::
+
+	>>> from easyprocess import EasyProcess
+	>>> EasyProcess('python --version').call().stderr
+	'Python 2.7.0+'
+
 
 Replacing existing functions
 ====================================

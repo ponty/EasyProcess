@@ -66,7 +66,7 @@ class Proc():
     '''
     config = None
     
-    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=200):
+    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000):
         '''
         :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
         :param max_bytes_to_log: logging of stdout and stderr is limited by this value
