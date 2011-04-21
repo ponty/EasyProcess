@@ -67,7 +67,8 @@ Alias
 You can define an alias for EasyProcess calls 
 by editing your config file ($HOME/.easyprocess.cfg)
 This can be used for:
- * testing defferent version of the same program
+
+ * testing different version of the same program
  * redirect calls
  * program path can be defined here. (Installed programs are not in $PATH on Windows) 
 
