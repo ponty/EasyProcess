@@ -3,16 +3,16 @@ Easy to use python subprocess interface.
 '''
 
 import ConfigParser
+import atexit
 import logging
 import os.path
 import platform
 import shlex
 import subprocess
 import tempfile
+import threading
 import time
 import unicodedata
-import threading
-
 
 __version__ = '0.0.7'
 
@@ -26,7 +26,9 @@ USE_FILES = 1
 
 CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
-
+POLL_TIME=0.1
+USE_POLL=1
+    
 class EasyProcessError(Exception):
     """  
     """
@@ -57,6 +59,7 @@ class EasyProcessCheckInstalledError(Exception):
                 msg += 'sudo apt-get install %s' % self.easy_process.ubuntu_package
         return msg
 
+
 class Proc():
     '''
     simple interface for :mod:`subprocess` 
@@ -83,6 +86,7 @@ class Proc():
         self.cmd_param = cmd
         self._thread = None
         self.max_bytes_to_log = max_bytes_to_log
+        self._stop_thread=False
 
         if hasattr(cmd, '__iter__'):
             # cmd is string list
@@ -189,7 +193,7 @@ class Proc():
         '''
         try:
             self.call()
-        except Exception as e:
+        except Exception:
             #log.debug('exception:' + str(e))
             #self.oserror = oserror
             raise EasyProcessCheckInstalledError(self)
@@ -209,6 +213,11 @@ class Proc():
     def start(self):
         '''
         start command in background and does not wait for it
+        
+        Timeout:
+        discussion: http://stackoverflow.com/questions/1191374/subprocess-with-timeout
+        implementation: threading with polling
+        
         
         :rtype: self
         '''
@@ -242,11 +251,16 @@ class Proc():
             log.debug('Thread started')        
             self._wait4process()
             log.debug('Thread finished')
+            
+        def shutdown():
+            log.debug('stopping thread')
+            self._stop_thread=True
+            self._thread.join()
         
-        # original idea from here: 
-        # http://stackoverflow.com/questions/1191374/subprocess-with-timeout
         self._thread = threading.Thread(target=target)
+        self._thread.daemon=1
         self._thread.start()
+        atexit.register(shutdown)
         
         return self
 
@@ -272,7 +286,12 @@ class Proc():
         if self._thread:
             self._thread.join(timeout=timeout)
         return self
-
+    
+    #def __del__(self):
+    #    if self._thread:
+    #        log.debug('waiting for thread')
+    #        self._thread.join()
+            
     def _wait4process(self):
         def remove_ending_lf(s):
             if s.endswith('\n'):
@@ -282,7 +301,18 @@ class Proc():
                    
         if self.popen:
             if USE_FILES:    
-                self.popen.wait()
+                if USE_POLL:    
+                    while 1:
+                        if self.popen.poll() is not None:
+                            break
+                        if self._stop_thread:
+                            return
+                        time.sleep(POLL_TIME)
+
+                else:
+                    # wait() blocks process
+                    self.popen.wait()
+                
                 self._stdout_file.seek(0)            
                 self._stderr_file.seek(0)            
                 self.stdout = self._stdout_file.read()
@@ -309,7 +339,7 @@ class Proc():
             log.debug('stdout=' + limit_str(self.stdout))
             log.debug('stderr=' + limit_str(self.stderr))
         #self.is_started = False
-        return self
+        #return self
             
     def stop(self):
         '''
@@ -338,7 +368,11 @@ class Proc():
                 log.debug('process is active -> sending SIGTERM')
 
                 #os.kill(self.popen.pid, signal.SIGKILL)
-                self.popen.terminate()
+                try:
+                    self.popen.terminate()
+                except OSError as e:
+                    log.debug('exception in terminate:'+str(e))
+                    
             else:
                 log.debug('process was already stopped')
         else:
