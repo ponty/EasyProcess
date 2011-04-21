@@ -31,3 +31,7 @@ nosetests.xml
 
 !.gitignore
 /distribute_setup.py
+
+
+sloccount.sc
+*.prefs
