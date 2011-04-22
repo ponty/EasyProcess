@@ -1,23 +1,27 @@
-# -*- coding: utf-8 -*-
-
 from path import path
 import logging
 import sphinx
 import sys
+from setuptools import find_packages
 
+def read_project_version(py=None, where='.', exclude=['bootstrap', 'pavement', 'doc', 'docs', 'test', 'tests',]):
+    if not py:
+        py = path(where) / find_packages(where=where, exclude=exclude)[0]
+    py = path(py)
+    if py.isdir():
+        py = py / '__init__.py'
+    __version__ = None
+    for line in py.lines():
+        if '__version__' in line:
+            exec line
+            break
+    return __version__
+
+
+release = read_project_version(where='..')
 project='EasyProcess'
 author='ponty'
 copyright = '2011, ponty'
-PACKAGE = 'easyprocess'
-
-__version__ = None
-py = path('..') / PACKAGE / '__init__.py'
-for line in open(py).readlines():
-    if '__version__' in line:
-        exec line
-        break
-assert __version__    
-release = __version__
 
 #logging.basicConfig(level=logging.DEBUG)
 
@@ -53,3 +57,8 @@ latex_documents = [
     ('index', '%s.tex' % project, u'%s Documentation' % project,
     author, 'manual'),
 ]
+
+# remove blank pages from pdf
+# http://groups.google.com/group/sphinx-dev/browse_thread/thread/92e19267d095412d/d60dcba483c6b13d
+latex_font_size = '10pt,oneside' 
+
