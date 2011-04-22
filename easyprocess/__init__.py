@@ -14,7 +14,7 @@ import threading
 import time
 import unicodedata
 
-__version__ = '0.0.7'
+__version__ = '0.0.8'
 
 log = logging.getLogger(__name__)
 #log=logging
@@ -225,8 +225,8 @@ class Proc():
             raise EasyProcessError(self, 'process was started twice!')
 
         if USE_FILES:
-            self._stdout_file = tempfile.NamedTemporaryFile(prefix='stdout')
-            self._stderr_file = tempfile.NamedTemporaryFile(prefix='stderr')
+            self._stdout_file = tempfile.NamedTemporaryFile(prefix='stdout_')
+            self._stderr_file = tempfile.NamedTemporaryFile(prefix='stderr_')
             stdout = self._stdout_file
             stderr = self._stderr_file
             
@@ -317,6 +317,9 @@ class Proc():
                 self._stderr_file.seek(0)            
                 self.stdout = self._stdout_file.read()
                 self.stderr = self._stderr_file.read()
+                
+                self._stdout_file.close()
+                self._stderr_file.close()
             else:
                 # This will deadlock when using stdout=PIPE and/or stderr=PIPE 
                 # and the child process generates enough output to a pipe such 
