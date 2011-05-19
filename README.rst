@@ -1,11 +1,8 @@
 EasyProcess is an easy to use python subprocess interface.
 
-home: https://github.com/ponty/EasyProcess
-
-html documentation: http://ponty.github.com/EasyProcess
-
-pdf documentation: https://github.com/ponty/EasyProcess/raw/master/docs/_build/latex/EasyProcess.pdf
-
+Links:
+ * home: https://github.com/ponty/EasyProcess
+ * documentation: http://ponty.github.com/EasyProcess
 
 Features:
  - layer on top of subprocess module

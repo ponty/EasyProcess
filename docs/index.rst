@@ -1,6 +1,8 @@
-EasyProcess is an easy to use python :mod:`subprocess` interface.
+**EasyProcess**
 
-Date: |today|
+:Date: |today|
+:PDF: `EasyProcess.pdf <EasyProcess.pdf>`_
+
 
 Contents:
 
@@ -10,7 +12,8 @@ Contents:
     readme
     usage
     api
-
+    dev
+    
 Indices and tables
 ==================
 
@@ -18,5 +21,3 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. _Xvfb: http://en.wikipedia.org/wiki/Xvfb
-.. _Xephyr: http://en.wikipedia.org/wiki/Xephyr
