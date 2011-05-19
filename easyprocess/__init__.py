@@ -14,7 +14,7 @@ import threading
 import time
 import unicodedata
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
 
 log = logging.getLogger(__name__)
 #log=logging
@@ -87,7 +87,8 @@ class Proc():
         self._thread = None
         self.max_bytes_to_log = max_bytes_to_log
         self._stop_thread=False
-
+        self.timeout_happened = False
+        
         if hasattr(cmd, '__iter__'):
             # cmd is string list
             self.cmd = cmd
@@ -124,7 +125,7 @@ class Proc():
             self.cmd[0] = self.alias
 
     def __repr__(self):
-        msg = '<{cls} cmd_param={cmd_param} alias={alias} cmd={cmd} ({scmd}) oserror={oserror} returncode={return_code} stdout="{stdout}" stderr="{stderr}">'.format(
+        msg = '<{cls} cmd_param={cmd_param} alias={alias} cmd={cmd} ({scmd}) oserror={oserror} returncode={return_code} stdout="{stdout}" stderr="{stderr}" timeout={timeout}>'.format(
                             cls=self.__class__.__name__,
                             cmd_param=self.cmd_param,
                             cmd=self.cmd,
@@ -134,6 +135,7 @@ class Proc():
                             stderr=self.stderr,
                             stdout=self.stdout,
                             scmd=' '.join(self.cmd),
+                            timeout=self.timeout_happened,
                             )
         return msg
         
@@ -248,12 +250,12 @@ class Proc():
         log.debug('process was started (pid=%s)' % (str(self.pid),))
 
         def target():
-            log.debug('Thread started')        
+#            log.debug('Thread started')        
             self._wait4process()
-            log.debug('Thread finished')
+#            log.debug('Thread finished')
             
         def shutdown():
-            log.debug('stopping thread')
+#            log.debug('stopping thread')
             self._stop_thread=True
             self._thread.join()
         
@@ -285,6 +287,8 @@ class Proc():
 
         if self._thread:
             self._thread.join(timeout=timeout)
+            if timeout is not None:
+                self.timeout_happened = self._thread.isAlive()
         return self
     
     #def __del__(self):
@@ -336,8 +340,8 @@ class Proc():
             log.debug('return code=' + str(self.return_code))
             def limit_str(s):
                 if len(s)>self.max_bytes_to_log:
-                    warn = '[rest of output was removed, max_bytes_to_log={max_bytes_to_log}]'.format(max_bytes_to_log=self.max_bytes_to_log)
-                    s = s[:self.max_bytes_to_log] + warn
+                    warn = '[middle of output was removed, max_bytes_to_log={max_bytes_to_log}]'.format(max_bytes_to_log=self.max_bytes_to_log)
+                    s = s[:self.max_bytes_to_log/2] + warn+s[-self.max_bytes_to_log/2:]
                 return s
             log.debug('stdout=' + limit_str(self.stdout))
             log.debug('stderr=' + limit_str(self.stderr))
@@ -418,5 +422,20 @@ class Proc():
                 self.stop()
             return x
         return wrapped
+
+def extract_version(txt):
+    '''general method to get version from help text of any program
+    '''
+    words = txt.replace(',', ' ').split()
+    version=None
+    for x in words:
+        if len(x)>2:
+            if x[0].lower()=='v':
+                x=x[1:]
+            if '.' in x and x[0].isdigit() and x[-1].isdigit() and x.replace('.', '0').isdigit():
+                version=x
+                break
+    return version
+
 
 EasyProcess = Proc

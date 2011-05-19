@@ -83,19 +83,34 @@ options(
 
 if ALL_TASKS_LOADED:
     
-    options.paved.clean.patterns += ['*.pickle', '*.doctree', '*.gz' , 'nosetests.xml', 'sloccount.sc']
+    options.paved.clean.patterns += ['*.pickle', 
+                                     '*.doctree', 
+                                     '*.gz' , 
+                                     'nosetests.xml', 
+                                     'sloccount.sc', 
+                                     '*.pdf','*.tex', 
+                                     '*.png',
+                                     ]
     
     options.paved.dist.manifest.include.remove('distribute_setup.py')
     
     
+#    @needs('sloccount', 'paver.doctools.html', 'pdf', 'sdist', 'nose')
     @task
-    @needs('sloccount', 'paver.doctools.html', 'pdf', 'sdist', 'nose')
-    def hudson():
-        '''task collection for hudson.
-        '''
+    @needs('sloccount', 'html', 'pdf', 'sdist', 'nose')
+    def alltest():
+        'all tasks to check'
         pass
     
     @task
     @needs('sphinxcontrib.paverutils.html')
     def html():
         pass
+
+    @task
+    @needs('sphinxcontrib.paverutils.pdf')
+    def pdf():
+        fpdf = list(path('docs/_build/latex').walkfiles('*.pdf'))[0]
+        d=path('docs/_build/html')
+        d.makedirs()
+        fpdf.copy(d)
