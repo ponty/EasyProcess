@@ -26,8 +26,8 @@ USE_FILES = 1
 
 CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
-POLL_TIME=0.1
-USE_POLL=1
+POLL_TIME = 0.1
+USE_POLL = 1
     
 class EasyProcessError(Exception):
     """  
@@ -69,7 +69,7 @@ class Proc():
     '''
     config = None
     
-    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000):
+    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000, cwd=None):
         '''
         :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
         :param max_bytes_to_log: logging of stdout and stderr is limited by this value
@@ -86,9 +86,9 @@ class Proc():
         self.cmd_param = cmd
         self._thread = None
         self.max_bytes_to_log = max_bytes_to_log
-        self._stop_thread=False
+        self._stop_thread = False
         self.timeout_happened = False
-        
+        self.cwd = cwd
         if hasattr(cmd, '__iter__'):
             # cmd is string list
             self.cmd = cmd
@@ -99,6 +99,7 @@ class Proc():
                 log.debug('unicode is normalized')
                 cmd = unicodedata.normalize('NFKD', cmd).encode('ascii', 'ignore')
             self.cmd = shlex.split(cmd)
+        self.cmd = map(str, self.cmd)
         self.cmd_as_string = ' '.join(self.cmd) # TODO: not perfect
         
         log.debug('param: "%s" command: %s ("%s")' % (str(self.cmd_param), str(self.cmd), self.cmd_as_string))
@@ -241,6 +242,7 @@ class Proc():
                                   stdout=stdout,
                                   stderr=stderr,
                                   #shell=1,
+                                  cwd=self.cwd,
                                   )
         except OSError, oserror:
             log.debug('OSError exception:' + str(oserror))
@@ -256,11 +258,11 @@ class Proc():
             
         def shutdown():
 #            log.debug('stopping thread')
-            self._stop_thread=True
+            self._stop_thread = True
             self._thread.join()
         
         self._thread = threading.Thread(target=target)
-        self._thread.daemon=1
+        self._thread.daemon = 1
         self._thread.start()
         atexit.register(shutdown)
         
@@ -339,9 +341,9 @@ class Proc():
             
             log.debug('return code=' + str(self.return_code))
             def limit_str(s):
-                if len(s)>self.max_bytes_to_log:
+                if len(s) > self.max_bytes_to_log:
                     warn = '[middle of output was removed, max_bytes_to_log={max_bytes_to_log}]'.format(max_bytes_to_log=self.max_bytes_to_log)
-                    s = s[:self.max_bytes_to_log/2] + warn+s[-self.max_bytes_to_log/2:]
+                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
                 return s
             log.debug('stdout=' + limit_str(self.stdout))
             log.debug('stderr=' + limit_str(self.stderr))
@@ -378,7 +380,7 @@ class Proc():
                 try:
                     self.popen.terminate()
                 except OSError as e:
-                    log.debug('exception in terminate:'+str(e))
+                    log.debug('exception in terminate:' + str(e))
                     
             else:
                 log.debug('process was already stopped')
@@ -427,13 +429,13 @@ def extract_version(txt):
     '''general method to get version from help text of any program
     '''
     words = txt.replace(',', ' ').split()
-    version=None
+    version = None
     for x in words:
-        if len(x)>2:
-            if x[0].lower()=='v':
-                x=x[1:]
+        if len(x) > 2:
+            if x[0].lower() == 'v':
+                x = x[1:]
             if '.' in x and x[0].isdigit() and x[-1].isdigit() and x.replace('.', '0').isdigit():
-                version=x
+                version = x
                 break
     return version
 
