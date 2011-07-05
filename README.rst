@@ -5,7 +5,7 @@ Links:
  * documentation: http://ponty.github.com/EasyProcess
 
 Features:
- - layer on top of subprocess module
+ - layer on top of :mod:`subprocess` module
  - easy to start, stop programs
  - easy to get standard output/error, return code of programs
  - command can be list or string
