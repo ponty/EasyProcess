@@ -5,7 +5,7 @@ Links:
  * documentation: http://ponty.github.com/EasyProcess
 
 Features:
- - layer on top of :mod:`subprocess` module
+ - layer on top of subprocess_ module
  - easy to start, stop programs
  - easy to get standard output/error, return code of programs
  - command can be list or string
@@ -67,4 +67,4 @@ Uninstall
 
 .. _setuptools: http://peak.telecommunity.com/DevCenter/EasyInstall
 .. _pip: http://pip.openplans.org/
-
+.. _subprocess: http://docs.python.org/library/subprocess.html
