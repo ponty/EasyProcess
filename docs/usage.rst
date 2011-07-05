@@ -40,6 +40,21 @@ Exceptions in check::
      return code:127
      stderr:sh: bad_command: not found
 
+With
+-----
+
+By using :keyword:`with` statement the process is started 
+and stopped automatically:
+
+.. runblock:: pycon
+    
+    >>> from easyprocess import EasyProcess
+    >>> with EasyProcess('ping 127.0.0.1') as proc: # start()
+    >>>     # communicate with proc
+    >>>     pass
+    >>> # stopped
+    
+
 Timeout
 --------
 
@@ -50,7 +65,7 @@ Timeout
     >>> print EasyProcess('ping localhost').call(timeout=1).stdout
 
 Logging
-=========
+--------
 
 Example program:
 
@@ -62,7 +77,7 @@ Output:
     :prompt:
 
 Alias
-======
+--------
 
 You can define an alias for EasyProcess calls 
 by editing your config file ($HOME/.easyprocess.cfg)
@@ -91,7 +106,7 @@ restart python and print python version again::
 
 
 Replacing existing functions
-====================================
+--------------------------------
 
 Replacing os.system::
 

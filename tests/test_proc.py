@@ -47,6 +47,12 @@ class Test(TestCase):
             return EasyProcess('echo hi').call().stdout
         eq_(EasyProcess('ping 127.0.0.1').wrap(f)(), 'hi')
         
+    def test_with(self):
+        with EasyProcess('ping 127.0.0.1') as x:
+            self.assertTrue(x.is_alive())
+#        self.assertEquals(x.return_code, 0)
+        self.assertFalse(x.is_alive())
+        
     def test_install(self):
         EasyProcess('echo hello').check_installed()
         self.assertRaises(EasyProcessCheckInstalledError, 

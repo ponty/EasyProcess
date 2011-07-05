@@ -14,7 +14,7 @@ import threading
 import time
 import unicodedata
 
-__version__ = '0.0.9'
+__version__ = '0.0.10'
 
 log = logging.getLogger(__name__)
 #log=logging
@@ -218,8 +218,8 @@ class Proc():
         start command in background and does not wait for it
         
         Timeout:
-        discussion: http://stackoverflow.com/questions/1191374/subprocess-with-timeout
-        implementation: threading with polling
+         - discussion: http://stackoverflow.com/questions/1191374/subprocess-with-timeout
+         - implementation: threading with polling
         
         
         :rtype: self
@@ -402,10 +402,12 @@ class Proc():
     def wrap(self, callable, delay=0):
         '''
         returns a function which:
-        1. start process
-        2. call callable, save result
-        3. stop process
-        4. returns result
+         1. start process
+         2. call callable, save result
+         3. stop process
+         4. returns result
+        
+        similar to :keyword:`with` statement
         
         :rtype: 
         '''
@@ -424,6 +426,15 @@ class Proc():
                 self.stop()
             return x
         return wrapped
+    
+    def __enter__(self):
+        '''used by the :keyword:`with` statement'''
+        self.start()
+        return self
+    
+    def __exit__(self, *exc_info):
+        '''used by the :keyword:`with` statement'''
+        self.stop()
 
 def extract_version(txt):
     '''general method to get version from help text of any program

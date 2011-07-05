@@ -36,7 +36,8 @@ extensions = [
      #'sphinx.ext.autosummary',
      'sphinx.ext.intersphinx',
     ]
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping =  {'python': ('http://docs.python.org/', None)}
+#intersphinx_mapping =  {'http://docs.python.org/': None}
 
 # Source
 master_doc = 'index'
