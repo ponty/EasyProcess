@@ -22,6 +22,11 @@ Known problems:
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree 
  - Python 3 is not supported
+
+Similar projects:
+ * execute (http://pypi.python.org/pypi/execute)
+ * commandwrapper (http://pypi.python.org/pypi/commandwrapper)
+ * extcmd (http://pypi.python.org/pypi/extcmd)
  
 Basic usage
 ============
