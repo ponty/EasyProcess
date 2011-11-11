@@ -27,7 +27,7 @@ class Test(TestCase):
         p.call()
         eq_(p.return_code,0)
 
-    @timed(2)
+    @timed(1)
     def test_time_cli2(self):
         p=EasyProcess(['python', '-c', "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 15').call(timeout=0.5)"])
         p.call()
