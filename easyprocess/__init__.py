@@ -21,8 +21,6 @@ log = logging.getLogger(__name__)
 
 log.debug('version=' + __version__)
 
-# deadlock test fails if USE_FILES=0
-USE_FILES = 1
 
 CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
@@ -69,11 +67,14 @@ class Proc():
     '''
     config = None
     
-    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000, cwd=None):
+    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000, cwd=None, use_temp_files=False):
         '''
         :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
         :param max_bytes_to_log: logging of stdout and stderr is limited by this value
+        :param use_temp_files: use temp files instead of pipes for stdout and stderr
         '''
+        self.use_temp_files = use_temp_files
+
         self.popen = None
         self.stdout = None
         self.stderr = None
@@ -227,7 +228,7 @@ class Proc():
         if self.is_started:
             raise EasyProcessError(self, 'process was started twice!')
 
-        if USE_FILES:
+        if self.use_temp_files:
             self._stdout_file = tempfile.NamedTemporaryFile(prefix='stdout_')
             self._stderr_file = tempfile.NamedTemporaryFile(prefix='stderr_')
             stdout = self._stdout_file
@@ -306,7 +307,7 @@ class Proc():
                 return s
                    
         if self.popen:
-            if USE_FILES:    
+            if self.use_temp_files:    
                 if USE_POLL:    
                     while 1:
                         if self.popen.poll() is not None:
@@ -334,6 +335,7 @@ class Proc():
                 #self.popen.wait()
                 #self.stdout = self.popen.stdout.read()
                 #self.stderr = self.popen.stderr.read()
+                
                 (self.stdout, self.stderr) = self.popen.communicate()
             log.debug('process has ended')
             self.stdout = remove_ending_lf(self.stdout)
