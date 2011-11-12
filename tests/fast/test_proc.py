@@ -26,8 +26,9 @@ class Test(TestCase):
     def test_start2(self):
         p = EasyProcess('echo hi').start()
         time.sleep(0.2)
-        eq_(p.return_code, 0)
-        eq_(p.stdout, 'hi')
+        # no wait() -> no results
+        eq_(p.return_code, None)
+        eq_(p.stdout, None)
     
     @timed(1)
     def test_start3(self):

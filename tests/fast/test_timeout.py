@@ -23,20 +23,20 @@ class Test(TestCase):
         
     @timed(2)
     def test_time_cli1(self):
-        p=EasyProcess(['python', '-c', "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 15').start()"])
+        p=EasyProcess(['python', '-c', "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 5').start()"])
         p.call()
         eq_(p.return_code,0)
 
     @timed(1)
     def test_time_cli2(self):
-        p=EasyProcess(['python', '-c', "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 15').call(timeout=0.5)"])
+        p=EasyProcess(['python', '-c', "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 5').call(timeout=0.5)"])
         p.call()
         eq_(p.return_code,0)
     
     @timed(1.2)
     def test_time2(self):
-        EasyProcess('sleep 15').call(timeout=1)
+        EasyProcess('sleep 5').call(timeout=1)
         
     @timed(0.3)
     def test_time3(self):
-        EasyProcess('sleep 15').start()
+        EasyProcess('sleep 5').start()

@@ -74,6 +74,7 @@ class Proc():
         :param use_temp_files: use temp files instead of pipes for stdout and stderr
         '''
         self.use_temp_files = use_temp_files
+        self._outputs_processed = False
 
         self.popen = None
         self.stdout = None
@@ -252,20 +253,17 @@ class Proc():
         self.is_started = True
         log.debug('process was started (pid=%s)' % (str(self.pid),))
 
-        def target():
-#            log.debug('Thread started')        
-            self._wait4process()
-#            log.debug('Thread finished')
+#        def target():
+#            self._wait4process()
             
-        def shutdown():
-#            log.debug('stopping thread')
-            self._stop_thread = True
-            self._thread.join()
+#        def shutdown():
+#            self._stop_thread = True
+#            self._thread.join()
         
-        self._thread = threading.Thread(target=target)
-        self._thread.daemon = 1
-        self._thread.start()
-        atexit.register(shutdown)
+#        self._thread = threading.Thread(target=target)
+#        self._thread.daemon = 1
+#        self._thread.start()
+#        atexit.register(shutdown)
         
         return self
 
@@ -287,19 +285,30 @@ class Proc():
         
         :rtype: self
         '''
-
-        if self._thread:
-            self._thread.join(timeout=timeout)
-            if timeout is not None:
-                self.timeout_happened = self._thread.isAlive()
-        return self
-    
-    #def __del__(self):
-    #    if self._thread:
-    #        log.debug('waiting for thread')
-    #        self._thread.join()
+#        def target():
+#            self._wait4process()
             
+        if timeout is None:
+            self._wait4process()
+        else:
+            if not self._thread:
+                self._thread = threading.Thread(target=self._wait4process)
+                self._thread.daemon = 1
+                self._thread.start()
+            self._thread.join(timeout=timeout)
+            self.timeout_happened = self._thread.isAlive()
+
+#        if self._thread:
+#            self._thread.join(timeout=timeout)
+#            if timeout is not None:
+#                self.timeout_happened = self._thread.isAlive()
+        
+        return self
+                
     def _wait4process(self):
+        if self._outputs_processed:
+            return
+
         def remove_ending_lf(s):
             if s.endswith('\n'):
                 return s[:-1]
@@ -317,9 +326,10 @@ class Proc():
                         time.sleep(POLL_TIME)
 
                 else:
-                    # wait() blocks process
+                    # wait() blocks process, timeout not possible
                     self.popen.wait()
                 
+                self._outputs_processed = True
                 self._stdout_file.seek(0)            
                 self._stderr_file.seek(0)            
                 self.stdout = self._stdout_file.read()
@@ -336,6 +346,8 @@ class Proc():
                 #self.stdout = self.popen.stdout.read()
                 #self.stderr = self.popen.stderr.read()
                 
+                # communicate() blocks process, timeout not possible
+                self._outputs_processed = True
                 (self.stdout, self.stderr) = self.popen.communicate()
             log.debug('process has ended')
             self.stdout = remove_ending_lf(self.stdout)
@@ -349,8 +361,6 @@ class Proc():
                 return s
             log.debug('stdout=' + limit_str(self.stdout))
             log.debug('stderr=' + limit_str(self.stderr))
-        #self.is_started = False
-        #return self
             
     def stop(self):
         '''

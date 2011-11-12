@@ -7,6 +7,7 @@ class Test(TestCase):
     @timed(1)
     def test_stop(self):
         # deadlock in 0.0.0
+        # no more deadlock! Something has changed in my system...
         EasyProcess('python deadlock.py').start().sleep(0.5).stop()
 
 
