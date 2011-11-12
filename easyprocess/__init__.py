@@ -67,11 +67,15 @@ class Proc():
     '''
     config = None
     
-    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000, cwd=None, use_temp_files=False):
+    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000, cwd=None, use_temp_files=True):
         '''
         :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
-        :param max_bytes_to_log: logging of stdout and stderr is limited by this value
-        :param use_temp_files: use temp files instead of pipes for stdout and stderr
+        :param max_bytes_to_log: logging of stdout and stderr is limited 
+                                 by this value
+        :param use_temp_files: use temp files instead of pipes for 
+                               stdout and stderr,
+                               pipes can cause deadlock in some cases
+                               (see unit tests)
         '''
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
@@ -230,8 +234,8 @@ class Proc():
             raise EasyProcessError(self, 'process was started twice!')
 
         if self.use_temp_files:
-            self._stdout_file = tempfile.NamedTemporaryFile(prefix='stdout_')
-            self._stderr_file = tempfile.NamedTemporaryFile(prefix='stderr_')
+            self._stdout_file = tempfile.TemporaryFile(prefix='stdout_')
+            self._stderr_file = tempfile.TemporaryFile(prefix='stderr_')
             stdout = self._stdout_file
             stderr = self._stderr_file
             
