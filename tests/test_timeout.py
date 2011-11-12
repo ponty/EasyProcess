@@ -35,8 +35,8 @@ class Test(TestCase):
     
     @timed(1.2)
     def test_time2(self):
-        EasyProcess('sleep 5').call(timeout=1)
+        EasyProcess('sleep 15').call(timeout=1)
         
     @timed(0.3)
     def test_time3(self):
-        EasyProcess('sleep 5').start()
+        EasyProcess('sleep 15').start()

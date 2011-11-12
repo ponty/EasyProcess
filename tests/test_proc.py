@@ -1,6 +1,6 @@
-from easyprocess import EasyProcess,  \
-    EasyProcessCheckInstalledError, EasyProcessError
-from nose.tools import eq_
+from easyprocess import EasyProcess, EasyProcessCheckInstalledError, \
+    EasyProcessError
+from nose.tools import eq_, timed
 from unittest import TestCase
 import time
 
@@ -22,7 +22,18 @@ class Test(TestCase):
         p = EasyProcess('ls -la').start()
         time.sleep(0.2)
         eq_(p.stop().return_code, 0)
+        
+    def test_start2(self):
+        p = EasyProcess('echo hi').start()
+        time.sleep(0.2)
+        eq_(p.return_code, 0)
+        eq_(p.stdout, 'hi')
     
+    @timed(1)
+    def test_start3(self):
+        p = EasyProcess('sleep 10').start()
+        eq_(p.return_code, None)
+
     def test_alive(self):
         eq_(EasyProcess('ping 127.0.0.1 -c 2').is_alive(), False)
         eq_(EasyProcess('ping 127.0.0.1 -c 2').start().is_alive(), True)
