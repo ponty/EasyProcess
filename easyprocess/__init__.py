@@ -25,7 +25,7 @@ log.debug('version=' + __version__)
 CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
 POLL_TIME = 0.1
-USE_POLL = 1
+USE_POLL = 0
     
 class EasyProcessError(Exception):
     """  
@@ -289,24 +289,20 @@ class Proc():
         
         :rtype: self
         '''
-#        def target():
-#            self._wait4process()
             
-        if timeout is None:
-            self._wait4process()
-        else:
+        if timeout is not None:
             if not self._thread:
                 self._thread = threading.Thread(target=self._wait4process)
                 self._thread.daemon = 1
                 self._thread.start()
+                
+        if self._thread:
             self._thread.join(timeout=timeout)
-            self.timeout_happened = self._thread.isAlive()
+            self.timeout_happened = self.timeout_happened or self._thread.isAlive()
+        else:
+            # no timeout and no existing thread
+            self._wait4process()
 
-#        if self._thread:
-#            self._thread.join(timeout=timeout)
-#            if timeout is not None:
-#                self.timeout_happened = self._thread.isAlive()
-        
         return self
                 
     def _wait4process(self):
