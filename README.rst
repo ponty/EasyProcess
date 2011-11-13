@@ -11,16 +11,15 @@ Features:
  - command can be list or string
  - logging
  - timeout
- - unittests
+ - unit-tests
  - crossplatform, development on linux
  - global config file with program aliases 
- 
-Known problems:
  - shell is not supported
  - pipes are not supported
- - large stdout/stderr was not tested, maybe not efficent
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree 
+ 
+Known problems:
  - Python 3 is not supported
 
 Similar projects:

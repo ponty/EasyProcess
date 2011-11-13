@@ -57,26 +57,22 @@ class EasyProcessCheckInstalledError(Exception):
                 msg += 'sudo apt-get install %s' % self.easy_process.ubuntu_package
         return msg
 
-
 class Proc():
     '''
     simple interface for :mod:`subprocess` 
 
     shell is not supported (shell=False)
     
+    :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
+    :param max_bytes_to_log: logging of stdout and stderr is limited by this value
+    :param use_temp_files: use temp files instead of pipes for 
+                           stdout and stderr,
+                           pipes can cause deadlock in some cases
+                           (see unit tests)
     '''
     config = None
     
     def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000, cwd=None, use_temp_files=True):
-        '''
-        :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
-        :param max_bytes_to_log: logging of stdout and stderr is limited 
-                                 by this value
-        :param use_temp_files: use temp files instead of pipes for 
-                               stdout and stderr,
-                               pipes can cause deadlock in some cases
-                               (see unit tests)
-        '''
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
 
