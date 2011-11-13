@@ -14,7 +14,7 @@ import threading
 import time
 import unicodedata
 
-__version__ = '0.0.10'
+__version__ = '0.1.0'
 
 log = logging.getLogger(__name__)
 #log=logging
