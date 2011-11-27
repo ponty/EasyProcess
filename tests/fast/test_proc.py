@@ -60,6 +60,9 @@ class Test(TestCase):
         eq_(EasyProcess('ping 127.0.0.1').wrap(f)(), 'hi')
         
     def test_with(self):
+        for i in xrange(100):
+            with EasyProcess('echo testing %d' % (i)) as p:
+                self.assertEquals(p.return_code, 0)
         with EasyProcess('ping 127.0.0.1') as x:
             self.assertTrue(x.is_alive())
 #        self.assertEquals(x.return_code, 0)
