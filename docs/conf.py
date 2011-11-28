@@ -30,7 +30,7 @@ extensions = [
      # -*-Extensions: -*-
      'sphinx.ext.autodoc',
      'sphinxcontrib.programoutput',
-     'sphinxcontrib.programscreenshot',
+#     'sphinxcontrib.programscreenshot',
      'sphinx.ext.graphviz',
      'sphinxcontrib.autorun',
      #'sphinx.ext.autosummary',
