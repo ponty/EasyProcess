@@ -1,62 +1,88 @@
 Usage
 ==================
 
+.. module:: easyprocess
+
+General
+--------
+
 .. runblock:: pycon
     
     >>> from easyprocess import EasyProcess
+    >>> 
     >>> # Run program, wait for it to complete, get stdout (command is string):
     >>> EasyProcess('echo hello').call().stdout
+    >>> 
     >>> # Run program, wait for it to complete, get stdout (command is list):
     >>> EasyProcess(['echo','hello']).call().stdout
+    >>> 
     >>> # Run program, wait for it to complete, get stderr:
     >>> EasyProcess('python --version').call().stderr
+    >>> 
     >>> # Run program, wait for it to complete, get return code:
     >>> EasyProcess('python --version').call().return_code
+    >>> 
     >>> # Run program, wait 1 second, stop it, get stdout:
     >>> print EasyProcess('ping localhost').start().sleep(1).stop().stdout
-    >>> # Run program, wait for it to complete, check for errors:
-    >>> EasyProcess('ls').check()
 
-Exceptions in check::
 
-    >>> EasyProcess('bad_command').check()
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "easyprocess.py", line 84, in check
-        raise EasyProcessCheckError(self)
-    easyprocess.EasyProcessCheckError: EasyProcess check failed!
-     OSError:[Errno 2] No such file or directory
-     cmd:['bad_command']
-     return code:None
-     stderr:None
-    >>> EasyProcess('sh -c bad_command').check()
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "easyprocess.py", line 84, in check
-        raise EasyProcessCheckError(self)
-    easyprocess.EasyProcessCheckError: EasyProcess check failed!
-     OSError:None
-     cmd:['sh', '-c', 'bad_command']
-     return code:127
-     stderr:sh: bad_command: not found
+return_code
+------------
+
+:attr:`EasyProcess.return_code` is None until 
+:func:`EasyProcess.stop` or :func:`EasyProcess.wait` 
+is called.
+
+
+.. runblock:: pycon
+    
+    >>> from easyprocess import EasyProcess
+    >>> 
+    >>> # process has finished but no stop() or wait() was called
+    >>> print EasyProcess('echo hello').start().sleep(0.5).return_code
+    >>> 
+    >>> # wait()
+    >>> print EasyProcess('echo hello').start().wait().return_code
+    >>> 
+    >>> # stop() after process has finished
+    >>> print EasyProcess('echo hello').start().sleep(0.5).stop().return_code
+    >>> 
+    >>> # stop() before process has finished
+    >>> print EasyProcess('sleep 2').start().stop().return_code
+    >>> 
+    >>> # same as start().wait().stop()
+    >>> print EasyProcess('echo hello').call().return_code
 
 With
 -----
 
 By using :keyword:`with` statement the process is started 
-and stopped automatically:
+and stopped automatically::
+    
+    from easyprocess import EasyProcess
+    with EasyProcess('ping 127.0.0.1') as proc: # start()
+        # communicate with proc
+        pass
+    # stopped
+    
+Equivalent with::
+    
+    from easyprocess import EasyProcess
+    proc = EasyProcess('ping 127.0.0.1').start()
+    try:
+        # communicate with proc
+        pass
+    finally:
+        proc.stop()
 
-.. runblock:: pycon
-    
-    >>> from easyprocess import EasyProcess
-    >>> with EasyProcess('ping 127.0.0.1') as proc: # start()
-    >>>     # communicate with proc
-    >>>     pass
-    >>> # stopped
-    
 
 Timeout
 --------
+
+This was implemented with "daemon thread".
+
+"The entire Python program exits when only daemon threads are left."
+http://docs.python.org/library/threading.html
 
 .. runblock:: pycon
 
@@ -123,3 +149,15 @@ Replacing subprocess.call::
     p = EasyProcess(["ls", "-l"]).call()
     retcode = p.return_code
     print p.stdout
+
+    
+extract_version
+--------------------
+
+.. autofunction:: easyprocess.extract_version
+
+.. runblock:: pycon
+
+    >>> from easyprocess import EasyProcess, extract_version
+    >>> extract_version(EasyProcess('python --version').call().stderr)
+    

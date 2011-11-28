@@ -57,8 +57,10 @@ class EasyProcessCheckInstalledError(Exception):
                 msg += 'sudo apt-get install %s' % self.easy_process.ubuntu_package
         return msg
 
-class Proc():
+class EasyProcess():
     '''
+    .. module:: easyprocess
+    
     simple interface for :mod:`subprocess` 
 
     shell is not supported (shell=False)
@@ -145,7 +147,7 @@ class Proc():
     @property
     def pid(self):
         '''
-        PID (subprocess.Popen.pid)
+        PID (:attr:`subprocess.Popen.pid`)
 
         :rtype: int
         '''
@@ -155,7 +157,7 @@ class Proc():
     @property
     def return_code(self):
         '''
-        returncode (``subprocess.Popen.returncode``)
+        returncode (:attr:`subprocess.Popen.returncode`)
 
         :rtype: int
         '''
@@ -208,6 +210,11 @@ class Proc():
         '''
         Run command with arguments. Wait for command to complete.
         
+        same as:
+         1. :meth:`start`
+         2. :meth:`wait`
+         3. :meth:`stop`
+        
         :rtype: self
         '''
         self.start().wait(timeout=timeout)
@@ -218,10 +225,6 @@ class Proc():
     def start(self):
         '''
         start command in background and does not wait for it
-        
-        Timeout:
-         - discussion: http://stackoverflow.com/questions/1191374/subprocess-with-timeout
-         - implementation: threading with polling
         
         
         :rtype: self
@@ -270,7 +273,7 @@ class Proc():
 
     def is_alive(self):
         '''
-        poll process (:func:`subprocess.Popen.poll`)
+        poll process using :meth:`subprocess.Popen.poll`
         
         :rtype: bool
         '''
@@ -283,6 +286,10 @@ class Proc():
         '''
         Wait for command to complete.
         
+        Timeout:
+         - discussion: http://stackoverflow.com/questions/1191374/subprocess-with-timeout
+         - implementation: threading
+         
         :rtype: self
         '''
             
@@ -360,10 +367,12 @@ class Proc():
             
     def stop(self):
         '''
-        Kill process by sending SIGTERM.
+        Kill process
         and wait for command to complete.
         
-        same as ``sendstop().wait()``
+        same as:
+         1. :meth:`sendstop`
+         2. :meth:`wait`
         
         :rtype: self
         '''
@@ -371,7 +380,7 @@ class Proc():
 
     def sendstop(self):
         '''
-        Kill process by sending SIGTERM.
+        Kill process (:meth:`subprocess.Popen.terminate`).
         Do not wait for command to complete.
         
         :rtype: self
@@ -445,7 +454,7 @@ class Proc():
         self.stop()
 
 def extract_version(txt):
-    '''general method to get version from help text of any program
+    '''This function tries to extract the version from the help text of any program.
     '''
     words = txt.replace(',', ' ').split()
     version = None
@@ -459,4 +468,4 @@ def extract_version(txt):
     return version
 
 
-EasyProcess = Proc
+Proc = EasyProcess

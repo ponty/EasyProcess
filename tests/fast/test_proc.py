@@ -65,7 +65,7 @@ class Test(TestCase):
                 self.assertEquals(p.return_code, 0)
         with EasyProcess('ping 127.0.0.1') as x:
             self.assertTrue(x.is_alive())
-#        self.assertEquals(x.return_code, 0)
+        self.assertNotEquals(x.return_code, 0)
         self.assertFalse(x.is_alive())
         
     def test_install(self):
