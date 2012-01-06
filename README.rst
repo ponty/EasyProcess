@@ -31,9 +31,8 @@ Basic usage
 ============
 
     >>> from easyprocess import EasyProcess
-    >>> EasyProcess('echo hello').call().stdout
-    'hello'
-
+    >>> EasyProcess('python --version').call().stderr
+    'Python 2.6.6'
 
 Installation
 ============

@@ -4,7 +4,6 @@ import logging
 # turn on logging
 logging.basicConfig(level=logging.DEBUG)
 
-EasyProcess('echo hello').call()
 EasyProcess('python --version').call()
 EasyProcess('ping localhost').start().sleep(1).stop()
 EasyProcess('python --version').check()

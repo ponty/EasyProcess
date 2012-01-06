@@ -3,6 +3,19 @@ Usage
 
 .. module:: easyprocess
 
+Simple example
+---------------
+
+Example program:
+
+.. literalinclude:: ../easyprocess/examples/ver.py
+
+Output:
+
+.. program-output:: python -m easyprocess.examples.ver
+    :prompt:
+
+
 General
 --------
 
@@ -11,10 +24,10 @@ General
     >>> from easyprocess import EasyProcess
     >>> 
     >>> # Run program, wait for it to complete, get stdout (command is string):
-    >>> EasyProcess('echo hello').call().stdout
+    >>> EasyProcess('python -c "print 3"').call().stdout
     >>> 
     >>> # Run program, wait for it to complete, get stdout (command is list):
-    >>> EasyProcess(['echo','hello']).call().stdout
+    >>> EasyProcess(['python','-c','print 3']).call().stdout
     >>> 
     >>> # Run program, wait for it to complete, get stderr:
     >>> EasyProcess('python --version').call().stderr
@@ -25,6 +38,15 @@ General
     >>> # Run program, wait 1 second, stop it, get stdout:
     >>> print EasyProcess('ping localhost').start().sleep(1).stop().stdout
 
+Shell commands
+----------------
+
+Shell commands are not supported.
+
+.. warning::
+
+  ``echo`` is a shell command on Windows (there is no echo.exe),
+  but it is a program on Linux  
 
 return_code
 ------------
