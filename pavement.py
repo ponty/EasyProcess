@@ -47,9 +47,7 @@ classifiers = [
     "Programming Language :: Python",
     ]
 
-install_requires = [
-    'setuptools',
-    ]
+install_requires = open("requirements.txt").read().split('\n')
 
 setup(
     name=NAME,
