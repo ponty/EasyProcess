@@ -96,7 +96,14 @@ if ALL_TASKS_LOADED:
     
 #    @needs('sloccount', 'paver.doctools.html', 'pdf', 'sdist', 'nose')
     @task
-    @needs('sloccount', 'html', 'pdf', 'sdist', 'nose')
+    @needs(
+           'clean',
+           'sloccount', 
+           'html', 
+           'pdf', 
+           'sdist', 
+           'nose',
+           )
     def alltest():
         'all tasks to check'
         pass
@@ -113,3 +120,40 @@ if ALL_TASKS_LOADED:
         d=path('docs/_build/html')
         d.makedirs()
         fpdf.copy(d)
+
+    def install_test(installer):
+        import virtualenv
+        import tempfile
+        import textwrap
+        root = path(tempfile.mkdtemp(prefix=NAME + '_'))
+        info( 'root='+ root)
+        script = root / 'start_virtualenv'
+        
+        txt = """
+        def after_install(options, home_dir):
+            assert not os.system('{installer} {NAME}')
+        """.format(
+                   NAME=NAME,
+                   installer=root / 'env' / 'bin' / installer,
+                   )
+        
+        script_text = virtualenv.create_bootstrap_script(textwrap.dedent(txt))
+        script.write_text(script_text)
+        script.chmod(0755)
+        sh('./start_virtualenv env --no-site-packages', cwd=root)
+
+    @task
+    def pypi_pip():
+        install_test('pip install')
+
+    @task
+    def pypi_easy_install():
+        install_test('easy_install')
+        
+    @task
+    @needs(
+           'pypi_easy_install',
+           'pypi_pip', 
+           )
+    def pypi():
+        pass
