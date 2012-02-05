@@ -2,6 +2,7 @@
 Easy to use python subprocess interface.
 '''
 
+from easyprocess.unicodeutil import uniencode, unidecode
 import ConfigParser
 import atexit
 import logging
@@ -14,7 +15,7 @@ import threading
 import time
 import unicodedata
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 log = logging.getLogger(__name__)
 #log=logging
@@ -35,6 +36,9 @@ class EasyProcessError(Exception):
         self.msg = msg
     def __str__(self):
         return self.msg + ' ' + repr(self.easy_process)
+    
+class EasyProcessUnicodeError(Exception):
+    pass
     
 template = '''cmd={cmd}
 OSError={oserror}  
@@ -57,6 +61,30 @@ class EasyProcessCheckInstalledError(Exception):
                 msg += 'sudo apt-get install %s' % self.easy_process.ubuntu_package
         return msg
 
+def split_command(cmd):
+    '''
+     - cmd is string list -> nothing to do
+     - cmd is string -> split it using shlex
+
+    :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
+    :rtype: string list
+    '''
+    if hasattr(cmd, '__iter__'):
+        # cmd is string list
+        pass
+    else:
+        # cmd is string 
+        # The shlex module currently does not support Unicode input!
+        if  isinstance(cmd, unicode):
+            try:
+                cmd = unicodedata.normalize('NFKD', cmd).encode('ascii', 'strict')
+            except UnicodeEncodeError:
+                raise EasyProcessUnicodeError('unicode command "%s" can not be processed.' % cmd+ 
+                'Use string list instead of string')
+            log.debug('unicode is normalized')
+        cmd = shlex.split(cmd)
+    return cmd
+
 class EasyProcess():
     '''
     .. module:: easyprocess
@@ -65,7 +93,13 @@ class EasyProcess():
 
     shell is not supported (shell=False)
     
+    .. warning::
+
+      unicode is supported only for string list command 
+      (check :mod:`shlex` for more information)
+        
     :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
+    :param cwd: working directory
     :param max_bytes_to_log: logging of stdout and stderr is limited by this value
     :param use_temp_files: use temp files instead of pipes for 
                            stdout and stderr,
@@ -93,17 +127,9 @@ class EasyProcess():
         self._stop_thread = False
         self.timeout_happened = False
         self.cwd = cwd
-        if hasattr(cmd, '__iter__'):
-            # cmd is string list
-            self.cmd = cmd
-        else:
-            # cmd is string 
-            # The shlex module currently does not support Unicode input!
-            if  isinstance(cmd, unicode):
-                log.debug('unicode is normalized')
-                cmd = unicodedata.normalize('NFKD', cmd).encode('ascii', 'ignore')
-            self.cmd = shlex.split(cmd)
-        self.cmd = map(str, self.cmd)
+        cmd = split_command(cmd)
+        cmd = map(uniencode, cmd)
+        self.cmd = cmd
         self.cmd_as_string = ' '.join(self.cmd) # TODO: not perfect
         
         log.debug('param: "%s" command: %s ("%s")' % (str(self.cmd_param), str(self.cmd), self.cmd_as_string))
@@ -353,8 +379,8 @@ class EasyProcess():
                 self._outputs_processed = True
                 (self.stdout, self.stderr) = self.popen.communicate()
             log.debug('process has ended')
-            self.stdout = remove_ending_lf(self.stdout)
-            self.stderr = remove_ending_lf(self.stderr)
+            self.stdout = unidecode(remove_ending_lf(self.stdout))
+            self.stderr = unidecode(remove_ending_lf(self.stderr))
             
             log.debug('return code=' + str(self.return_code))
             def limit_str(s):
@@ -416,11 +442,11 @@ class EasyProcess():
 
         return self
 
-    def wrap(self, callable, delay=0):
+    def wrap(self, func, delay=0):
         '''
         returns a function which:
          1. start process
-         2. call callable, save result
+         2. call func, save result
          3. stop process
          4. returns result
         
@@ -434,7 +460,7 @@ class EasyProcess():
                 self.sleep(delay)
             x = None
             try:     
-                x = callable()
+                x = func()
             except OSError, oserror:
                 log.debug('OSError exception:' + str(oserror))
                 self.oserror = oserror
@@ -458,11 +484,11 @@ def extract_version(txt):
     '''
     words = txt.replace(',', ' ').split()
     version = None
-    for x in words:
+    for x in reversed(words):
         if len(x) > 2:
             if x[0].lower() == 'v':
                 x = x[1:]
-            if '.' in x and x[0].isdigit() and x[-1].isdigit() and x.replace('.', '0').isdigit():
+            if '.' in x and x[0].isdigit():
                 version = x
                 break
     return version

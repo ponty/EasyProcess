@@ -37,6 +37,10 @@ General
     >>> 
     >>> # Run program, wait 1 second, stop it, get stdout:
     >>> print EasyProcess('ping localhost').start().sleep(1).stop().stdout
+    >>> 
+    >>> # Unicode support
+    >>> EasyProcess(['python','-c','print unichr(0x03A9).encode("utf-8")']).call().stdout
+    >>> 
 
 Shell commands
 ----------------
@@ -181,5 +185,5 @@ extract_version
 .. runblock:: pycon
 
     >>> from easyprocess import EasyProcess, extract_version
-    >>> extract_version(EasyProcess('python --version').call().stderr)
+    >>> print extract_version(EasyProcess('python --version').call().stderr)
     
