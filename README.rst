@@ -18,6 +18,7 @@ Features:
  - pipes are not supported
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree 
+ - unicode support
  
 Known problems:
  - Python 3 is not supported
@@ -32,7 +33,7 @@ Basic usage
 
     >>> from easyprocess import EasyProcess
     >>> EasyProcess('python --version').call().stderr
-    'Python 2.6.6'
+    u'Python 2.6.6'
 
 Installation
 ============
@@ -40,15 +41,8 @@ Installation
 General
 --------
 
- * install setuptools_ or pip_
- * install the program:
-
-if you have setuptools_ installed::
-
-    # as root
-    easy_install EasyProcess
-
-if you have pip_ installed::
+ * install pip_
+ * install the program::
 
     # as root
     pip install EasyProcess
@@ -57,8 +51,8 @@ Ubuntu
 ----------
 ::
 
-    sudo apt-get install python-setuptools
-    sudo easy_install EasyProcess
+    sudo apt-get install python-pip
+    sudo pip install EasyProcess
 
 Uninstall
 ----------
