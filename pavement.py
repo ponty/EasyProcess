@@ -98,7 +98,7 @@ if ALL_TASKS_LOADED:
 #    @needs('sloccount', 'paver.doctools.html', 'pdf', 'sdist', 'nose')
     @task
     @needs(
-           'clean',
+#           'clean',
            'sloccount', 
            'html', 
            'pdf', 
