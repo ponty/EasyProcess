@@ -9,13 +9,14 @@ import logging
 import os.path
 import platform
 import shlex
+import signal
 import subprocess
 import tempfile
 import threading
 import time
 import unicodedata
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 log = logging.getLogger(__name__)
 #log=logging
@@ -40,8 +41,8 @@ class EasyProcessError(Exception):
 class EasyProcessUnicodeError(Exception):
     pass
     
-template = '''cmd={cmd}
-OSError={oserror}  
+template = '''cmd=%s
+OSError=%s  
 Program install error! '''
 class EasyProcessCheckInstalledError(Exception):
     """This exception is raised when a process run by check() returns
@@ -50,8 +51,8 @@ class EasyProcessCheckInstalledError(Exception):
     def __init__(self, easy_process):
         self.easy_process = easy_process
     def __str__(self):
-        msg = template.format(cmd=self.easy_process.cmd,
-                          oserror=self.easy_process.oserror,
+        msg = template% (self.easy_process.cmd,
+                         self.easy_process.oserror,
                           )
         if self.easy_process.url:
             msg += '\nhome page: ' + self.easy_process.url
@@ -156,17 +157,17 @@ class EasyProcess():
             self.cmd[0] = self.alias
 
     def __repr__(self):
-        msg = '<{cls} cmd_param={cmd_param} alias={alias} cmd={cmd} ({scmd}) oserror={oserror} returncode={return_code} stdout="{stdout}" stderr="{stderr}" timeout={timeout}>'.format(
-                            cls=self.__class__.__name__,
-                            cmd_param=self.cmd_param,
-                            cmd=self.cmd,
-                            oserror=self.oserror,
-                            alias=self.alias,
-                            return_code=self.return_code,
-                            stderr=self.stderr,
-                            stdout=self.stdout,
-                            scmd=' '.join(self.cmd),
-                            timeout=self.timeout_happened,
+        msg = '<%s cmd_param=%s alias={alias} cmd=%s ({scmd}) oserror=%s returncode=%s stdout="%s" stderr="%s" timeout=%s>'% (
+                            self.__class__.__name__,
+                            self.cmd_param,
+                            self.cmd,
+                            self.oserror,
+#                            alias=self.alias,
+                            self.return_code,
+                            self.stdout,
+                            self.stderr,
+#                            scmd=' '.join(self.cmd),
+                            self.timeout_happened,
                             )
         return msg
         
@@ -202,7 +203,7 @@ class EasyProcess():
 #        try:
 #            ret = self.call().return_code
 #            ok = ret == return_code
-#        except Exception as e:
+#        except Exception , e:
 #            log.debug('OSError exception:' + str(oserror))
 #            ok = False
 #            self.oserror = oserror
@@ -385,7 +386,7 @@ class EasyProcess():
             log.debug('return code=' + str(self.return_code))
             def limit_str(s):
                 if len(s) > self.max_bytes_to_log:
-                    warn = '[middle of output was removed, max_bytes_to_log={max_bytes_to_log}]'.format(max_bytes_to_log=self.max_bytes_to_log)
+                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
                     s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
                 return s
             log.debug('stdout=' + limit_str(self.stdout))
@@ -419,10 +420,12 @@ class EasyProcess():
             if self.is_alive():
                 log.debug('process is active -> sending SIGTERM')
 
-                #os.kill(self.popen.pid, signal.SIGKILL)
                 try:
-                    self.popen.terminate()
-                except OSError as e:
+                    try:
+                        self.popen.terminate()
+                    except AttributeError:
+                        os.kill(self.popen.pid, signal.SIGKILL)
+                except OSError , e:
                     log.debug('exception in terminate:' + str(e))
                     
             else:

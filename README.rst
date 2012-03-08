@@ -12,13 +12,14 @@ Features:
  - logging
  - timeout
  - unit-tests
- - crossplatform, development on linux
+ - cross-platform, development on linux
  - global config file with program aliases 
  - shell is not supported
  - pipes are not supported
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree 
  - unicode support
+ - supported python versions: 2.5, 2.6, 2.7, PyPy
  
 Known problems:
  - Python 3 is not supported

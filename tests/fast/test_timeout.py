@@ -1,5 +1,5 @@
 from easyprocess import EasyProcess
-from nose.tools import eq_, timed
+from nose.tools import eq_, timed, ok_
 from unittest import TestCase
 
 
@@ -38,7 +38,7 @@ class Test(TestCase):
         p=EasyProcess('sleep 5').call(timeout=1)
         eq_(p.is_alive(), False)
         eq_(p.timeout_happened, True)
-        eq_(p.return_code, -15)
+        ok_(p.return_code<0)
         eq_(p.stdout, '')
         
     @timed(1.2)
@@ -46,7 +46,7 @@ class Test(TestCase):
         p=EasyProcess(['python', '-c', "import time;print 'start';time.sleep(5);print 'end'"]).call(timeout=1)
         eq_(p.is_alive(), False)
         eq_(p.timeout_happened, True)
-        eq_(p.return_code, -15)
+        ok_(p.return_code<0)
         eq_(p.stdout, '')
 
     @timed(0.3)

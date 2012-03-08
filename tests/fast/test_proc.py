@@ -1,9 +1,9 @@
+from __future__ import with_statement
 from easyprocess import EasyProcess, EasyProcessCheckInstalledError, \
     EasyProcessError
 from nose.tools import eq_, timed
 from unittest import TestCase
 import time
-
 
 class Test(TestCase):
     def test_call(self):
