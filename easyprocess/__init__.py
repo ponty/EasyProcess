@@ -2,19 +2,18 @@
 Easy to use python subprocess interface.
 '''
 
-from easyprocess.unicodeutil import uniencode, unidecode
-import ConfigParser
+from easyprocess.unicodeutil import split_command, unidecode, uniencode
 import atexit
 import logging
 import os.path
 import platform
-import shlex
 import signal
 import subprocess
+import sys
 import tempfile
 import threading
 import time
-import unicodedata
+import ConfigParser
 
 __version__ = '0.1.4'
 
@@ -22,7 +21,6 @@ log = logging.getLogger(__name__)
 #log=logging
 
 log.debug('version=' + __version__)
-
 
 CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
@@ -37,10 +35,7 @@ class EasyProcessError(Exception):
         self.msg = msg
     def __str__(self):
         return self.msg + ' ' + repr(self.easy_process)
-    
-class EasyProcessUnicodeError(Exception):
-    pass
-    
+        
 template = '''cmd=%s
 OSError=%s  
 Program install error! '''
@@ -62,30 +57,6 @@ class EasyProcessCheckInstalledError(Exception):
                 msg += 'sudo apt-get install %s' % self.easy_process.ubuntu_package
         return msg
 
-def split_command(cmd):
-    '''
-     - cmd is string list -> nothing to do
-     - cmd is string -> split it using shlex
-
-    :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
-    :rtype: string list
-    '''
-    if hasattr(cmd, '__iter__'):
-        # cmd is string list
-        pass
-    else:
-        # cmd is string 
-        # The shlex module currently does not support Unicode input!
-        if  isinstance(cmd, unicode):
-            try:
-                cmd = unicodedata.normalize('NFKD', cmd).encode('ascii', 'strict')
-            except UnicodeEncodeError:
-                raise EasyProcessUnicodeError('unicode command "%s" can not be processed.' % cmd+ 
-                'Use string list instead of string')
-            log.debug('unicode is normalized')
-        cmd = shlex.split(cmd)
-    return cmd
-
 class EasyProcess():
     '''
     .. module:: easyprocess
@@ -96,12 +67,11 @@ class EasyProcess():
     
     .. warning::
 
-      unicode is supported only for string list command 
+      unicode is supported only for string list command (Python2.x) 
       (check :mod:`shlex` for more information)
         
     :param cmd: string ('ls -l') or list of strings (['ls','-l']) 
     :param cwd: working directory
-    :param max_bytes_to_log: logging of stdout and stderr is limited by this value
     :param use_temp_files: use temp files instead of pipes for 
                            stdout and stderr,
                            pipes can cause deadlock in some cases
@@ -109,7 +79,7 @@ class EasyProcess():
     '''
     config = None
     
-    def __init__(self, cmd, ubuntu_package=None, url=None, max_bytes_to_log=1000, cwd=None, use_temp_files=True):
+    def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=True):
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
 
@@ -124,16 +94,15 @@ class EasyProcess():
         self.oserror = None
         self.cmd_param = cmd
         self._thread = None
-        self.max_bytes_to_log = max_bytes_to_log
+#        self.max_bytes_to_log = max_bytes_to_log
         self._stop_thread = False
         self.timeout_happened = False
         self.cwd = cwd
         cmd = split_command(cmd)
-        cmd = map(uniencode, cmd)
         self.cmd = cmd
         self.cmd_as_string = ' '.join(self.cmd) # TODO: not perfect
         
-        log.debug('param: "%s" command: %s ("%s")' % (str(self.cmd_param), str(self.cmd), self.cmd_as_string))
+        log.debug('param: "%s" command: %s ("%s")' % (self.cmd_param, self.cmd, self.cmd_as_string))
         
         if not len(cmd):
             raise EasyProcessError(self, 'empty command!')
@@ -268,16 +237,18 @@ class EasyProcess():
         else:
             stdout = subprocess.PIPE
             stderr = subprocess.PIPE
-            
+
+        cmd = list(map(uniencode, self.cmd))
+        
         try:     
-            self.popen = subprocess.Popen(self.cmd,
+            self.popen = subprocess.Popen(cmd,
                                   stdout=stdout,
                                   stderr=stderr,
                                   #shell=1,
                                   cwd=self.cwd,
                                   )
-        except OSError, oserror:
-            log.debug('OSError exception:' + str(oserror))
+        except OSError , oserror:
+            log.debug('OSError exception:%s' % (oserror))
             self.oserror = oserror
             raise EasyProcessError(self, 'start error')
         self.is_started = True
@@ -380,17 +351,17 @@ class EasyProcess():
                 self._outputs_processed = True
                 (self.stdout, self.stderr) = self.popen.communicate()
             log.debug('process has ended')
-            self.stdout = unidecode(remove_ending_lf(self.stdout))
-            self.stderr = unidecode(remove_ending_lf(self.stderr))
+            self.stdout = remove_ending_lf(unidecode(self.stdout))
+            self.stderr = remove_ending_lf(unidecode(self.stderr))
             
             log.debug('return code=' + str(self.return_code))
-            def limit_str(s):
-                if len(s) > self.max_bytes_to_log:
-                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
-                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
-                return s
-            log.debug('stdout=' + limit_str(self.stdout))
-            log.debug('stderr=' + limit_str(self.stderr))
+#            def limit_str(s):
+#                if len(s) > self.max_bytes_to_log:
+#                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
+#                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
+#                return s
+            log.debug('stdout=' + (self.stdout))
+            log.debug('stderr=' + (self.stderr))
             
     def stop(self):
         '''
@@ -425,8 +396,8 @@ class EasyProcess():
                         self.popen.terminate()
                     except AttributeError:
                         os.kill(self.popen.pid, signal.SIGKILL)
-                except OSError , e:
-                    log.debug('exception in terminate:' + str(e))
+                except OSError , oserror:
+                    log.debug('exception in terminate:%s' %(oserror))
                     
             else:
                 log.debug('process was already stopped')
@@ -464,8 +435,8 @@ class EasyProcess():
             x = None
             try:     
                 x = func()
-            except OSError, oserror:
-                log.debug('OSError exception:' + str(oserror))
+            except OSError , oserror:
+                log.debug('OSError exception:%s' %(oserror))
                 self.oserror = oserror
                 raise EasyProcessError(self, 'wrap error!')
             finally:

@@ -1,7 +1,11 @@
 import Image
-print "displaying image"
+import sys
 
-img=Image.new('RGB', (33,33))
-img.show()
+print("start")
 
-print "exit program"
+img = Image.new('RGB', (33, 33))
+if (sys.argv+[''])[1] != '--hide':
+    print("show")
+    img.show()
+
+print("exit program")

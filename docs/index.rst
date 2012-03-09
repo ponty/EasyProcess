@@ -12,7 +12,6 @@ Contents:
     readme
     usage
     api
-    dev
     
 Indices and tables
 ==================

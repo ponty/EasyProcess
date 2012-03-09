@@ -1,5 +1,6 @@
 from easyprocess import EasyProcess
+import sys
 
-v = EasyProcess('python --version').call().stderr
-print 'your python version:', v
+v = EasyProcess([sys.executable , '--version']).call().stderr
+print('your python version:%s' % v)
 

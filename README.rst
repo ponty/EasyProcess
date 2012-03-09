@@ -19,10 +19,10 @@ Features:
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree 
  - unicode support
- - supported python versions: 2.5, 2.6, 2.7, PyPy
+ - supported python versions: 2.5, 2.6, 2.7, 3.1, 3.2, PyPy
  
 Known problems:
- - Python 3 is not supported
+ - none
 
 Similar projects:
  * execute (http://pypi.python.org/pypi/execute)
