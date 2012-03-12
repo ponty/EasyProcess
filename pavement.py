@@ -1,6 +1,5 @@
 from paver.easy import *
 from paver.setuputils import setup
-from setuptools import find_packages
 import paver.doctools
 import paver.misctasks
 from paved import *
@@ -10,6 +9,7 @@ from paved.docs import *
 from paved.pycheck import *
 from paved.pkg import *
 from sphinxcontrib import paverutils
+from setuptools import find_packages
 
 # get info from setup.py
 setup_py=''.join([x for x in path('setup.py').lines() if 'setuptools' not in x])
@@ -39,10 +39,12 @@ options.paved.clean.patterns += ['*.pickle',
                                  'sloccount.sc',
                                  '*.pdf', '*.tex',
                                  '*.png',
-                                 '*.zip',
+                                 '*.zip',   
+                                 'distribute_setup.py',
                                  ]
 
 options.paved.dist.manifest.include.remove('distribute_setup.py')
+options.paved.dist.manifest.include.remove('paver-minilib.zip')
 options.paved.dist.manifest.include.add('requirements.txt')
 
 
@@ -53,8 +55,7 @@ options.paved.dist.manifest.include.add('requirements.txt')
        'html',
        'pdf',
        'sdist',
-       'nose',
-       'tox',
+       'nose',   'tox',
        )
 def alltest():
     'all tasks to check'
@@ -74,13 +75,13 @@ def pdf():
     fpdf.copy(d)
 
 @task
+def tox():
+    '''Run tox.'''
+    sh('tox')
+    
+@task
 @needs('manifest', 'setuptools.command.sdist')
 def sdist():
     """Overrides sdist to make sure that our MANIFEST.in is generated.
     """
     pass
-
-@task
-def tox():
-    '''Run tox.'''
-    sh('tox')

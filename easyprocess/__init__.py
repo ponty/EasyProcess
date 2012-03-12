@@ -3,7 +3,6 @@ Easy to use python subprocess interface.
 '''
 
 from easyprocess.unicodeutil import split_command, unidecode, uniencode
-import atexit
 import logging
 import os.path
 import platform

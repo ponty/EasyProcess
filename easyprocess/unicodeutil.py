@@ -5,7 +5,7 @@ import unicodedata
 
 log = logging.getLogger(__name__)
 
-PY3 = sys.version_info[0] == 3
+PY3 = sys.version_info[0] >= 3
 
 if PY3:
     string_types = str,

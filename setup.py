@@ -21,8 +21,6 @@ VERSION = read_project_version(PACKAGE)
 extra = {}
 if sys.version_info >= (3,):
     extra['use_2to3'] = True
-#    extra['convert_2to3_doctests'] = ['src/your/module/README.txt']
-#    extra['use_2to3_fixers'] = ['your.fixers']
 
 classifiers = [
     # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
