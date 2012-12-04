@@ -11,10 +11,10 @@ class Test(TestCase):
             print('index=', x)
             eq_(EasyProcess('echo hi').call().return_code, 0)
 
-    def test_start(self):
-        for x in range(1000):
-            print('index=', x)
-            EasyProcess('echo hi').start()
+#    def test_start(self):
+#        for x in range(1000):
+#            print('index=', x)
+#            EasyProcess('echo hi').start()
 
     @timed(1000)
     def test_timeout(self):
