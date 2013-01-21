@@ -28,6 +28,9 @@ Similar projects:
  * execute (http://pypi.python.org/pypi/execute)
  * commandwrapper (http://pypi.python.org/pypi/commandwrapper)
  * extcmd (http://pypi.python.org/pypi/extcmd)
+ * sh (https://github.com/amoffat/sh)
+ * envoy (https://github.com/kennethreitz/envoy)
+ * plumbum (https://github.com/tomerfiliba/plumbum)
  
 Basic usage
 ============
