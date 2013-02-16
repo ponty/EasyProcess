@@ -84,7 +84,7 @@ class EasyProcess():
     '''
     config = None
 
-    def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=False):
+    def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=True):
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
 

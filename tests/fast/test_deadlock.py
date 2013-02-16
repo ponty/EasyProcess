@@ -1,23 +1,24 @@
 from easyprocess import EasyProcess
 from nose.tools import timed, eq_
+from pyvirtualdisplay.display import Display
 import os.path
 import sys
 
 python = sys.executable
 
+VISIBLE = 0
+
 # deadlock in 0.0.0
 # popen.communicate() hangs
 # no deadlock with temp_files
 
-#@timed(1)
-# def test_stop():
-#    cwd = os.path.dirname(__file__)
-#    EasyProcess('python deadlock.py', cwd=cwd).start().sleep(0.5).stop()
 
-#@timed(1)
-# def test_stop2():
-#    cwd = os.path.dirname(__file__)
-#    eq_(EasyProcess([python, 'deadlock.py', '--hide'], cwd=cwd).call().return_code, 0)
-#    p = EasyProcess([python, 'deadlock.py'], cwd=cwd).start().sleep(0.1).stop()
-#    eq_(p.return_code, 0)
-#    eq_(p.stdout, 'start')
+@timed(4)
+def test_deadlock():
+    with Display(visible=VISIBLE, size=(600, 400)):
+        p = EasyProcess([python, '-c', 'import Image;Image.new("RGB",(99, 99)).show()'])
+        p.start()
+        p.sleep(1)
+        # hangs with pipes
+        p.stop()
+
