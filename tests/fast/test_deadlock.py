@@ -15,10 +15,14 @@ VISIBLE = 0
 
 @timed(4)
 def test_deadlock():
-    with Display(visible=VISIBLE, size=(600, 400)):
-        p = EasyProcess([python, '-c', 'import Image;Image.new("RGB",(99, 99)).show()'])
-        p.start()
-        p.sleep(1)
-        # hangs with pipes
-        p.stop()
+    d = Display(visible=VISIBLE, size=(600, 400))
+    d.start()
+    
+    p = EasyProcess([python, '-c', 'import Image;Image.new("RGB",(99, 99)).show()'])
+    p.start()
+    p.sleep(1)
+    # hangs with pipes
+    p.stop()
+    
+    d.stop()
 
