@@ -14,7 +14,7 @@ import threading
 import time
 import ConfigParser
 
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 
 log = logging.getLogger(__name__)
 # log=logging
