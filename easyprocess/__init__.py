@@ -107,8 +107,9 @@ class EasyProcess():
         self.cmd = cmd
         self.cmd_as_string = ' '.join(self.cmd)  # TODO: not perfect
 
-        log.debug('param: "%s" command: %s ("%s")' % (
-            self.cmd_param, self.cmd, self.cmd_as_string))
+        log.debug('param: "%s" ' % (self.cmd_param))
+        log.debug('command: %s' % ( self.cmd))
+        log.debug('joined command: %s' % ( self.cmd_as_string))
 
         if not len(cmd):
             raise EasyProcessError(self, 'empty command!')
