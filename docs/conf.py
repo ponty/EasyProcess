@@ -2,24 +2,13 @@ from path import path
 import logging
 import sphinx
 import sys
-from setuptools import find_packages
 
+sys.path.append('..')
+import easyprocess
+sys.path.pop()
 
-def read_project_version(py=None, where='.', exclude=['bootstrap', 'pavement', 'doc', 'docs', 'test', 'tests', ]):
-    if not py:
-        py = path(where) / find_packages(where=where, exclude=exclude)[0]
-    py = path(py)
-    if py.isdir():
-        py = py / '__init__.py'
-    __version__ = None
-    for line in py.lines():
-        if '__version__' in line:
-            exec line
-            break
-    return __version__
-
-
-release = read_project_version(where='..')
+release = easyprocess.__version__
+print release
 project = 'EasyProcess'
 author = 'ponty'
 copyright = '2011, ponty'

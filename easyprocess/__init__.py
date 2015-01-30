@@ -14,7 +14,9 @@ import threading
 import time
 import ConfigParser
 
-__version__ = '0.1.6'
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
 
 log = logging.getLogger(__name__)
 # log=logging
@@ -478,3 +480,4 @@ def extract_version(txt):
 
 
 Proc = EasyProcess
+
