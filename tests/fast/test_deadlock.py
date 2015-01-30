@@ -13,7 +13,7 @@ VISIBLE = 0
 # no deadlock with temp_files
 
 
-@timed(4)
+@timed(100)
 def test_deadlock():
     d = Display(visible=VISIBLE, size=(600, 400))
     d.start()
