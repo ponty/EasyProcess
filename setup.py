@@ -45,7 +45,6 @@ classifiers = [
     #    "Programming Language :: Python :: 3.3",
 ]
 
-install_requires = open("requirements.txt").read().split('\n')
 
 setup(
     name=NAME,
@@ -62,6 +61,5 @@ setup(
     include_package_data=True,
     test_suite='nose.collector',
     zip_safe=False,
-    install_requires=install_requires,
     **extra
 )
