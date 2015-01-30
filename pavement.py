@@ -11,9 +11,11 @@ from paved.pkg import *
 from setuptools import find_packages
 
 # get info from setup.py
+sys.path.append('.')
 setup_py = ''.join(
-    [x for x in path('setup.py').lines() if 'setuptools' not in x])
+    [x for x in path('setup.py').lines() if 'distutils' not in x])
 exec(setup_py)
+sys.path.pop()
 
 
 options(
@@ -46,6 +48,7 @@ options.paved.clean.patterns += ['*.pickle',
 options.paved.dist.manifest.include.remove('distribute_setup.py')
 options.paved.dist.manifest.include.remove('paver-minilib.zip')
 options.paved.dist.manifest.include.add('requirements.txt')
+options.paved.dist.manifest.include.add('versioneer.py')
 
 
 @task
@@ -54,7 +57,7 @@ options.paved.dist.manifest.include.add('requirements.txt')
     'html',
     'pdf',
     'sdist',
-    'nose', 
+    'nose',
     'tox',
 )
 def alltest():
@@ -63,7 +66,9 @@ def alltest():
 
 
 @task
-@needs('manifest', 'setuptools.command.sdist')
+@needs('manifest',
+       'distutils.command.sdist',
+       )
 def sdist():
     """Overrides sdist to make sure that our MANIFEST.in is generated.
     """
