@@ -12,7 +12,7 @@ install:
  - pip install PyVirtualDisplay
 
 script:  
-  - python nosetests -v --with-coverage --cover-package=easyprocess  tests
+  - nosetests -v --with-coverage --cover-package=easyprocess  tests
  
 after_sucess:
   coveralls
