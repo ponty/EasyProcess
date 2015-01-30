@@ -4,6 +4,30 @@ Links:
  * home: https://github.com/ponty/EasyProcess
  * documentation: http://ponty.github.com/EasyProcess
 
+.. image:: https://pypip.in/version/EasyProcess/badge.svg
+    :target: https://pypi.python.org/pypi/EasyProcess/
+    :alt: Latest Version
+
+.. image:: https://pypip.in/py_versions/EasyProcess/badge.svg
+    :target: https://pypi.python.org/pypi/EasyProcess/
+    :alt: Supported Python versions
+
+.. image:: https://pypip.in/license/EasyProcess/badge.svg
+    :target: https://pypi.python.org/pypi/EasyProcess/
+    :alt: License
+            
+.. image:: https://pypip.in/download/EasyProcess/badge.svg
+    :target: https://pypi.python.org/pypi/EasyProcess/
+    :alt: Downloads
+    
+.. image:: https://pypip.in/download/EasyProcess/badge.svg
+    :target: https://pypi.python.org/pypi/EasyProcess/
+    :alt: Build
+    
+.. image:: https://pypip.in/download/EasyProcess/badge.svg
+    :target: https://pypi.python.org/pypi/EasyProcess/
+    :alt: Coverage
+
 Features:
  - layer on top of subprocess_ module
  - easy to start, stop programs
@@ -19,7 +43,7 @@ Features:
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree 
  - unicode support
- - supported python versions: 2.5, 2.6, 2.7, 3.1, 3.2, PyPy
+ - supported python versions: 2.6, 2.7, 3.2, 3.3, 3.4
  
 Known problems:
  - none
@@ -33,7 +57,7 @@ Similar projects:
  * plumbum (https://github.com/tomerfiliba/plumbum)
  
 Basic usage
-============
+===========
 
     >>> from easyprocess import EasyProcess
     >>> EasyProcess('python --version').call().stderr
@@ -43,7 +67,7 @@ Installation
 ============
 
 General
---------
+-------
 
  * install pip_
  * install the program::
@@ -52,14 +76,14 @@ General
     pip install EasyProcess
 
 Ubuntu
-----------
+------
 ::
 
     sudo apt-get install python-pip
     sudo pip install EasyProcess
 
 Uninstall
-----------
+---------
 ::
 
     # as root
