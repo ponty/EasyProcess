@@ -25,6 +25,9 @@ nosetests.xml
 
 .*
 !.gitignore
+!.travis*
+!.coveragerc
+
 /distribute_setup.py
 
 

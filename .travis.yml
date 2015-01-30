@@ -1,0 +1,18 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.1"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+
+install:
+ - pip install coveralls coverage
+ - pip install PyVirtualDisplay
+
+script:  
+  - python nosetests -v --with-coverage --cover-package=easyprocess  tests
+ 
+after_sucess:
+  coveralls
