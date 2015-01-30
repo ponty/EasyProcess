@@ -54,8 +54,8 @@ class Test(TestCase):
         eq_(EasyProcess('echo hello').start().wait().return_code, 0)
         eq_(EasyProcess('echo hello').start().wait().stdout, 'hello')
 
-    def test_xephyr(self):
-        EasyProcess('Xephyr -help').check(return_code=1)
+#     def test_xephyr(self):
+#         EasyProcess('Xephyr -help').check(return_code=1)
 
     def test_wrap(self):
         def f():
