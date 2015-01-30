@@ -20,12 +20,12 @@ Links:
     :target: https://pypi.python.org/pypi/EasyProcess/
     :alt: Downloads
     
-.. image:: https://pypip.in/download/EasyProcess/badge.svg
-    :target: https://pypi.python.org/pypi/EasyProcess/
+.. image:: https://travis-ci.org/ponty/EasyProcess.svg?branch=master
+    :target: https://travis-ci.org/ponty/EasyProcess
     :alt: Build
-    
-.. image:: https://pypip.in/download/EasyProcess/badge.svg
-    :target: https://pypi.python.org/pypi/EasyProcess/
+        
+.. image:: https://coveralls.io/repos/ponty/EasyProcess/badge.svg?branch=master
+    :target: https://coveralls.io/r/ponty/EasyProcess?branch=master
     :alt: Coverage
 
 Features:
