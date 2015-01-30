@@ -10,6 +10,7 @@ python:
 install:
  - pip install coveralls coverage
  - pip install PyVirtualDisplay
+ - pip install six
 
 script:  
   - nosetests -v --with-coverage --cover-package=easyprocess  tests
