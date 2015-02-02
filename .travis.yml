@@ -15,5 +15,5 @@ install:
 script:  
  - cd tests && nosetests -v --with-coverage --cover-package=easyprocess  .
  
-after_sucess:
+after_success:
  - coveralls
