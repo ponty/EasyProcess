@@ -15,7 +15,7 @@ versioneer.versionfile_source = NAME + '/_version.py'
 versioneer.versionfile_build = versioneer.versionfile_source
 versioneer.tag_prefix = ''
 versioneer.parentdir_prefix = NAME + '-'
-
+versioneer.VCS = "git"
 
 extra = {}
 if sys.version_info >= (3,):
