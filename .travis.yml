@@ -12,7 +12,7 @@ install:
  - pip install six
 
 script:  
- - python setup.py nosetests --with-coverage --cover-package=easyprocess  -w tests
+ - python setup.py nosetests --with-coverage --cover-package=easyprocess  -w `pwd`/tests
  
 after_success:
  - coveralls
