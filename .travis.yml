@@ -7,13 +7,12 @@ python:
  - "3.4"
 
 install:
- - pip install .
  - pip install coveralls coverage
  - pip install PyVirtualDisplay
  - pip install six
 
 script:  
- - cd tests && nosetests -v --with-coverage --cover-package=easyprocess  .
+ - python setup.py nosetests --with-coverage --cover-package=easyprocess  -w tests
  
 after_success:
  - coveralls
