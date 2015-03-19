@@ -3,6 +3,7 @@ import sys
 import os
 
 NAME = 'easyprocess'
+PYPI_NAME = 'EasyProcess'
 URL = 'https://github.com/ponty/easyprocess'
 DESCRIPTION = 'Easy to use python subprocess interface.'
 PACKAGES = [NAME,
@@ -11,7 +12,7 @@ PACKAGES = [NAME,
 
 # get __version__
 __version__ = None
-exec(open(os.path.join(NAME , 'about.py')).read())
+exec(open(os.path.join(NAME, 'about.py')).read())
 VERSION = __version__
 
 extra = {}
@@ -43,7 +44,7 @@ classifiers = [
 
 
 setup(
-    name=NAME,
+    name=PYPI_NAME,
     version=VERSION,
     description=DESCRIPTION,
     long_description=open('README.rst', 'r').read(),
