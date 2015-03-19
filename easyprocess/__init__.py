@@ -8,7 +8,6 @@ import os.path
 import platform
 import signal
 import subprocess
-import sys
 import tempfile
 import threading
 import time
@@ -19,7 +18,7 @@ from easyprocess.about import __version__
 log = logging.getLogger(__name__)
 # log=logging
 
-log.debug('version=' + __version__)
+log.debug('version=%s', __version__)
 
 CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
@@ -62,7 +61,7 @@ class EasyProcessCheckInstalledError(Exception):
         return msg
 
 
-class EasyProcess():
+class EasyProcess(object):
     '''
     .. module:: easyprocess
 
@@ -107,16 +106,16 @@ class EasyProcess():
         self.cmd = cmd
         self.cmd_as_string = ' '.join(self.cmd)  # TODO: not perfect
 
-        log.debug('param: "%s" ' % (self.cmd_param))
-        log.debug('command: %s' % ( self.cmd))
-        log.debug('joined command: %s' % ( self.cmd_as_string))
+        log.debug('param: "%s" ', self.cmd_param)
+        log.debug('command: %s', self.cmd)
+        log.debug('joined command: %s', self.cmd_as_string)
 
         if not len(cmd):
             raise EasyProcessError(self, 'empty command!')
 
         if not Proc.config:
             conf_file = os.path.join(os.path.expanduser('~'), CONFIG_FILE)
-            log.debug('reading config: %s' % (conf_file))
+            log.debug('reading config: %s', conf_file)
             Proc.config = ConfigParser.RawConfigParser()
             Proc.config.read(conf_file)
 
@@ -129,7 +128,7 @@ class EasyProcess():
             pass
 
         if self.alias:
-            log.debug('alias found: %s' % (self.alias))
+            log.debug('alias found: %s', self.alias)
             self.cmd[0] = self.alias
 
     def __repr__(self):
@@ -256,11 +255,11 @@ class EasyProcess():
                                           cwd=self.cwd,
                                           )
         except OSError, oserror:
-            log.debug('OSError exception:%s' % (oserror))
+            log.debug('OSError exception: %s', oserror)
             self.oserror = oserror
             raise EasyProcessError(self, 'start error')
         self.is_started = True
-        log.debug('process was started (pid=%s)' % (str(self.pid),))
+        log.debug('process was started (pid=%s)', self.pid)
 
 #        def target():
 #            self._wait4process()
@@ -361,14 +360,14 @@ class EasyProcess():
             self.stdout = remove_ending_lf(unidecode(self.stdout))
             self.stderr = remove_ending_lf(unidecode(self.stderr))
 
-            log.debug('return code=' + str(self.return_code))
+            log.debug('return code=%s', self.return_code)
 #            def limit_str(s):
 #                if len(s) > self.max_bytes_to_log:
 #                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
 #                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
 #                return s
-            log.debug('stdout=' + (self.stdout))
-            log.debug('stderr=' + (self.stderr))
+            log.debug('stdout=%s', self.stdout)
+            log.debug('stderr=%s', self.stderr)
 
     def stop(self):
         '''
@@ -393,8 +392,7 @@ class EasyProcess():
         if not self.is_started:
             raise EasyProcessError(self, 'process was not started!')
 
-        log.debug(
-            'stopping process (pid=%s cmd="%s")' % (str(self.pid), self.cmd))
+        log.debug('stopping process (pid=%s cmd="%s")', self.pid, self.cmd)
         if self.popen:
             if self.is_alive():
                 log.debug('process is active -> sending SIGTERM')
@@ -405,7 +403,7 @@ class EasyProcess():
                     except AttributeError:
                         os.kill(self.popen.pid, signal.SIGKILL)
                 except OSError, oserror:
-                    log.debug('exception in terminate:%s' % (oserror))
+                    log.debug('exception in terminate:%s', oserror)
 
             else:
                 log.debug('process was already stopped')
@@ -444,7 +442,7 @@ class EasyProcess():
             try:
                 x = func()
             except OSError, oserror:
-                log.debug('OSError exception:%s' % (oserror))
+                log.debug('OSError exception:%s', oserror)
                 self.oserror = oserror
                 raise EasyProcessError(self, 'wrap error!')
             finally:
