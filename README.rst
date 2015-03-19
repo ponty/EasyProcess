@@ -4,29 +4,7 @@ Links:
  * home: https://github.com/ponty/EasyProcess
  * documentation: http://ponty.github.com/EasyProcess
 
-.. image:: https://pypip.in/version/EasyProcess/badge.svg
-    :target: https://pypi.python.org/pypi/EasyProcess/
-    :alt: Latest Version
-
-.. image:: https://pypip.in/py_versions/EasyProcess/badge.svg
-    :target: https://pypi.python.org/pypi/EasyProcess/
-    :alt: Supported Python versions
-
-.. image:: https://pypip.in/license/EasyProcess/badge.svg
-    :target: https://pypi.python.org/pypi/EasyProcess/
-    :alt: License
-            
-.. image:: https://pypip.in/download/EasyProcess/badge.svg
-    :target: https://pypi.python.org/pypi/EasyProcess/
-    :alt: Downloads
-    
-.. image:: https://travis-ci.org/ponty/EasyProcess.svg?branch=master
-    :target: https://travis-ci.org/ponty/EasyProcess
-    :alt: Build
-        
-.. image:: https://coveralls.io/repos/ponty/EasyProcess/badge.svg?branch=master
-    :target: https://coveralls.io/r/ponty/EasyProcess?branch=master
-    :alt: Coverage
+|Travis| |Coveralls| |Latest Version| |Supported Python versions| |License| |Downloads| |Code Health|
 
 Features:
  - layer on top of subprocess_ module
@@ -93,3 +71,24 @@ Uninstall
 .. _setuptools: http://peak.telecommunity.com/DevCenter/EasyInstall
 .. _pip: http://pip.openplans.org/
 .. _subprocess: http://docs.python.org/library/subprocess.html
+.. |Travis| image:: http://img.shields.io/travis/ponty/EasyProcess.svg
+   :target: https://travis-ci.org/ponty/EasyProcess/
+.. |Coveralls| image:: http://img.shields.io/coveralls/ponty/EasyProcess/master.svg
+   :target: https://coveralls.io/r/ponty/EasyProcess/
+.. |Latest Version| image:: https://pypip.in/version/EasyProcess/badge.svg?style=flat
+   :target: https://pypi.python.org/pypi/EasyProcess/
+.. |Supported Python versions| image:: https://pypip.in/py_versions/EasyProcess/badge.svg?style=flat
+   :target: https://pypi.python.org/pypi/EasyProcess/
+.. |License| image:: https://pypip.in/license/EasyProcess/badge.svg?style=flat
+   :target: https://pypi.python.org/pypi/EasyProcess/
+.. |Downloads| image:: https://pypip.in/download/EasyProcess/badge.svg?style=flat
+   :target: https://pypi.python.org/pypi/EasyProcess/
+.. |Code Health| image:: https://landscape.io/github/ponty/EasyProcess/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/ponty/EasyProcess/master
+
+
+
+
+     
+
+   
