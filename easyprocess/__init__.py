@@ -14,9 +14,7 @@ import threading
 import time
 import ConfigParser
 
-from ._version import get_versions
-__version__ = get_versions()['version']
-del get_versions
+from easyprocess.about import __version__
 
 log = logging.getLogger(__name__)
 # log=logging

@@ -1,8 +1,6 @@
-import versioneer
-
 from setuptools import setup
 import sys
-
+import os
 
 NAME = 'easyprocess'
 URL = 'https://github.com/ponty/easyprocess'
@@ -11,11 +9,10 @@ PACKAGES = [NAME,
             NAME + '.examples',
             ]
 
-versioneer.versionfile_source = NAME + '/_version.py'
-versioneer.versionfile_build = versioneer.versionfile_source
-versioneer.tag_prefix = ''
-versioneer.parentdir_prefix = NAME + '-'
-versioneer.VCS = "git"
+# get __version__
+__version__ = None
+exec(open(os.path.join(NAME , 'about.py')).read())
+VERSION = __version__
 
 extra = {}
 if sys.version_info >= (3,):
@@ -47,8 +44,7 @@ classifiers = [
 
 setup(
     name=NAME,
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
+    version=VERSION,
     description=DESCRIPTION,
     long_description=open('README.rst', 'r').read(),
     classifiers=classifiers,
