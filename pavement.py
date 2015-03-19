@@ -9,6 +9,7 @@ from paved.docs import *
 from paved.pycheck import *
 from paved.pkg import *
 from setuptools import find_packages
+import sys
 
 # get info from setup.py
 sys.path.append('.')
@@ -47,8 +48,8 @@ options.paved.clean.patterns += ['*.pickle',
 
 options.paved.dist.manifest.include.remove('distribute_setup.py')
 options.paved.dist.manifest.include.remove('paver-minilib.zip')
-options.paved.dist.manifest.include.add('requirements.txt')
-options.paved.dist.manifest.include.add('versioneer.py')
+# options.paved.dist.manifest.include.add('requirements.txt')
+# options.paved.dist.manifest.include.add('versioneer.py')
 
 
 @task
