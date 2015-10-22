@@ -7,10 +7,8 @@ python:
  - "3.4"
 
 install:
- - pip install coveralls coverage
- - pip install PyVirtualDisplay
- - pip install six
-
+ - pip install coveralls
+ - pip install -r requirements-test.txt
 script:  
  - python setup.py nosetests --with-coverage --cover-package=easyprocess  -w `pwd`/tests
  
