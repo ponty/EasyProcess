@@ -24,8 +24,7 @@ pip-log.txt
 nosetests.xml
 
 .*
-!.gitignore
-!.gitattributes
+!.git*
 !.travis*
 !.coveragerc
 
