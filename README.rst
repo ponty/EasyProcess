@@ -75,13 +75,13 @@ Uninstall
    :target: https://travis-ci.org/ponty/EasyProcess/
 .. |Coveralls| image:: http://img.shields.io/coveralls/ponty/EasyProcess/master.svg
    :target: https://coveralls.io/r/ponty/EasyProcess/
-.. |Latest Version| image:: https://pypip.in/version/EasyProcess/badge.svg?style=flat
+.. |Latest Version| image:: https://img.shields.io/pypi/v/EasyProcess.svg
    :target: https://pypi.python.org/pypi/EasyProcess/
-.. |Supported Python versions| image:: https://pypip.in/py_versions/EasyProcess/badge.svg?style=flat
+.. |Supported Python versions| image:: https://img.shields.io/pypi/pyversions/EasyProcess.svg
    :target: https://pypi.python.org/pypi/EasyProcess/
-.. |License| image:: https://pypip.in/license/EasyProcess/badge.svg?style=flat
+.. |License| image:: https://img.shields.io/pypi/l/EasyProcess.svg
    :target: https://pypi.python.org/pypi/EasyProcess/
-.. |Downloads| image:: https://pypip.in/download/EasyProcess/badge.svg?style=flat
+.. |Downloads| image:: https://img.shields.io/pypi/dm/EasyProcess.svg
    :target: https://pypi.python.org/pypi/EasyProcess/
 .. |Code Health| image:: https://landscape.io/github/ponty/EasyProcess/master/landscape.svg?style=flat
    :target: https://landscape.io/github/ponty/EasyProcess/master
