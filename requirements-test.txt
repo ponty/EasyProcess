@@ -1,4 +1,5 @@
+tox
 nose
 coverage
 six
-pyvirtualdisplay
+
