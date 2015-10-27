@@ -1,28 +1,26 @@
-# from path import path
-# import logging
-# import sphinx
+import os
 import sys
 
-sys.path.append('..')
-import easyprocess
-sys.path.pop()
 
-release = easyprocess.__version__
-print release
 project = 'EasyProcess'
 author = 'ponty'
 copyright = '2011, ponty'
 
+__version__ = None
+exec(open(os.path.join('..', project.lower(), 'about.py')).read())
+release = __version__
+
 # logging.basicConfig(level=logging.DEBUG)
+sys.path.insert(0, os.path.abspath('..'))
 
 # Extension
 extensions = [
     # -*-Extensions: -*-
     'sphinx.ext.autodoc',
-    'sphinxcontrib.programoutput',
+#     'sphinxcontrib.programoutput',
     #     'sphinxcontrib.programscreenshot',
     'sphinx.ext.graphviz',
-    'sphinxcontrib.autorun',
+#     'sphinxcontrib.autorun',
     #'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
 ]

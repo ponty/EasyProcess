@@ -1,22 +1,15 @@
-**EasyProcess**
+===========
+EasyProcess
+===========
 
-:Date: |today|
-:PDF: `EasyProcess.pdf <EasyProcess.pdf>`_
 
 
-Contents:
+About
+=====
 
-.. toctree::
-    :maxdepth: 2
 
-    readme
-    usage
-    api
-    
-Indices and tables
-==================
+.. include:: ../README.rst
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. include:: api.rst
+
 
