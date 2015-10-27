@@ -5,7 +5,7 @@ Links:
  * documentation: http://EasyProcess.readthedocs.org
  * PYPI: https://pypi.python.org/pypi/EasyProcess
 
-|Travis| |Coveralls| |Latest Version| |Supported Python versions| |License| |Downloads| |Code Health|
+|Travis| |Coveralls| |Latest Version| |Supported Python versions| |License| |Downloads| |Code Health| |Documentation|
 
 Features:
  - layer on top of subprocess_ module
