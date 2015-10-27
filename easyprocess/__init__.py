@@ -11,7 +11,7 @@ import subprocess
 import tempfile
 import threading
 import time
-import ConfigParser
+# import ConfigParser
 
 from easyprocess.about import __version__
 
@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 
 log.debug('version=%s', __version__)
 
-CONFIG_FILE = '.easyprocess.cfg'
+# CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
 POLL_TIME = 0.1
 USE_POLL = 0
@@ -81,7 +81,7 @@ class EasyProcess(object):
                            pipes can cause deadlock in some cases
                            (see unit tests)
     '''
-    config = None
+#     config = None
 
     def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=True):
         self.use_temp_files = use_temp_files
@@ -113,23 +113,23 @@ class EasyProcess(object):
         if not len(cmd):
             raise EasyProcessError(self, 'empty command!')
 
-        if not Proc.config:
-            conf_file = os.path.join(os.path.expanduser('~'), CONFIG_FILE)
-            log.debug('reading config: %s', conf_file)
-            Proc.config = ConfigParser.RawConfigParser()
-            Proc.config.read(conf_file)
+#         if not Proc.config:
+#             conf_file = os.path.join(os.path.expanduser('~'), CONFIG_FILE)
+#             log.debug('reading config: %s', conf_file)
+#             Proc.config = ConfigParser.RawConfigParser()
+#             Proc.config.read(conf_file)
 
-        self.alias = None
-        try:
-            self.alias = Proc.config.get(SECTION_LINK, self.cmd[0])
-        except ConfigParser.NoSectionError:
-            pass
-        except ConfigParser.NoOptionError:
-            pass
+#         self.alias = None
+#         try:
+#             self.alias = Proc.config.get(SECTION_LINK, self.cmd[0])
+#         except ConfigParser.NoSectionError:
+#             pass
+#         except ConfigParser.NoOptionError:
+#             pass
 
-        if self.alias:
-            log.debug('alias found: %s', self.alias)
-            self.cmd[0] = self.alias
+#         if self.alias:
+#             log.debug('alias found: %s', self.alias)
+#             self.cmd[0] = self.alias
 
     def __repr__(self):
         msg = '<%s cmd_param=%s cmd=%s oserror=%s returncode=%s stdout="%s" stderr="%s" timeout=%s>' % (
