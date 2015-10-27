@@ -8,3 +8,9 @@ def test():
                     ).call().return_code, 0)
     eq_(EasyProcess([sys.executable, '-m', 'easyprocess.examples.log']
                     ).call().return_code, 0)
+    eq_(EasyProcess([sys.executable, '-m', 'easyprocess.examples.cmd']
+                    ).call().return_code, 0)
+    eq_(EasyProcess([sys.executable, '-m', 'easyprocess.examples.hello']
+                    ).call().return_code, 0)
+    eq_(EasyProcess([sys.executable, '-m', 'easyprocess.examples.timeout']
+                    ).call().return_code, 0)
