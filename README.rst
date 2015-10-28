@@ -69,8 +69,6 @@ Uninstall
 Usage
 =====
 
-.. module:: easyprocess
-
 Simple example
 --------------
 
