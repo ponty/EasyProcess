@@ -80,13 +80,19 @@ class EasyProcess(object):
                            stdout and stderr,
                            pipes can cause deadlock in some cases
                            (see unit tests)
+                           
+    :param env: If *env* is not ``None``, it must be a mapping that defines the environment
+                   variables for the new process; these are used instead of inheriting the current
+                   process' environment, which is the default behavior. 
+                   (check :mod:`subprocess`  for more information)
     '''
 #     config = None
 
-    def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=True):
+    def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=True, env=None):
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
 
+        self.env = env
         self.popen = None
         self.stdout = None
         self.stderr = None
@@ -253,6 +259,7 @@ class EasyProcess(object):
                                           stderr=stderr,
                                           # shell=1,
                                           cwd=self.cwd,
+                                          env=self.env,
                                           )
         except OSError, oserror:
             log.debug('OSError exception: %s', oserror)
