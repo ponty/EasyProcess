@@ -23,6 +23,7 @@ Features:
  - stop() does not kill whole subprocess tree 
  - unicode support
  - supported python versions: 2.6, 2.7, 3.3, 3.4, 3.5
+ - Method chaining_
  
 Similar projects:
  * execute (http://pypi.python.org/pypi/execute)
@@ -223,6 +224,7 @@ Replacing subprocess.call::
  
 .. _pip: http://pip.openplans.org/
 .. _subprocess: http://docs.python.org/library/subprocess.html
+.. _chaining: https://en.wikipedia.org/wiki/Method_chaining#Python
 
 .. |Travis| image:: http://img.shields.io/travis/ponty/EasyProcess.svg
    :target: https://travis-ci.org/ponty/EasyProcess/
