@@ -4,6 +4,7 @@ from unittest import TestCase
 
 
 class Test(TestCase):
+
     def test_is_started(self):
         eq_(EasyProcess('ls -la').is_started, False)
         eq_(EasyProcess('ls -la').start().is_started, True)

@@ -4,6 +4,7 @@ from unittest import TestCase
 
 
 class Test(TestCase):
+
     def test_call(self):
         for x in range(1000):
             # test for:

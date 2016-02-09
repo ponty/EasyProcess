@@ -7,6 +7,7 @@ import time
 
 
 class Test(TestCase):
+
     def test_call(self):
         eq_(EasyProcess('ls -la').call().return_code, 0)
         eq_(EasyProcess(['ls', '-la']).call().return_code, 0)

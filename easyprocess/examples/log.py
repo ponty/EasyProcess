@@ -10,9 +10,9 @@ EasyProcess('python --version').check()
 try:
     EasyProcess('bad_command').check()
 except Exception, detail:
-    print  detail
+    print detail
 
 try:
     EasyProcess('sh -c bad_command').check()
 except Exception, detail:
-    print  detail
+    print detail

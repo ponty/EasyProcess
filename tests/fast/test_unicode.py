@@ -8,6 +8,7 @@ OMEGA = u('\u03A9')
 
 
 class Test(TestCase):
+
     def test_str(self):
         eq_(EasyProcess(u('ls -la')).call().return_code, 0)
 

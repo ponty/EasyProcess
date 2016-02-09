@@ -33,7 +33,7 @@ def split_command(cmd):
             # cmd is string
             # The shlex module currently does not support Unicode input (in
             # 2.x)!
-            if  isinstance(cmd, unicode):
+            if isinstance(cmd, unicode):
                 try:
                     cmd = unicodedata.normalize(
                         'NFKD', cmd).encode('ascii', 'strict')

@@ -1,6 +1,4 @@
-'''
-Easy to use python subprocess interface.
-'''
+"""Easy to use python subprocess interface."""
 
 from easyprocess.unicodeutil import split_command, unidecode, uniencode
 import logging
@@ -11,24 +9,20 @@ import subprocess
 import tempfile
 import threading
 import time
-# import ConfigParser
 
 from easyprocess.about import __version__
 
 log = logging.getLogger(__name__)
-# log=logging
 
 log.debug('version=%s', __version__)
 
-# CONFIG_FILE = '.easyprocess.cfg'
 SECTION_LINK = 'link'
 POLL_TIME = 0.1
 USE_POLL = 0
 
 
 class EasyProcessError(Exception):
-    """
-    """
+
     def __init__(self, easy_process, msg=''):
         self.easy_process = easy_process
         self.msg = msg
@@ -42,9 +36,11 @@ Program install error! '''
 
 
 class EasyProcessCheckInstalledError(Exception):
+
     """This exception is raised when a process run by check() returns
     a non-zero exit status or OSError is raised.
     """
+
     def __init__(self, easy_process):
         self.easy_process = easy_process
 
@@ -62,6 +58,7 @@ class EasyProcessCheckInstalledError(Exception):
 
 
 class EasyProcess(object):
+
     '''
     .. module:: easyprocess
 
@@ -80,7 +77,7 @@ class EasyProcess(object):
                            stdout and stderr,
                            pipes can cause deadlock in some cases
                            (see unit tests)
-                           
+
     :param env: If *env* is not ``None``, it must be a mapping that defines the environment
                    variables for the new process; these are used instead of inheriting the current
                    process' environment, which is the default behavior. 
@@ -119,35 +116,15 @@ class EasyProcess(object):
         if not len(cmd):
             raise EasyProcessError(self, 'empty command!')
 
-#         if not Proc.config:
-#             conf_file = os.path.join(os.path.expanduser('~'), CONFIG_FILE)
-#             log.debug('reading config: %s', conf_file)
-#             Proc.config = ConfigParser.RawConfigParser()
-#             Proc.config.read(conf_file)
-
-#         self.alias = None
-#         try:
-#             self.alias = Proc.config.get(SECTION_LINK, self.cmd[0])
-#         except ConfigParser.NoSectionError:
-#             pass
-#         except ConfigParser.NoOptionError:
-#             pass
-
-#         if self.alias:
-#             log.debug('alias found: %s', self.alias)
-#             self.cmd[0] = self.alias
-
     def __repr__(self):
         msg = '<%s cmd_param=%s cmd=%s oserror=%s returncode=%s stdout="%s" stderr="%s" timeout=%s>' % (
             self.__class__.__name__,
             self.cmd_param,
             self.cmd,
             self.oserror,
-            #                            alias=self.alias,
             self.return_code,
             self.stdout,
             self.stderr,
-            #                            scmd=' '.join(self.cmd),
             self.timeout_happened,
         )
         return msg
@@ -173,22 +150,14 @@ class EasyProcess(object):
             return self.popen.returncode
 
     def check(self, return_code=0):
-        '''
-        Run command with arguments. Wait for command to complete.
-        If the exit code was as expected and there is no exception then return,
+        """Run command with arguments. Wait for command to complete. If the
+        exit code was as expected and there is no exception then return,
         otherwise raise EasyProcessError.
 
         :param return_code: int, expected return code
         :rtype: self
-        '''
-#        try:
-#            ret = self.call().return_code
-#            ok = ret == return_code
-#        except Exception , e:
-#            log.debug('OSError exception:' + str(oserror))
-#            ok = False
-#            self.oserror = oserror
 
+        """
         ret = self.call().return_code
         ok = ret == return_code
         if not ok:
@@ -197,8 +166,7 @@ class EasyProcess(object):
         return self
 
     def check_installed(self):
-        '''
-        Used for testing if program is installed.
+        """Used for testing if program is installed.
 
         Run command with arguments. Wait for command to complete.
         If OSError raised, then raise :class:`EasyProcessCheckInstalledError`
@@ -206,18 +174,16 @@ class EasyProcess(object):
 
         :param return_code: int, expected return code
         :rtype: self
-        '''
+
+        """
         try:
             self.call()
         except Exception:
-            # log.debug('exception:' + str(e))
-            # self.oserror = oserror
             raise EasyProcessCheckInstalledError(self)
         return self
 
     def call(self, timeout=None):
-        '''
-        Run command with arguments. Wait for command to complete.
+        """Run command with arguments. Wait for command to complete.
 
         same as:
          1. :meth:`start`
@@ -225,19 +191,19 @@ class EasyProcess(object):
          3. :meth:`stop`
 
         :rtype: self
-        '''
+
+        """
         self.start().wait(timeout=timeout)
         if self.is_alive():
             self.stop()
         return self
 
     def start(self):
-        '''
-        start command in background and does not wait for it
-
+        """start command in background and does not wait for it.
 
         :rtype: self
-        '''
+
+        """
         if self.is_started:
             raise EasyProcessError(self, 'process was started twice!')
 
@@ -257,7 +223,6 @@ class EasyProcess(object):
             self.popen = subprocess.Popen(cmd,
                                           stdout=stdout,
                                           stderr=stderr,
-                                          # shell=1,
                                           cwd=self.cwd,
                                           env=self.env,
                                           )
@@ -267,19 +232,6 @@ class EasyProcess(object):
             raise EasyProcessError(self, 'start error')
         self.is_started = True
         log.debug('process was started (pid=%s)', self.pid)
-
-#        def target():
-#            self._wait4process()
-
-#        def shutdown():
-#            self._stop_thread = True
-#            self._thread.join()
-
-#        self._thread = threading.Thread(target=target)
-#        self._thread.daemon = 1
-#        self._thread.start()
-#        atexit.register(shutdown)
-
         return self
 
     def is_alive(self):
@@ -294,15 +246,15 @@ class EasyProcess(object):
             return False
 
     def wait(self, timeout=None):
-        '''
-        Wait for command to complete.
+        """Wait for command to complete.
 
         Timeout:
          - discussion: http://stackoverflow.com/questions/1191374/subprocess-with-timeout
          - implementation: threading
 
         :rtype: self
-        '''
+
+        """
 
         if timeout is not None:
             if not self._thread:
@@ -377,16 +329,15 @@ class EasyProcess(object):
             log.debug('stderr=%s', self.stderr)
 
     def stop(self):
-        '''
-        Kill process
-        and wait for command to complete.
+        """Kill process and wait for command to complete.
 
         same as:
          1. :meth:`sendstop`
          2. :meth:`wait`
 
         :rtype: self
-        '''
+
+        """
         return self.sendstop().wait()
 
     def sendstop(self):
@@ -468,8 +419,8 @@ class EasyProcess(object):
 
 
 def extract_version(txt):
-    '''This function tries to extract the version from the help text of any program.
-    '''
+    """This function tries to extract the version from the help text of any
+    program."""
     words = txt.replace(',', ' ').split()
     version = None
     for x in reversed(words):
@@ -483,4 +434,3 @@ def extract_version(txt):
 
 
 Proc = EasyProcess
-
