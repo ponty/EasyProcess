@@ -83,8 +83,6 @@ class EasyProcess(object):
                    process' environment, which is the default behavior. 
                    (check :mod:`subprocess`  for more information)
     '''
-#     config = None
-
     def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=True, env=None):
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
