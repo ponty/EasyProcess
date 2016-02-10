@@ -13,7 +13,7 @@ before_install:
 install:
  - pip install coveralls
  - pip install -r requirements-test.txt
- - pip install .
+ - pip install --upgrade .
  
 script:  
  - cd tests && nosetests -v --with-coverage --cover-package=easyprocess .
