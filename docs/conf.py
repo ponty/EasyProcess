@@ -19,13 +19,12 @@ extensions = [
     'sphinx.ext.autodoc',
 #     'sphinxcontrib.programoutput',
     #     'sphinxcontrib.programscreenshot',
-    'sphinx.ext.graphviz',
+#     'sphinx.ext.graphviz',
 #     'sphinxcontrib.autorun',
     #'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
 ]
 intersphinx_mapping = {'python': ('http://docs.python.org/', None)}
-# intersphinx_mapping =  {'http://docs.python.org/': None}
 
 # Source
 master_doc = 'index'
