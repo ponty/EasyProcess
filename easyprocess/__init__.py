@@ -115,7 +115,7 @@ class EasyProcess(object):
             raise EasyProcessError(self, 'empty command!')
 
     def __repr__(self):
-        msg = '<%s cmd_param=%s cmd=%s oserror=%s returncode=%s stdout="%s" stderr="%s" timeout=%s>' % (
+        msg = '<%s cmd_param=%s cmd=%s oserror=%s return_code=%s stdout="%s" stderr="%s" timeout_happened=%s>' % (
             self.__class__.__name__,
             self.cmd_param,
             self.cmd,
