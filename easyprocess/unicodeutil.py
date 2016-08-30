@@ -60,5 +60,5 @@ def unidecode(s):
         s = s.decode()
     else:
         if isinstance(s, str):
-            s = s.decode('utf-8')
+            s = s.decode('utf-8', 'ignore')
     return s
