@@ -16,7 +16,9 @@ install:
  - pip install --upgrade .
  
 script:  
- - cd tests && nosetests -v --with-coverage --cover-package=easyprocess .
+ - cd tests
+ - nosetests -v nocoverage
+ - nosetests -v --with-coverage --cover-package=easyprocess coverage
  
 after_success:
  - coveralls
