@@ -160,7 +160,7 @@ class EasyProcess(object):
         ok = ret == return_code
         if not ok:
             raise EasyProcessError(
-                self, 'check error, return code is not zero!')
+                self, 'check error, return code is not {0}!'.format(return_code))
         return self
 
     def check_installed(self):
