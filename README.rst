@@ -5,7 +5,7 @@ Links:
  * documentation: http://EasyProcess.readthedocs.org
  * PYPI: https://pypi.python.org/pypi/EasyProcess
 
-|Travis| |Coveralls| |Latest Version| |Supported Python versions| |License| |Downloads| |Code Health| |Documentation|
+|Travis| |Coveralls| |Latest Version| |Supported Python versions| |License| |Code Health| |Documentation|
 
 Features:
  - layer on top of subprocess_ module
@@ -235,8 +235,6 @@ Replacing subprocess.call::
 .. |Supported Python versions| image:: https://img.shields.io/pypi/pyversions/EasyProcess.svg
    :target: https://pypi.python.org/pypi/EasyProcess/
 .. |License| image:: https://img.shields.io/pypi/l/EasyProcess.svg
-   :target: https://pypi.python.org/pypi/EasyProcess/
-.. |Downloads| image:: https://img.shields.io/pypi/dm/EasyProcess.svg
    :target: https://pypi.python.org/pypi/EasyProcess/
 .. |Code Health| image:: https://landscape.io/github/ponty/EasyProcess/master/landscape.svg?style=flat
    :target: https://landscape.io/github/ponty/EasyProcess/master
