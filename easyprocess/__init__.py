@@ -224,7 +224,7 @@ class EasyProcess(object):
                                           cwd=self.cwd,
                                           env=self.env,
                                           )
-        except OSError, oserror:
+        except (OSError, oserror):
             log.debug('OSError exception: %s', oserror)
             self.oserror = oserror
             raise EasyProcessError(self, 'start error')
@@ -358,7 +358,7 @@ class EasyProcess(object):
                         self.popen.terminate()
                     except AttributeError:
                         os.kill(self.popen.pid, signal.SIGKILL)
-                except OSError, oserror:
+                except (OSError, oserror):
                     log.debug('exception in terminate:%s', oserror)
 
             else:
@@ -397,7 +397,7 @@ class EasyProcess(object):
             x = None
             try:
                 x = func()
-            except OSError, oserror:
+            except (OSError, oserror):
                 log.debug('OSError exception:%s', oserror)
                 self.oserror = oserror
                 raise EasyProcessError(self, 'wrap error!')
