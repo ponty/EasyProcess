@@ -6,7 +6,8 @@ python = sys.executable
 
 
 def pass_env(e):
-    return EasyProcess([python, '-c', 'import os;print(dict(os.environ))'], env=e).call().stdout
+    return EasyProcess(
+        [python, '-c', 'import os;print(dict(os.environ))'], env=e).call().stdout
 
 
 def test_env():

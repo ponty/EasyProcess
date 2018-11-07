@@ -80,10 +80,12 @@ class EasyProcess(object):
 
     :param env: If *env* is not ``None``, it must be a mapping that defines the environment
                    variables for the new process; these are used instead of inheriting the current
-                   process' environment, which is the default behavior. 
+                   process' environment, which is the default behavior.
                    (check :mod:`subprocess`  for more information)
     '''
-    def __init__(self, cmd, ubuntu_package=None, url=None, cwd=None, use_temp_files=True, env=None):
+
+    def __init__(self, cmd, ubuntu_package=None, url=None,
+                 cwd=None, use_temp_files=True, env=None):
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
 
@@ -224,7 +226,7 @@ class EasyProcess(object):
                                           cwd=self.cwd,
                                           env=self.env,
                                           )
-        except OSError, oserror:
+        except OSError as oserror:
             log.debug('OSError exception: %s', oserror)
             self.oserror = oserror
             raise EasyProcessError(self, 'start error')
@@ -282,7 +284,7 @@ class EasyProcess(object):
         if self.popen:
             if self.use_temp_files:
                 if USE_POLL:
-                    while 1:
+                    while True:
                         if self.popen.poll() is not None:
                             break
                         if self._stop_thread:
@@ -358,7 +360,7 @@ class EasyProcess(object):
                         self.popen.terminate()
                     except AttributeError:
                         os.kill(self.popen.pid, signal.SIGKILL)
-                except OSError, oserror:
+                except OSError as oserror:
                     log.debug('exception in terminate:%s', oserror)
 
             else:
@@ -397,7 +399,7 @@ class EasyProcess(object):
             x = None
             try:
                 x = func()
-            except OSError, oserror:
+            except OSError as oserror:
                 log.debug('OSError exception:%s', oserror)
                 self.oserror = oserror
                 raise EasyProcessError(self, 'wrap error!')

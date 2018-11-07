@@ -1,7 +1,7 @@
 from easyprocess import EasyProcess
-from nose.tools import timed, eq_
+from nose.tools import eq_
+from nose.tools import timed
 from pyvirtualdisplay.display import Display
-import os.path
 import sys
 
 python = sys.executable

@@ -1,5 +1,6 @@
 from easyprocess import EasyProcess
-from nose.tools import eq_, ok_
+from nose.tools import eq_
+from nose.tools import ok_
 import sys
 
 

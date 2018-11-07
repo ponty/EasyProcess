@@ -9,10 +9,10 @@ EasyProcess('ping localhost').start().sleep(1).stop()
 EasyProcess('python --version').check()
 try:
     EasyProcess('bad_command').check()
-except Exception, detail:
+except Exception as detail:
     print detail
 
 try:
     EasyProcess('sh -c bad_command').check()
-except Exception, detail:
+except Exception as detail:
     print detail

@@ -17,10 +17,10 @@ sys.path.insert(0, os.path.abspath('..'))
 extensions = [
     # -*-Extensions: -*-
     'sphinx.ext.autodoc',
-#     'sphinxcontrib.programoutput',
+    #     'sphinxcontrib.programoutput',
     #     'sphinxcontrib.programscreenshot',
-#     'sphinx.ext.graphviz',
-#     'sphinxcontrib.autorun',
+    #     'sphinx.ext.graphviz',
+    #     'sphinxcontrib.autorun',
     #'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
 ]

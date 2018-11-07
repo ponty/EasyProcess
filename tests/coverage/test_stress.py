@@ -1,5 +1,7 @@
-from easyprocess import EasyProcess, EasyProcessError
+from easyprocess import EasyProcess
+from easyprocess import EasyProcessError
 from nose.tools import eq_
+
 
 def test_call():
     for x in range(1000):
@@ -12,5 +14,3 @@ def test_call():
 #        for x in range(1000):
 #            print('index=', x)
 #            EasyProcess('echo hi').start()
-
-
