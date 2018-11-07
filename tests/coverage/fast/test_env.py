@@ -6,8 +6,9 @@ python = sys.executable
 
 
 def pass_env(e):
-    return EasyProcess(
-        [python, '-c', 'import os;print(dict(os.environ))'], env=e).call().stdout
+    # py37 creates "LC_CTYPE" automatically
+    prog = 'import os;d=dict(os.environ);d.pop("LC_CTYPE",None);print(d)'
+    return EasyProcess([python, '-c', prog], env=e).call().stdout
 
 
 def test_env():
