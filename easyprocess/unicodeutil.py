@@ -17,7 +17,7 @@ class EasyProcessUnicodeError(Exception):
     pass
 
 
-def split_command(cmd):
+def split_command(cmd, posix=None):
     '''
      - cmd is string list -> nothing to do
      - cmd is string -> split it using shlex
@@ -41,7 +41,9 @@ def split_command(cmd):
                     raise EasyProcessUnicodeError('unicode command "%s" can not be processed.' % cmd +
                                                   'Use string list instead of string')
                 log.debug('unicode is normalized')
-        cmd = shlex.split(cmd)
+        if posix is None:
+            posix = 'win' not in sys.platform
+        cmd = shlex.split(cmd, posix=posix)
     return cmd
 
 

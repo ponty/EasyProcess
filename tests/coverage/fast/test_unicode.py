@@ -35,6 +35,10 @@ class Test(TestCase):
             self.assertRaises(EasyProcessUnicodeError, lambda:
                               split_command(u('x ') + OMEGA))
 
+        # split windows paths #12
+        eq_(split_command('c:\\temp\\a.exe someArg', posix=False),
+            ['c:\\temp\\a.exe', 'someArg'])
+
     def test_echo(self):
         eq_(EasyProcess(u('echo hi')).call().stdout, 'hi')
 
