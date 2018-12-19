@@ -46,3 +46,14 @@ class Test(TestCase):
                               lambda: EasyProcess(u('echo ') + OMEGA).call().stdout)
 
         eq_(EasyProcess(['echo', OMEGA]).call().stdout, OMEGA)
+
+    def test_invalid_stdout(self):
+        """invalid utf-8 byte in stdout."""
+        # https://en.wikipedia.org/wiki/UTF-8#Codepage_layout
+
+        # 0x92  continuation byte
+#         eq_(EasyProcess(['bash', '-c', 'printf "\\x$(printf %x 0x92)"']).call().stdout, '')
+
+        # 0xFF must never appear in a valid UTF-8 sequence
+        eq_(EasyProcess(
+            ['bash', '-c', 'printf "\\x$(printf %x 0xFF)"']).call().stdout, '')
