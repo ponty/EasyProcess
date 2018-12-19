@@ -57,7 +57,7 @@ def uniencode(s):
 
 def unidecode(s):
     if PY3:
-        s = s.decode()
+        s = s.decode('utf-8', 'ignore')
     else:
         if isinstance(s, str):
             s = s.decode('utf-8', 'ignore')
