@@ -11,9 +11,7 @@ Features:
  - layer on top of subprocess_ module
  - easy to start, stop programs
  - easy to get standard output/error, return code of programs
- - command can be list or string
-   - list is preferred
-   - command string is converted to list using shlex.split()
+ - command can be list (preferred) or string (command string is converted to list using shlex.split)
  - logging
  - timeout
  - unit-tests
