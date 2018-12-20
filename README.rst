@@ -12,11 +12,12 @@ Features:
  - easy to start, stop programs
  - easy to get standard output/error, return code of programs
  - command can be list or string
+   - list is preferred
+   - command string is converted to list using shlex.split()
  - logging
  - timeout
  - unit-tests
  - cross-platform, development on linux
- - global config file with program aliases 
  - shell is not supported
  - pipes are not supported
  - stdout/stderr is set only after the subprocess has finished
@@ -43,27 +44,13 @@ Basic usage
 Installation
 ============
 
-General
--------
+install::
 
- * install pip_
- * install the program::
-
-    # as root
     pip install EasyProcess
 
-Ubuntu 14.04
-------------
-::
 
-    sudo apt-get install python-pip
-    sudo pip install EasyProcess
+uninstall::
 
-Uninstall
----------
-::
-
-    # as root
     pip uninstall EasyProcess
 
 
@@ -222,7 +209,6 @@ Replacing subprocess.call::
     print p.stdout
 
  
-.. _pip: http://pip.openplans.org/
 .. _subprocess: http://docs.python.org/library/subprocess.html
 .. _chaining: https://en.wikipedia.org/wiki/Method_chaining#Python
 
