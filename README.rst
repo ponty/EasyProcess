@@ -196,7 +196,7 @@ Replacing os.system::
     ==>
     p = EasyProcess("ls -l").call()
     retcode = p.return_code
-    print p.stdout
+    print(p.stdout)
 
 Replacing subprocess.call::
 
@@ -204,7 +204,7 @@ Replacing subprocess.call::
     ==>
     p = EasyProcess(["ls", "-l"]).call()
     retcode = p.return_code
-    print p.stdout
+    print(p.stdout)
 
  
 .. _subprocess: http://docs.python.org/library/subprocess.html
