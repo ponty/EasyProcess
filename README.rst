@@ -19,7 +19,7 @@ Features:
  - shell is not supported
  - pipes are not supported
  - stdout/stderr is set only after the subprocess has finished
- - stop() does not kill whole subprocess tree 
+ - stop() does not kill whole subprocess tree
  - unicode support
  - supported python versions: 2.7, 3.4, 3.5, 3.6, 3.7
  - Method chaining_
@@ -31,7 +31,7 @@ Similar projects:
  * sh (https://github.com/amoffat/sh)
  * envoy (https://github.com/kennethreitz/envoy)
  * plumbum (https://github.com/tomerfiliba/plumbum)
- 
+
 Basic usage
 ===========
 
@@ -130,19 +130,18 @@ Shell commands are not supported.
 .. warning::
 
   ``echo`` is a shell command on Windows (there is no echo.exe),
-  but it is a program on Linux  
+  but it is a program on Linux.
 
 return_code
 -----------
 
-:attr:`EasyProcess.return_code` is None until 
-:func:`EasyProcess.stop` or :func:`EasyProcess.wait` 
-is called.
+`EasyProcess.return_code` is None until
+`EasyProcess.stop` or `EasyProcess.wait` is called.
 
 With
 ----
 
-By using :keyword:`with` statement the process is started 
+By using `with` statement the process is started
 and stopped automatically::
     
     from easyprocess import EasyProcess
