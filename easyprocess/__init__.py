@@ -109,9 +109,9 @@ class EasyProcess(object):
         self.cmd = cmd
         self.cmd_as_string = ' '.join(self.cmd)  # TODO: not perfect
 
-        log.debug('param: "%s" ', self.cmd_param)
+        # log.debug('param: "%s" ', self.cmd_param)
         log.debug('command: %s', self.cmd)
-        log.debug('joined command: %s', self.cmd_as_string)
+        # log.debug('joined command: %s', self.cmd_as_string)
 
         if not len(cmd):
             raise EasyProcessError(self, 'empty command!')
@@ -315,11 +315,10 @@ class EasyProcess(object):
                 # communicate() blocks process, timeout not possible
                 self._outputs_processed = True
                 (self.stdout, self.stderr) = self.popen.communicate()
-            log.debug('process has ended')
+            log.debug('process has ended, return code=%s', self.return_code)
             self.stdout = remove_ending_lf(unidecode(self.stdout))
             self.stderr = remove_ending_lf(unidecode(self.stderr))
 
-            log.debug('return code=%s', self.return_code)
 #            def limit_str(s):
 #                if len(s) > self.max_bytes_to_log:
 #                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
