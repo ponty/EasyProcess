@@ -108,6 +108,8 @@ class EasyProcess(object):
         cmd = split_command(cmd)
         self.cmd = cmd
         self.cmd_as_string = ' '.join(self.cmd)  # TODO: not perfect
+        self.enable_stdout_log = True
+        self.enable_stderr_log = True
 
         # log.debug('param: "%s" ', self.cmd_param)
         log.debug('command: %s', self.cmd)
@@ -324,8 +326,10 @@ class EasyProcess(object):
 #                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
 #                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
 #                return s
-            log.debug('stdout=%s', self.stdout)
-            log.debug('stderr=%s', self.stderr)
+            if self.enable_stdout_log:
+                log.debug('stdout=%s', self.stdout)
+            if self.enable_stderr_log:
+                log.debug('stderr=%s', self.stderr)
 
     def stop(self):
         """Kill process and wait for command to complete.
