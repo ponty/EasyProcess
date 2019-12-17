@@ -152,7 +152,8 @@ class EasyProcess(object):
             return self.popen.returncode
 
     def check(self, return_code=0):
-        """Run command with arguments. Wait for command to complete. If the
+        """DEPRECATED
+        Run command with arguments. Wait for command to complete. If the
         exit code was as expected and there is no exception then return,
         otherwise raise EasyProcessError.
 
@@ -168,7 +169,8 @@ class EasyProcess(object):
         return self
 
     def check_installed(self):
-        """Used for testing if program is installed.
+        """DEPRECATED
+        Used for testing if program is installed.
 
         Run command with arguments. Wait for command to complete.
         If OSError raised, then raise :class:`EasyProcessCheckInstalledError`
