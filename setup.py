@@ -21,9 +21,9 @@ __version__ = None
 exec(open(os.path.join(NAME, 'about.py')).read())
 VERSION = __version__
 
-extra = {}
-if sys.version_info >= (3,):
-    extra['use_2to3'] = True
+# extra = {}
+# if sys.version_info >= (3,):
+#     extra['use_2to3'] = True
 
 classifiers = [
     # Get more strings from
@@ -55,5 +55,5 @@ setup(
     url=URL,
     license='BSD',
     packages=PACKAGES,
-    **extra
+    # **extra
 )
