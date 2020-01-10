@@ -73,12 +73,10 @@ class Test(TestCase):
         EasyProcess('echo hello').check_installed()
         self.assertRaises(EasyProcessCheckInstalledError,
                           lambda: EasyProcess('xecho',
-                                              url='http://xecho',
-                                              ubuntu_package='xecho').check_installed())
+                                              url='http://xecho').check_installed())
 
         EasyProcess('echo',
-                    url='http://xecho',
-                    ubuntu_package='xecho').check_installed()
+                    url='http://xecho').check_installed()
 
     def test_parse(self):
         eq_(EasyProcess('ls -la').cmd, ['ls', '-la'])

@@ -50,10 +50,6 @@ class EasyProcessCheckInstalledError(Exception):
                           )
         if self.easy_process.url:
             msg += '\nhome page: ' + self.easy_process.url
-        if platform.dist()[0].lower() == 'ubuntu':
-            if self.easy_process.ubuntu_package:
-                msg += '\nYou can install it in terminal:\n'
-                msg += 'sudo apt-get install %s' % self.easy_process.ubuntu_package
         return msg
 
 
@@ -96,7 +92,6 @@ class EasyProcess(object):
         self._stdout_file = None
         self._stderr_file = None
         self.url = url
-        self.ubuntu_package = ubuntu_package
         self.is_started = False
         self.oserror = None
         self.cmd_param = cmd
