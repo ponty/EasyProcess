@@ -209,7 +209,7 @@ Replacing subprocess.call::
 .. _subprocess: http://docs.python.org/library/subprocess.html
 .. _chaining: https://en.wikipedia.org/wiki/Method_chaining#Python
 
-.. |Travis| image:: http://img.shields.io/travis/ponty/EasyProcess.svg
+.. |Travis| image:: https://travis-ci.org/ponty/EasyProcess.svg?branch=master
    :target: https://travis-ci.org/ponty/EasyProcess/
 .. |Coveralls| image:: http://img.shields.io/coveralls/ponty/EasyProcess/master.svg
    :target: https://coveralls.io/r/ponty/EasyProcess/
