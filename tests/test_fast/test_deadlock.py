@@ -15,6 +15,9 @@ VISIBLE = 0
 
 @timed(100)
 def test_deadlock():
+    # skip these tests for Windows/Mac
+    if not sys.platform.startswith('linux'):
+        return    
     d = Display(visible=VISIBLE, size=(600, 400))
     d.start()
 
