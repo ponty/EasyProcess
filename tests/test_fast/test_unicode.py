@@ -2,10 +2,11 @@ from easyprocess import EasyProcess
 from easyprocess.unicodeutil import split_command, EasyProcessUnicodeError
 from nose.tools import eq_
 from unittest import TestCase
-import six
+import six, sys
 u = six.u
 OMEGA = u('\u03A9')
 
+python = sys.executable
 
 class Test(TestCase):
 
@@ -55,10 +56,19 @@ class Test(TestCase):
         """invalid utf-8 byte in stdout."""
         # https://en.wikipedia.org/wiki/UTF-8#Codepage_layout
 
+        
         # 0x92  continuation byte
-        eq_(EasyProcess(
-            ['bash', '-c', 'printf "\\x$(printf %x 0x92)"']).call().stdout, '')
+        if six.PY3:
+            cmd = [python, '-c', "import sys;sys.stdout.write(b'\\x92')"]
+        else:
+            cmd = [python, '-c', "import sys;sys.stdout.buffer.write(b'\\x92')"]
+        eq_(EasyProcess(cmd).call().stdout, '')
 
+        
         # 0xFF must never appear in a valid UTF-8 sequence
-        eq_(EasyProcess(
-            ['bash', '-c', 'printf "\\x$(printf %x 0xFF)"']).call().stdout, '')
+        if six.PY3:
+            cmd = [python, '-c', "import sys;sys.stdout.write(b'\\xFF')"]
+        else:
+            cmd = [python, '-c', "import sys;sys.stdout.buffer.write(b'\\xFF')"]
+        eq_(EasyProcess(cmd).call().stdout, '')
+
