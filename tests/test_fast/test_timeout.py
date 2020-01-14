@@ -44,7 +44,7 @@ class Test(TestCase):
         p = EasyProcess('sleep 5').call(timeout=1)
         eq_(p.is_alive(), False)
         eq_(p.timeout_happened, True)
-        ok_(p.return_code < 0)
+        ok_(p.return_code != 0)
         eq_(p.stdout, '')
 
     @timed(3)
@@ -53,7 +53,7 @@ class Test(TestCase):
             [python, '-c', "import time;print( 'start');time.sleep(5);print( 'end')"]).call(timeout=1)
         eq_(p.is_alive(), False)
         eq_(p.timeout_happened, True)
-        ok_(p.return_code < 0)
+        ok_(p.return_code != 0)
         eq_(p.stdout, '')
 
     @timed(0.3)

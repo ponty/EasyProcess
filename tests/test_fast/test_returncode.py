@@ -13,7 +13,7 @@ def test_return_code():
     eq_(EasyProcess('echo hello').start().sleep(0.5).stop().return_code, 0)
 
     # stop() before process has finished
-    ok_(EasyProcess('sleep 2').start().stop().return_code < 0)
+    ok_(EasyProcess('sleep 2').start().stop().return_code != 0)
 
     # same as start().wait().stop()
     eq_(EasyProcess('echo hello').call().return_code, 0)
