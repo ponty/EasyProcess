@@ -1,4 +1,5 @@
 language: python
+os: linux
 python:
  - "2.7"
  - "3.5"
@@ -14,6 +15,10 @@ matrix:
       python: 3.8
       dist: xenial
       
+    - name: 2.7_bionic
+      python: 2.7
+      dist: bionic
+
     - name: 3.7_bionic
       python: 3.7
       dist: bionic
@@ -22,19 +27,29 @@ matrix:
       python: 3.8
       dist: bionic
 
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y iputils-ping
+    - name: "Python 3.7 on macOS"
+      os: osx
+      osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
+      language: shell       # 'language: python' is an error on Travis CI macOS
+      env: PATH=/Users/travis/Library/Python/3.7/bin:$PATH USER=--user
+
+    - name: "Python 3.8 on Windows"
+      os: windows           # Windows 10.0.17134 N/A Build 17134
+      language: shell       # 'language: python' is an error on Travis CI Windows
+      before_install:
+        - choco install python --version 3.8
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
 
 install:
- - pip install coveralls
- - pip install -r requirements-test.txt
- - pip install --upgrade .
+ - if [ "$TRAVIS_PYTHON_VERSION" == "2.7" ]; then PIP=pip; else PIP=pip3; fi
+ - $PIP install $USER --upgrade coveralls
+ - $PIP install $USER --upgrade -r requirements-test.txt
+ - $PIP install $USER --upgrade .
  
 script:  
  - cd tests
- - nosetests -v nocoverage
- - nosetests -v --with-coverage --cover-package=easyprocess coverage
+ - nosetests -vv  --with-coverage --cover-package=easyprocess .
  
 after_success:
  - coveralls
