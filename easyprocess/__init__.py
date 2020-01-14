@@ -276,9 +276,10 @@ class EasyProcess(object):
 
         def remove_ending_lf(s):
             if s.endswith('\n'):
-                return s[:-1]
-            else:
-                return s
+                s = s[:-1]
+            if s.endswith('\r'):
+                s = s[:-1]
+            return s
 
         if self.popen:
             if self.use_temp_files:
