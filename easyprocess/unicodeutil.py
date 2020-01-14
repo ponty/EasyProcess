@@ -42,7 +42,7 @@ def split_command(cmd, posix=None):
                                                   'Use string list instead of string')
                 log.debug('unicode is normalized')
         if posix is None:
-            posix = 'win' not in sys.platform
+            posix = True
         cmd = shlex.split(cmd, posix=posix)
     return cmd
 
