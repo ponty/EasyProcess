@@ -4,6 +4,9 @@ from easyprocess import EasyProcess, EasyProcessCheckInstalledError, \
 from nose.tools import eq_, timed
 from unittest import TestCase
 import time
+import sys
+
+python = sys.executable
 
 
 class Test(TestCase):
@@ -47,6 +50,7 @@ class Test(TestCase):
 
     def test_std(self):
         eq_(EasyProcess('echo hello').call().stdout, 'hello')
+        eq_(EasyProcess([python, '-c', 'print(42)']).call().stdout, '42')
 
     def test_wait(self):
         eq_(EasyProcess('echo hello').wait().return_code, None)
