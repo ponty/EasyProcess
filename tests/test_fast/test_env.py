@@ -1,17 +1,20 @@
 from easyprocess import EasyProcess
 from nose.tools import eq_, ok_
 import sys
+import json
 
 python = sys.executable
 
 
 def pass_env(e):
-    # py37 creates "LC_CTYPE" automatically
-    prog = 'import os;d=dict(os.environ);d.pop("LC_CTYPE",None);print(d)'
-    return EasyProcess([python, '-c', prog], env=e).call().stdout
+    prog = 'import os,json;print(json.dumps(dict(os.environ)))'
+    s = EasyProcess([python, '-c', prog], env=e).call().stdout
+    return json.loads(s)
 
 
 def test_env():
     ok_(len(pass_env(None)))
-    eq_(pass_env({}), '{}')
-    eq_(pass_env(dict(x='2')), "{'x': '2'}")
+    e = pass_env(None)
+    eq_(pass_env(e).get('FOO'), None)
+    e['FOO'] = '2'
+    eq_(pass_env(e).get('FOO'), '2')
