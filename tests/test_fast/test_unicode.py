@@ -62,7 +62,9 @@ class Test(TestCase):
             cmd = [python, '-c', "import sys;sys.stdout.write(b'\\x92')"]
         else:
             cmd = [python, '-c', "import sys;sys.stdout.buffer.write(b'\\x92')"]
-        eq_(EasyProcess(cmd).call().stdout, '')
+        p=EasyProcess(cmd).call()
+        eq_(p.return_code, 0)
+        eq_(p.stdout, '')
 
         
         # 0xFF must never appear in a valid UTF-8 sequence
@@ -70,5 +72,7 @@ class Test(TestCase):
             cmd = [python, '-c', "import sys;sys.stdout.write(b'\\xFF')"]
         else:
             cmd = [python, '-c', "import sys;sys.stdout.buffer.write(b'\\xFF')"]
-        eq_(EasyProcess(cmd).call().stdout, '')
+        p=EasyProcess(cmd).call()
+        eq_(p.return_code, 0)
+        eq_(p.stdout, '')
 
