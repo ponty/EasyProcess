@@ -59,9 +59,9 @@ class Test(TestCase):
         
         # 0x92  continuation byte
         if six.PY3:
-            cmd = [python, '-c', "import sys;sys.stdout.write(b'\\x92')"]
-        else:
             cmd = [python, '-c', "import sys;sys.stdout.buffer.write(b'\\x92')"]
+        else:
+            cmd = [python, '-c', "import sys;sys.stdout.write(b'\\x92')"]
         p=EasyProcess(cmd).call()
         eq_(p.return_code, 0)
         eq_(p.stdout, '')
@@ -69,9 +69,9 @@ class Test(TestCase):
         
         # 0xFF must never appear in a valid UTF-8 sequence
         if six.PY3:
-            cmd = [python, '-c', "import sys;sys.stdout.write(b'\\xFF')"]
-        else:
             cmd = [python, '-c', "import sys;sys.stdout.buffer.write(b'\\xFF')"]
+        else:
+            cmd = [python, '-c', "import sys;sys.stdout.write(b'\\xFF')"]
         p=EasyProcess(cmd).call()
         eq_(p.return_code, 0)
         eq_(p.stdout, '')
