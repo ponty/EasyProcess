@@ -3,7 +3,6 @@
 from easyprocess.unicodeutil import split_command, unidecode, uniencode
 import logging
 import os.path
-import platform
 import signal
 import subprocess
 import tempfile

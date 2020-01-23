@@ -1,5 +1,4 @@
 from setuptools import setup
-import sys
 import os
 
 if os.environ.get('distutils_issue8876_workaround_enabled', False):

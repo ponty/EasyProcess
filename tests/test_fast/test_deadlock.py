@@ -1,5 +1,4 @@
 from easyprocess import EasyProcess
-from nose.tools import eq_
 from nose.tools import timed
 from pyvirtualdisplay.display import Display
 import sys

@@ -1,6 +1,4 @@
 from easyprocess import EasyProcess
-from easyprocess import EasyProcessError
-from nose.tools import eq_
 from nose.tools import timed
 from nose.tools import assert_not_equal as neq_
 

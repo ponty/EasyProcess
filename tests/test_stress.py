@@ -1,5 +1,4 @@
 from easyprocess import EasyProcess
-from easyprocess import EasyProcessError
 from nose.tools import eq_
 
 
