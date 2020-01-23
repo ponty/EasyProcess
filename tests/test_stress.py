@@ -1,5 +1,6 @@
-from easyprocess import EasyProcess
 from nose.tools import eq_
+
+from easyprocess import EasyProcess
 
 
 def test_call():

@@ -1,10 +1,13 @@
 from __future__ import with_statement
-from easyprocess import EasyProcess, EasyProcessCheckInstalledError, \
-    EasyProcessError
-from nose.tools import eq_, timed
-from unittest import TestCase
-import time
+
 import sys
+import time
+from unittest import TestCase
+
+from nose.tools import eq_, timed
+
+from easyprocess import (EasyProcess, EasyProcessCheckInstalledError,
+                         EasyProcessError)
 
 python = sys.executable
 

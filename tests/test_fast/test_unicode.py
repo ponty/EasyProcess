@@ -1,8 +1,12 @@
-from easyprocess import EasyProcess
-from easyprocess.unicodeutil import split_command, EasyProcessUnicodeError
-from nose.tools import eq_
+import sys
 from unittest import TestCase
-import six, sys
+
+import six
+from nose.tools import eq_
+
+from easyprocess import EasyProcess
+from easyprocess.unicodeutil import EasyProcessUnicodeError, split_command
+
 u = six.u
 OMEGA = u('\u03A9')
 
@@ -75,4 +79,3 @@ class Test(TestCase):
         p=EasyProcess(cmd).call()
         eq_(p.return_code, 0)
         eq_(p.stdout, '')
-

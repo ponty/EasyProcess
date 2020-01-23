@@ -1,7 +1,9 @@
-from easyprocess import EasyProcess
+import sys
+
 from nose.tools import timed
 from pyvirtualdisplay.display import Display
-import sys
+
+from easyprocess import EasyProcess
 
 python = sys.executable
 

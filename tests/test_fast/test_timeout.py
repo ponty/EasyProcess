@@ -1,7 +1,9 @@
-from easyprocess import EasyProcess
-from nose.tools import eq_, timed, ok_
-from unittest import TestCase
 import sys
+from unittest import TestCase
+
+from nose.tools import eq_, ok_, timed
+
+from easyprocess import EasyProcess
 
 python = sys.executable
 

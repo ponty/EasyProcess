@@ -1,7 +1,9 @@
-from easyprocess import EasyProcess
-from nose.tools import eq_, ok_
-import sys
 import json
+import sys
+
+from nose.tools import eq_, ok_
+
+from easyprocess import EasyProcess
 
 python = sys.executable
 

@@ -1,6 +1,8 @@
-from easyprocess import EasyProcess, EasyProcessError
-from nose.tools import eq_
 from unittest import TestCase
+
+from nose.tools import eq_
+
+from easyprocess import EasyProcess, EasyProcessError
 
 
 class Test(TestCase):

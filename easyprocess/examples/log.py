@@ -1,6 +1,8 @@
-from easyprocess import EasyProcess
 import logging
 import sys
+
+from easyprocess import EasyProcess
+
 python = sys.executable
 
 # turn on logging

@@ -1,5 +1,7 @@
-from easyprocess import EasyProcess
 import sys
+
+from easyprocess import EasyProcess
+
 python = sys.executable
 
 print('-- Run program, wait for it to complete, get stdout:')

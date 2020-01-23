@@ -1,6 +1,7 @@
-from easyprocess import EasyProcess
-from nose.tools import timed
 from nose.tools import assert_not_equal as neq_
+from nose.tools import timed
+
+from easyprocess import EasyProcess
 
 # if run with coverage:
 #        Fatal Python error: deallocating None

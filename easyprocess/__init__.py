@@ -1,6 +1,5 @@
 """Easy to use python subprocess interface."""
 
-from easyprocess.unicodeutil import split_command, unidecode, uniencode
 import logging
 import os.path
 import signal
@@ -10,6 +9,7 @@ import threading
 import time
 
 from easyprocess.about import __version__
+from easyprocess.unicodeutil import split_command, unidecode, uniencode
 
 log = logging.getLogger(__name__)
 
