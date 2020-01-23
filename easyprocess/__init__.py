@@ -13,25 +13,25 @@ from easyprocess.unicodeutil import split_command, unidecode, uniencode
 
 log = logging.getLogger(__name__)
 
-log.debug('version=%s', __version__)
+log.debug("version=%s", __version__)
 
-SECTION_LINK = 'link'
+SECTION_LINK = "link"
 POLL_TIME = 0.1
 USE_POLL = 0
 
 
 class EasyProcessError(Exception):
-
-    def __init__(self, easy_process, msg=''):
+    def __init__(self, easy_process, msg=""):
         self.easy_process = easy_process
         self.msg = msg
 
     def __str__(self):
-        return self.msg + ' ' + repr(self.easy_process)
+        return self.msg + " " + repr(self.easy_process)
 
-template = '''cmd=%s
+
+template = """cmd=%s
 OSError=%s
-Program install error! '''
+Program install error! """
 
 
 class EasyProcessCheckInstalledError(Exception):
@@ -44,17 +44,15 @@ class EasyProcessCheckInstalledError(Exception):
         self.easy_process = easy_process
 
     def __str__(self):
-        msg = template % (self.easy_process.cmd,
-                          self.easy_process.oserror,
-                          )
+        msg = template % (self.easy_process.cmd, self.easy_process.oserror,)
         if self.easy_process.url:
-            msg += '\nhome page: ' + self.easy_process.url
+            msg += "\nhome page: " + self.easy_process.url
         return msg
 
 
 class EasyProcess(object):
 
-    '''
+    """
     .. module:: easyprocess
 
     simple interface for :mod:`subprocess`
@@ -77,10 +75,17 @@ class EasyProcess(object):
                    variables for the new process; these are used instead of inheriting the current
                    process' environment, which is the default behavior.
                    (check :mod:`subprocess`  for more information)
-    '''
+    """
 
-    def __init__(self, cmd, ubuntu_package=None, url=None,
-                 cwd=None, use_temp_files=True, env=None):
+    def __init__(
+        self,
+        cmd,
+        ubuntu_package=None,
+        url=None,
+        cwd=None,
+        use_temp_files=True,
+        env=None,
+    ):
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
 
@@ -95,53 +100,56 @@ class EasyProcess(object):
         self.oserror = None
         self.cmd_param = cmd
         self._thread = None
-#        self.max_bytes_to_log = max_bytes_to_log
+        #        self.max_bytes_to_log = max_bytes_to_log
         self._stop_thread = False
         self.timeout_happened = False
         self.cwd = cwd
         cmd = split_command(cmd)
         self.cmd = cmd
-        self.cmd_as_string = ' '.join(self.cmd)  # TODO: not perfect
+        self.cmd_as_string = " ".join(self.cmd)  # TODO: not perfect
         self.enable_stdout_log = True
         self.enable_stderr_log = True
 
         # log.debug('param: "%s" ', self.cmd_param)
-        log.debug('command: %s', self.cmd)
+        log.debug("command: %s", self.cmd)
         # log.debug('joined command: %s', self.cmd_as_string)
 
         if not len(cmd):
-            raise EasyProcessError(self, 'empty command!')
+            raise EasyProcessError(self, "empty command!")
 
     def __repr__(self):
-        msg = '<%s cmd_param=%s cmd=%s oserror=%s return_code=%s stdout="%s" stderr="%s" timeout_happened=%s>' % (
-            self.__class__.__name__,
-            self.cmd_param,
-            self.cmd,
-            self.oserror,
-            self.return_code,
-            self.stdout,
-            self.stderr,
-            self.timeout_happened,
+        msg = (
+            '<%s cmd_param=%s cmd=%s oserror=%s return_code=%s stdout="%s" stderr="%s" timeout_happened=%s>'
+            % (
+                self.__class__.__name__,
+                self.cmd_param,
+                self.cmd,
+                self.oserror,
+                self.return_code,
+                self.stdout,
+                self.stderr,
+                self.timeout_happened,
+            )
         )
         return msg
 
     @property
     def pid(self):
-        '''
+        """
         PID (:attr:`subprocess.Popen.pid`)
 
         :rtype: int
-        '''
+        """
         if self.popen:
             return self.popen.pid
 
     @property
     def return_code(self):
-        '''
+        """
         returncode (:attr:`subprocess.Popen.returncode`)
 
         :rtype: int
-        '''
+        """
         if self.popen:
             return self.popen.returncode
 
@@ -159,7 +167,8 @@ class EasyProcess(object):
         ok = ret == return_code
         if not ok:
             raise EasyProcessError(
-                self, 'check error, return code is not {0}!'.format(return_code))
+                self, "check error, return code is not {0}!".format(return_code)
+            )
         return self
 
     def check_installed(self):
@@ -203,11 +212,11 @@ class EasyProcess(object):
 
         """
         if self.is_started:
-            raise EasyProcessError(self, 'process was started twice!')
+            raise EasyProcessError(self, "process was started twice!")
 
         if self.use_temp_files:
-            self._stdout_file = tempfile.TemporaryFile(prefix='stdout_')
-            self._stderr_file = tempfile.TemporaryFile(prefix='stderr_')
+            self._stdout_file = tempfile.TemporaryFile(prefix="stdout_")
+            self._stderr_file = tempfile.TemporaryFile(prefix="stderr_")
             stdout = self._stdout_file
             stderr = self._stderr_file
 
@@ -218,26 +227,23 @@ class EasyProcess(object):
         cmd = list(map(uniencode, self.cmd))
 
         try:
-            self.popen = subprocess.Popen(cmd,
-                                          stdout=stdout,
-                                          stderr=stderr,
-                                          cwd=self.cwd,
-                                          env=self.env,
-                                          )
+            self.popen = subprocess.Popen(
+                cmd, stdout=stdout, stderr=stderr, cwd=self.cwd, env=self.env,
+            )
         except OSError as oserror:
-            log.debug('OSError exception: %s', oserror)
+            log.debug("OSError exception: %s", oserror)
             self.oserror = oserror
-            raise EasyProcessError(self, 'start error')
+            raise EasyProcessError(self, "start error")
         self.is_started = True
-        log.debug('process was started (pid=%s)', self.pid)
+        log.debug("process was started (pid=%s)", self.pid)
         return self
 
     def is_alive(self):
-        '''
+        """
         poll process using :meth:`subprocess.Popen.poll`
 
         :rtype: bool
-        '''
+        """
         if self.popen:
             return self.popen.poll() is None
         else:
@@ -274,9 +280,9 @@ class EasyProcess(object):
             return
 
         def remove_ending_lf(s):
-            if s.endswith('\n'):
+            if s.endswith("\n"):
                 s = s[:-1]
-            if s.endswith('\r'):
+            if s.endswith("\r"):
                 s = s[:-1]
             return s
 
@@ -314,19 +320,19 @@ class EasyProcess(object):
                 # communicate() blocks process, timeout not possible
                 self._outputs_processed = True
                 (self.stdout, self.stderr) = self.popen.communicate()
-            log.debug('process has ended, return code=%s', self.return_code)
+            log.debug("process has ended, return code=%s", self.return_code)
             self.stdout = remove_ending_lf(unidecode(self.stdout))
             self.stderr = remove_ending_lf(unidecode(self.stderr))
 
-#            def limit_str(s):
-#                if len(s) > self.max_bytes_to_log:
-#                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
-#                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
-#                return s
+            #            def limit_str(s):
+            #                if len(s) > self.max_bytes_to_log:
+            #                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
+            #                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
+            #                return s
             if self.enable_stdout_log:
-                log.debug('stdout=%s', self.stdout)
+                log.debug("stdout=%s", self.stdout)
             if self.enable_stderr_log:
-                log.debug('stderr=%s', self.stderr)
+                log.debug("stderr=%s", self.stderr)
 
     def stop(self):
         """Kill process and wait for command to complete.
@@ -341,19 +347,19 @@ class EasyProcess(object):
         return self.sendstop().wait()
 
     def sendstop(self):
-        '''
+        """
         Kill process (:meth:`subprocess.Popen.terminate`).
         Do not wait for command to complete.
 
         :rtype: self
-        '''
+        """
         if not self.is_started:
-            raise EasyProcessError(self, 'process was not started!')
+            raise EasyProcessError(self, "process was not started!")
 
         log.debug('stopping process (pid=%s cmd="%s")', self.pid, self.cmd)
         if self.popen:
             if self.is_alive():
-                log.debug('process is active -> sending SIGTERM')
+                log.debug("process is active -> sending SIGTERM")
 
                 try:
                     try:
@@ -361,27 +367,27 @@ class EasyProcess(object):
                     except AttributeError:
                         os.kill(self.popen.pid, signal.SIGKILL)
                 except OSError as oserror:
-                    log.debug('exception in terminate:%s', oserror)
+                    log.debug("exception in terminate:%s", oserror)
 
             else:
-                log.debug('process was already stopped')
+                log.debug("process was already stopped")
         else:
-            log.debug('process was not started')
+            log.debug("process was not started")
 
         return self
 
     def sleep(self, sec):
-        '''
+        """
         sleeping (same as :func:`time.sleep`)
 
         :rtype: self
-        '''
+        """
         time.sleep(sec)
 
         return self
 
     def wrap(self, func, delay=0):
-        '''
+        """
         returns a function which:
          1. start process
          2. call func, save result
@@ -391,7 +397,8 @@ class EasyProcess(object):
         similar to :keyword:`with` statement
 
         :rtype:
-        '''
+        """
+
         def wrapped():
             self.start()
             if delay:
@@ -400,34 +407,35 @@ class EasyProcess(object):
             try:
                 x = func()
             except OSError as oserror:
-                log.debug('OSError exception:%s', oserror)
+                log.debug("OSError exception:%s", oserror)
                 self.oserror = oserror
-                raise EasyProcessError(self, 'wrap error!')
+                raise EasyProcessError(self, "wrap error!")
             finally:
                 self.stop()
             return x
+
         return wrapped
 
     def __enter__(self):
-        '''used by the :keyword:`with` statement'''
+        """used by the :keyword:`with` statement"""
         self.start()
         return self
 
     def __exit__(self, *exc_info):
-        '''used by the :keyword:`with` statement'''
+        """used by the :keyword:`with` statement"""
         self.stop()
 
 
 def extract_version(txt):
     """This function tries to extract the version from the help text of any
     program."""
-    words = txt.replace(',', ' ').split()
+    words = txt.replace(",", " ").split()
     version = None
     for x in reversed(words):
         if len(x) > 2:
-            if x[0].lower() == 'v':
+            if x[0].lower() == "v":
                 x = x[1:]
-            if '.' in x and x[0].isdigit():
+            if "." in x and x[0].isdigit():
                 version = x
                 break
     return version

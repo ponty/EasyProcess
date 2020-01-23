@@ -10,5 +10,5 @@ from easyprocess import EasyProcess
 @timed(1000)
 def test_timeout():  # pragma: no cover
     for x in range(1000):
-        print('index=', x)
-        neq_(EasyProcess('sleep 5').call(timeout=0.05).return_code, 0)
+        print("index=", x)
+        neq_(EasyProcess("sleep 5").call(timeout=0.05).return_code, 0)

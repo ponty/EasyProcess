@@ -8,9 +8,9 @@ log = logging.getLogger(__name__)
 PY3 = sys.version_info[0] >= 3
 
 if PY3:
-    string_types = str,
+    string_types = (str,)
 else:
-    string_types = basestring,
+    string_types = (basestring,)
 
 
 class EasyProcessUnicodeError(Exception):
@@ -18,13 +18,13 @@ class EasyProcessUnicodeError(Exception):
 
 
 def split_command(cmd, posix=None):
-    '''
+    """
      - cmd is string list -> nothing to do
      - cmd is string -> split it using shlex
 
     :param cmd: string ('ls -l') or list of strings (['ls','-l'])
     :rtype: string list
-    '''
+    """
     if not isinstance(cmd, string_types):
         # cmd is string list
         pass
@@ -35,12 +35,13 @@ def split_command(cmd, posix=None):
             # 2.x)!
             if isinstance(cmd, unicode):
                 try:
-                    cmd = unicodedata.normalize(
-                        'NFKD', cmd).encode('ascii', 'strict')
+                    cmd = unicodedata.normalize("NFKD", cmd).encode("ascii", "strict")
                 except UnicodeEncodeError:
-                    raise EasyProcessUnicodeError('unicode command "%s" can not be processed.' % cmd +
-                                                  'Use string list instead of string')
-                log.debug('unicode is normalized')
+                    raise EasyProcessUnicodeError(
+                        'unicode command "%s" can not be processed.' % cmd
+                        + "Use string list instead of string"
+                    )
+                log.debug("unicode is normalized")
         if posix is None:
             posix = True
         cmd = shlex.split(cmd, posix=posix)
@@ -50,17 +51,17 @@ def split_command(cmd, posix=None):
 def uniencode(s):
     if PY3:
         pass
-#        s=s.encode()
+    #        s=s.encode()
     else:
         if isinstance(s, unicode):
-            s = s.encode('utf-8')
+            s = s.encode("utf-8")
     return s
 
 
 def unidecode(s):
     if PY3:
-        s = s.decode('utf-8', 'ignore')
+        s = s.decode("utf-8", "ignore")
     else:
         if isinstance(s, str):
-            s = s.decode('utf-8', 'ignore')
+            s = s.decode("utf-8", "ignore")
     return s
