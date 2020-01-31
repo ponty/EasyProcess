@@ -300,7 +300,6 @@ class EasyProcess(object):
                     # wait() blocks process, timeout not possible
                     self.popen.wait()
 
-                self._outputs_processed = True
                 self._stdout_file.seek(0)
                 self._stderr_file.seek(0)
                 self.stdout = self._stdout_file.read()
@@ -318,11 +317,11 @@ class EasyProcess(object):
                 # self.stderr = self.popen.stderr.read()
 
                 # communicate() blocks process, timeout not possible
-                self._outputs_processed = True
                 (self.stdout, self.stderr) = self.popen.communicate()
             log.debug("process has ended, return code=%s", self.return_code)
             self.stdout = remove_ending_lf(unidecode(self.stdout))
             self.stderr = remove_ending_lf(unidecode(self.stderr))
+            self._outputs_processed = True
 
             #            def limit_str(s):
             #                if len(s) > self.max_bytes_to_log:
