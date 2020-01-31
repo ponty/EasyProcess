@@ -241,11 +241,18 @@ class EasyProcess(object):
     def is_alive(self):
         """
         poll process using :meth:`subprocess.Popen.poll`
-
+        It updates stdout/stderr/return_code if process has stopped earlier.
+        
         :rtype: bool
         """
         if self.popen:
-            return self.popen.poll() is None
+            alive = self.popen.poll() is None
+
+            if not alive:
+                # collect stdout/stderr/return_code if proc stopped
+                self._wait4process()
+
+            return alive
         else:
             return False
 
