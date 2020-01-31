@@ -101,7 +101,7 @@ class EasyProcess(object):
         self.cmd_param = cmd
         self._thread = None
         #        self.max_bytes_to_log = max_bytes_to_log
-        self._stop_thread = False
+        # self._stop_thread = False
         self.timeout_happened = False
         self.cwd = cwd
         cmd = split_command(cmd)
@@ -292,8 +292,8 @@ class EasyProcess(object):
                     while True:
                         if self.popen.poll() is not None:
                             break
-                        if self._stop_thread:
-                            return
+                        # if self._stop_thread:
+                        #     return
                         time.sleep(POLL_TIME)
 
                 else:
