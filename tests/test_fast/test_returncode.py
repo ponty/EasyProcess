@@ -18,3 +18,39 @@ def test_return_code():
 
     # same as start().wait().stop()
     eq_(EasyProcess("echo hello").call().return_code, 0)
+
+
+def test_is_alive1():
+    # early exit
+    p = EasyProcess("echo hello").start().sleep(0.5)
+
+    eq_(p.return_code, None)
+    eq_(p.stdout, None)
+    eq_(p.stderr, None)
+
+    eq_(p.is_alive(), False)  # is_alive collects ouputs if proc stopped
+
+    eq_(p.return_code, 0)
+    eq_(p.stdout, "hello")
+    eq_(p.stderr, "")
+
+    eq_(p.is_alive(), False)
+    eq_(p.is_alive(), False)
+
+
+def test_is_alive2():
+    # no exit
+    p = EasyProcess("sleep 10").start()
+
+    eq_(p.return_code, None)
+    eq_(p.stdout, None)
+    eq_(p.stderr, None)
+
+    eq_(p.is_alive(), True)  # is_alive collects ouputs if proc stopped
+
+    eq_(p.return_code, None)
+    eq_(p.stdout, None)
+    eq_(p.stderr, None)
+
+    eq_(p.is_alive(), True)
+    eq_(p.is_alive(), True)
