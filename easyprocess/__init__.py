@@ -275,7 +275,7 @@ class EasyProcess(object):
 
         if self._thread:
             self._thread.join(timeout=timeout)
-            self.timeout_happened = self.timeout_happened or self._thread.isAlive()
+            self.timeout_happened = self.timeout_happened or self._thread.is_alive()
         else:
             # no timeout and no existing thread
             self._wait4process()
