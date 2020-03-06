@@ -431,7 +431,7 @@ class EasyProcess(object):
         """used by the :keyword:`with` statement"""
         self.stop()
 
-
+# TODO: remove extract_version
 def extract_version(txt):
     """This function tries to extract the version from the help text of any
     program."""
@@ -447,4 +447,5 @@ def extract_version(txt):
     return version
 
 
+# TODO: remove Proc
 Proc = EasyProcess
