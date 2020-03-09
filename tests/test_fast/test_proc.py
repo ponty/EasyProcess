@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from nose.tools import eq_, timed
 
-from easyprocess import EasyProcess, EasyProcessCheckInstalledError, EasyProcessError
+from easyprocess import EasyProcess, EasyProcessError
 
 python = sys.executable
 
@@ -15,13 +15,6 @@ class Test(TestCase):
     def test_call(self):
         eq_(EasyProcess("ls -la").call().return_code, 0)
         eq_(EasyProcess(["ls", "-la"]).call().return_code, 0)
-
-    def test_check(self):
-        eq_(EasyProcess("ls -la").check().return_code, 0)
-        eq_(EasyProcess(["ls", "-la"]).check().return_code, 0)
-
-        self.assertRaises(EasyProcessError, lambda: EasyProcess("xxxxx").check())
-        self.assertRaises(EasyProcessError, lambda: EasyProcess("sh -c xxxxx").check())
 
     def test_start(self):
         p = EasyProcess("ls -la").start()
@@ -71,15 +64,6 @@ class Test(TestCase):
             self.assertTrue(x.is_alive())
         self.assertNotEquals(x.return_code, 0)
         self.assertFalse(x.is_alive())
-
-    def test_install(self):
-        EasyProcess("echo hello").check_installed()
-        self.assertRaises(
-            EasyProcessCheckInstalledError,
-            lambda: EasyProcess("xecho", url="http://xecho").check_installed(),
-        )
-
-        EasyProcess("echo", url="http://xecho").check_installed()
 
     def test_parse(self):
         eq_(EasyProcess("ls -la").cmd, ["ls", "-la"])

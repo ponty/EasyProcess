@@ -15,7 +15,6 @@ log = logging.getLogger(__name__)
 
 log.debug("version=%s", __version__)
 
-SECTION_LINK = "link"
 POLL_TIME = 0.1
 USE_POLL = 0
 
@@ -32,22 +31,6 @@ class EasyProcessError(Exception):
 template = """cmd=%s
 OSError=%s
 Program install error! """
-
-
-class EasyProcessCheckInstalledError(Exception):
-
-    """This exception is raised when a process run by check() returns
-    a non-zero exit status or OSError is raised.
-    """
-
-    def __init__(self, easy_process):
-        self.easy_process = easy_process
-
-    def __str__(self):
-        msg = template % (self.easy_process.cmd, self.easy_process.oserror,)
-        if self.easy_process.url:
-            msg += "\nhome page: " + self.easy_process.url
-        return msg
 
 
 class EasyProcess(object):
@@ -78,13 +61,7 @@ class EasyProcess(object):
     """
 
     def __init__(
-        self,
-        cmd,
-        ubuntu_package=None,
-        url=None,
-        cwd=None,
-        use_temp_files=True,
-        env=None,
+        self, cmd, cwd=None, use_temp_files=True, env=None,
     ):
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
@@ -95,13 +72,10 @@ class EasyProcess(object):
         self.stderr = None
         self._stdout_file = None
         self._stderr_file = None
-        self.url = url
         self.is_started = False
         self.oserror = None
         self.cmd_param = cmd
         self._thread = None
-        #        self.max_bytes_to_log = max_bytes_to_log
-        # self._stop_thread = False
         self.timeout_happened = False
         self.cwd = cwd
         cmd = split_command(cmd)
@@ -152,42 +126,6 @@ class EasyProcess(object):
         """
         if self.popen:
             return self.popen.returncode
-
-    def check(self, return_code=0):
-        """DEPRECATED
-        Run command with arguments. Wait for command to complete. If the
-        exit code was as expected and there is no exception then return,
-        otherwise raise EasyProcessError.
-
-        :param return_code: int, expected return code
-        :rtype: self
-
-        """
-        ret = self.call().return_code
-        ok = ret == return_code
-        if not ok:
-            raise EasyProcessError(
-                self, "check error, return code is not {0}!".format(return_code)
-            )
-        return self
-
-    def check_installed(self):
-        """DEPRECATED
-        Used for testing if program is installed.
-
-        Run command with arguments. Wait for command to complete.
-        If OSError raised, then raise :class:`EasyProcessCheckInstalledError`
-        with information about program installation
-
-        :param return_code: int, expected return code
-        :rtype: self
-
-        """
-        try:
-            self.call()
-        except Exception:
-            raise EasyProcessCheckInstalledError(self)
-        return self
 
     def call(self, timeout=None):
         """Run command with arguments. Wait for command to complete.
@@ -430,22 +368,3 @@ class EasyProcess(object):
     def __exit__(self, *exc_info):
         """used by the :keyword:`with` statement"""
         self.stop()
-
-# TODO: remove extract_version
-def extract_version(txt):
-    """This function tries to extract the version from the help text of any
-    program."""
-    words = txt.replace(",", " ").split()
-    version = None
-    for x in reversed(words):
-        if len(x) > 2:
-            if x[0].lower() == "v":
-                x = x[1:]
-            if "." in x and x[0].isdigit():
-                version = x
-                break
-    return version
-
-
-# TODO: remove Proc
-Proc = EasyProcess
