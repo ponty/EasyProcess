@@ -41,7 +41,7 @@ setup(
     name=PYPI_NAME,
     version=VERSION,
     description=DESCRIPTION,
-    long_description=open("README.rst", "r").read(),
+    # long_description=open("README.rst", "r").read(),
     classifiers=classifiers,
     keywords="subprocess interface",
     author="ponty",
