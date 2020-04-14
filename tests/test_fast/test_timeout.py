@@ -1,7 +1,6 @@
 import sys
 from unittest import TestCase
-
-from nose.tools import eq_, ok_, timed
+import pytest
 
 from easyprocess import EasyProcess
 
@@ -12,21 +11,21 @@ class Test(TestCase):
     def test_timeout(self):
         p = EasyProcess("sleep 1").start()
         p.wait(0.2)
-        eq_(p.is_alive(), True)
+        assert p.is_alive()
         p.wait(0.2)
-        eq_(p.is_alive(), True)
+        assert p.is_alive()
         p.wait(2)
-        eq_(p.is_alive(), False)
+        assert not p.is_alive()
 
-        eq_(EasyProcess("sleep 0.3").call().return_code == 0, True)
-        eq_(EasyProcess("sleep 0.3").call(timeout=0.1).return_code == 0, False)
-        eq_(EasyProcess("sleep 0.3").call(timeout=1).return_code == 0, True)
+        assert EasyProcess("sleep 0.3").call().return_code == 0
+        assert EasyProcess("sleep 0.3").call(timeout=0.1).return_code != 0
+        assert EasyProcess("sleep 0.3").call(timeout=1).return_code == 0
 
-        eq_(EasyProcess("sleep 0.3").call().timeout_happened, False)
-        eq_(EasyProcess("sleep 0.3").call(timeout=0.1).timeout_happened, True)
-        eq_(EasyProcess("sleep 0.3").call(timeout=1).timeout_happened, False)
+        assert EasyProcess("sleep 0.3").call().timeout_happened is False
+        assert EasyProcess("sleep 0.3").call(timeout=0.1).timeout_happened
+        assert EasyProcess("sleep 0.3").call(timeout=1).timeout_happened is False
 
-    @timed(3)
+    @pytest.mark.timeout(3)
     def test_time_cli1(self):
         p = EasyProcess(
             [
@@ -36,9 +35,9 @@ class Test(TestCase):
             ]
         )
         p.call()
-        eq_(p.return_code, 0)
+        assert p.return_code == 0
 
-    @timed(3)
+    @pytest.mark.timeout(3)
     def test_time_cli2(self):
         p = EasyProcess(
             [
@@ -48,26 +47,26 @@ class Test(TestCase):
             ]
         )
         p.call()
-        eq_(p.return_code, 0)
+        assert p.return_code == 0
 
-    @timed(3)
+    @pytest.mark.timeout(3)
     def test_time2(self):
         p = EasyProcess("sleep 5").call(timeout=1)
-        eq_(p.is_alive(), False)
-        eq_(p.timeout_happened, True)
-        ok_(p.return_code != 0)
-        eq_(p.stdout, "")
+        assert p.is_alive() is False
+        assert p.timeout_happened
+        assert p.return_code != 0
+        assert p.stdout == ""
 
-    @timed(3)
+    @pytest.mark.timeout(3)
     def test_timeout_out(self):
         p = EasyProcess(
             [python, "-c", "import time;print( 'start');time.sleep(5);print( 'end')"]
         ).call(timeout=1)
-        eq_(p.is_alive(), False)
-        eq_(p.timeout_happened, True)
-        ok_(p.return_code != 0)
-        eq_(p.stdout, "")
+        assert p.is_alive() is False
+        assert p.timeout_happened
+        assert p.return_code != 0
+        assert p.stdout == ""
 
-    @timed(0.3)
+    @pytest.mark.timeout(0.3)
     def test_time3(self):
         EasyProcess("sleep 5").start()

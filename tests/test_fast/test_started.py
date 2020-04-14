@@ -1,17 +1,16 @@
 from unittest import TestCase
 
-from nose.tools import eq_
 
 from easyprocess import EasyProcess, EasyProcessError
 
 
 class Test(TestCase):
     def test_is_started(self):
-        eq_(EasyProcess("ls -la").is_started, False)
-        eq_(EasyProcess("ls -la").start().is_started, True)
-        eq_(EasyProcess("ls -la").call().is_started, True)
-        eq_(EasyProcess("ls -la").start().wait().is_started, True)
-        eq_(EasyProcess("ls -la").start().stop().is_started, True)
+        assert EasyProcess("ls -la").is_started is False
+        assert EasyProcess("ls -la").start().is_started
+        assert EasyProcess("ls -la").call().is_started
+        assert EasyProcess("ls -la").start().wait().is_started
+        assert EasyProcess("ls -la").start().stop().is_started
 
     def test_raise(self):
         self.assertRaises(

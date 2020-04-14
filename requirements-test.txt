@@ -1,5 +1,6 @@
 tox
-nose
+pytest
+pytest-timeout
 coverage
 six
 pyvirtualdisplay

@@ -1,7 +1,6 @@
 import json
 import sys
 
-from nose.tools import eq_, ok_
 
 from easyprocess import EasyProcess
 
@@ -15,8 +14,8 @@ def pass_env(e):
 
 
 def test_env():
-    ok_(len(pass_env(None)))
+    assert len(pass_env(None)) > 0
     e = pass_env(None)
-    eq_(pass_env(e).get("FOO"), None)
+    assert pass_env(e).get("FOO") is None
     e["FOO"] = "2"
-    eq_(pass_env(e).get("FOO"), "2")
+    assert pass_env(e).get("FOO") == "2"

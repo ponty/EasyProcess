@@ -49,7 +49,4 @@ install:
  
 script:  
  - cd tests
- - nosetests -vv  --with-coverage --cover-package=easyprocess .
- 
-after_success:
- - coveralls
+ - pytest -v .

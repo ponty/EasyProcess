@@ -1,7 +1,7 @@
 import sys
 
-from nose.tools import timed
 from pyvirtualdisplay.display import Display
+import pytest
 
 from easyprocess import EasyProcess
 
@@ -14,7 +14,7 @@ VISIBLE = 0
 # no deadlock with temp_files
 
 
-@timed(100)
+@pytest.mark.timeout(100)
 def test_deadlock():
     # skip these tests for Windows/Mac
     if not sys.platform.startswith("linux"):

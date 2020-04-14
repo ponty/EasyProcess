@@ -1,5 +1,3 @@
-from nose.tools import eq_
-
 from easyprocess import EasyProcess
 
 
@@ -8,7 +6,7 @@ def test_call():
         # test for:
         # OSError exception:[Errno 24] Too many open files
         print("index=", x)
-        eq_(EasyProcess("echo hi").call().return_code, 0)
+        assert EasyProcess("echo hi").call().return_code == 0
 
 
 #    def test_start(self):
