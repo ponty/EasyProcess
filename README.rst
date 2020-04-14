@@ -2,10 +2,9 @@ EasyProcess is an easy to use python subprocess interface.
 
 Links:
  * home: https://github.com/ponty/EasyProcess
- * documentation: http://EasyProcess.readthedocs.org
  * PYPI: https://pypi.python.org/pypi/EasyProcess
 
-|Travis| |Coveralls| |Latest Version| |Supported Python versions| |License| |Code Health| |Documentation|
+|Travis| |License|
 
 Features:
  - layer on top of subprocess_ module
@@ -24,32 +23,19 @@ Features:
  - supported python versions: 2.7, 3.5, 3.6, 3.7, 3.8
  - Method chaining_
  
-Similar projects:
- * execute (http://pypi.python.org/pypi/execute)
- * commandwrapper (http://pypi.python.org/pypi/commandwrapper)
- * extcmd (http://pypi.python.org/pypi/extcmd)
- * sh (https://github.com/amoffat/sh)
- * envoy (https://github.com/kennethreitz/envoy)
- * plumbum (https://github.com/tomerfiliba/plumbum)
-
 Basic usage
 ===========
 
     >>> from easyprocess import EasyProcess
     >>> EasyProcess('python --version').call().stderr
-    u'Python 2.6.6'
+    'Python 2.7.17'
 
 Installation
 ============
 
 install::
 
-    pip install EasyProcess
-
-
-uninstall::
-
-    pip uninstall EasyProcess
+    pip3 install EasyProcess
 
 
 Usage
@@ -211,18 +197,8 @@ Replacing subprocess.call::
 
 .. |Travis| image:: https://travis-ci.org/ponty/EasyProcess.svg?branch=master
    :target: https://travis-ci.org/ponty/EasyProcess/
-.. |Coveralls| image:: http://img.shields.io/coveralls/ponty/EasyProcess/master.svg
-   :target: https://coveralls.io/r/ponty/EasyProcess/
-.. |Latest Version| image:: https://img.shields.io/pypi/v/EasyProcess.svg
-   :target: https://pypi.python.org/pypi/EasyProcess/
-.. |Supported Python versions| image:: https://img.shields.io/pypi/pyversions/EasyProcess.svg
-   :target: https://pypi.python.org/pypi/EasyProcess/
 .. |License| image:: https://img.shields.io/pypi/l/EasyProcess.svg
    :target: https://pypi.python.org/pypi/EasyProcess/
-.. |Code Health| image:: https://landscape.io/github/ponty/EasyProcess/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/ponty/EasyProcess/master
-.. |Documentation| image:: https://readthedocs.org/projects/pyscreenshot/badge/?version=latest
-   :target: http://easyprocess.readthedocs.org
 
 
 
