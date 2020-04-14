@@ -1,5 +1,6 @@
-from easyprocess import EasyProcess
 import pytest
+
+from easyprocess import EasyProcess
 
 # if run with coverage:
 #        Fatal Python error: deallocating None

@@ -1,9 +1,9 @@
 import sys
 
-from pyvirtualdisplay.display import Display
 import pytest
 
 from easyprocess import EasyProcess
+from pyvirtualdisplay.display import Display
 
 python = sys.executable
 

@@ -1,7 +1,6 @@
 import json
 import sys
 
-
 from easyprocess import EasyProcess
 
 python = sys.executable
