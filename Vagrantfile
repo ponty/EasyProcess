@@ -79,13 +79,13 @@ Vagrant.configure(2) do |config|
   sudo apt-get install -y python3-distutils
 
 # tools
-  sudo apt-get install -y mc python-pip xvfb
+  sudo apt-get install -y mc python3-pip xvfb
 
 # test dependencies
-  sudo pip install -r /vagrant/requirements-test.txt
+  sudo pip3 install tox
   
 # doc dependencies
-  sudo pip install -r /vagrant/requirements-doc.txt
+#  sudo pip install -r /vagrant/requirements-doc.txt
   
   "
       config.vm.provision "shell", inline: $script
