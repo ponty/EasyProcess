@@ -4,7 +4,7 @@ Links:
  * home: https://github.com/ponty/EasyProcess
  * PYPI: https://pypi.python.org/pypi/EasyProcess
 
-|Travis| |License|
+|Travis|
 
 Features:
  - layer on top of subprocess_ module
@@ -13,8 +13,6 @@ Features:
  - command can be list (preferred) or string (command string is converted to list using shlex.split)
  - logging
  - timeout
- - unit-tests
- - cross-platform, development on linux
  - shell is not supported
  - pipes are not supported
  - stdout/stderr is set only after the subprocess has finished
@@ -197,8 +195,6 @@ Replacing subprocess.call::
 
 .. |Travis| image:: https://travis-ci.org/ponty/EasyProcess.svg?branch=master
    :target: https://travis-ci.org/ponty/EasyProcess/
-.. |License| image:: https://img.shields.io/pypi/l/EasyProcess.svg
-   :target: https://pypi.python.org/pypi/EasyProcess/
 
 
 
