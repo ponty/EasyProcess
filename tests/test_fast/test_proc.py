@@ -5,7 +5,7 @@ import time
 
 import pytest
 
-from easyprocess import EasyProcess, EasyProcessError
+from easyprocess import EasyProcess
 
 python = sys.executable
 
