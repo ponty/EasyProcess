@@ -5,7 +5,10 @@ from setuptools import setup
 NAME = "easyprocess"
 PYPI_NAME = "EasyProcess"
 URL = "https://github.com/ponty/easyprocess"
-DESCRIPTION = "Easy to use python subprocess interface."
+DESCRIPTION = "Easy to use Python subprocess interface."
+LONG_DESCRIPTION = """Easy to use Python subprocess interface.
+
+home: https://github.com/ponty/easyprocess"""
 PACKAGES = [
     NAME,
     NAME + ".examples",
@@ -41,7 +44,7 @@ setup(
     name=PYPI_NAME,
     version=VERSION,
     description=DESCRIPTION,
-    # long_description=open("README.rst", "r").read(),
+    long_description=LONG_DESCRIPTION,
     classifiers=classifiers,
     keywords="subprocess interface",
     author="ponty",
