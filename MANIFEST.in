@@ -7,4 +7,4 @@ include setup.py
 prune docs/_build
 prune docs/.build
 prune docs/api
-graft tests
+recursive-include tests *.py
