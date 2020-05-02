@@ -43,7 +43,6 @@ matrix:
 
 install:
  - if [ "$TRAVIS_PYTHON_VERSION" == "2.7" ]; then PIP=pip; else PIP=pip3; fi
- - $PIP install $USER --upgrade coveralls
  - $PIP install $USER --upgrade -r requirements-test.txt
  - $PIP install $USER --upgrade .
  

@@ -1,6 +1,4 @@
-tox
 pytest
 pytest-timeout
-coverage
 six
 pyvirtualdisplay
