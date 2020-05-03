@@ -3,5 +3,10 @@ import sys
 from easyprocess import EasyProcess
 
 python = sys.executable
-s = EasyProcess([python, "-c", 'print "hello"']).call().stdout
+cmd = [
+    python,
+    "-c",
+    'print("hello")',
+]
+s = EasyProcess(cmd).call().stdout
 print(s)

@@ -21,100 +21,93 @@ Features:
  - supported python versions: 2.7, 3.6, 3.7, 3.8
  - [Method chaining](https://en.wikipedia.org/wiki/Method_chaining)
  
-Basic usage
-===========
+Installation:
 
-    >>> from easyprocess import EasyProcess
-    >>> EasyProcess('python --version').call().stderr
-    'Python 2.7.17'
-
-Installation
-============
-
-install:
-
-    pip3 install EasyProcess
-
+```console
+$ python3 -m pip install EasyProcess
+```
 
 Usage
 =====
 
-Simple example
---------------
+```pycon
+>>> from easyprocess import EasyProcess
+>>> EasyProcess('python --version').call().stderr
+'Python 2.7.17'
+```
 
-Example program:
+Example program (examples/hello.py):
 
-    #-- include('examples/hello.py')--#
-    from easyprocess import EasyProcess
-    import sys
+```python
+import sys
 
-    s = EasyProcess([sys.executable, '-c', 'print "hello"']).call().stdout
-    print(s)
-    #-#
+from easyprocess import EasyProcess
 
-Output:
-
-    #-- sh('python -m easyprocess.examples.hello')--#
-    hello
-    #-#
-
-
-General
--------
-
-The command can be a string list or a concatenated string:
-    
-    #-- include('examples/cmd.py')--#
-    from easyprocess import EasyProcess
-
-    print('-- Run program, wait for it to complete, get stdout (command is string):')
-    s=EasyProcess('python -c "print 3"').call().stdout
-    print(s)
-
-    print('-- Run program, wait for it to complete, get stdout (command is list):')
-    s=EasyProcess(['python','-c','print 3']).call().stdout
-    print(s)
-
-    print('-- Run program, wait for it to complete, get stderr:')
-    s=EasyProcess('python --version').call().stderr
-    print(s)
-
-    print('-- Run program, wait for it to complete, get return code:')
-    s=EasyProcess('python --version').call().return_code
-    print(s)
-
-    print('-- Run program, wait 1 second, stop it, get stdout:')
-    s=EasyProcess('ping localhost').start().sleep(1).stop().stdout
-    print(s)
-
-    #-#
+python = sys.executable
+cmd = [
+    python,
+    "-c",
+    'print("hello")',
+]
+s = EasyProcess(cmd).call().stdout
+print(s)
+```
 
 Output:
 
-    #-- sh('python -m easyprocess.examples.cmd')--#
-    -- Run program, wait for it to complete, get stdout (command is string):
-    3
-    -- Run program, wait for it to complete, get stdout (command is list):
-    3
-    -- Run program, wait for it to complete, get stderr:
-    Python 2.7.6
-    -- Run program, wait for it to complete, get return code:
-    0
-    -- Run program, wait 1 second, stop it, get stdout:
-    PING localhost (127.0.0.1) 56(84) bytes of data.
-    64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.017 ms
-    64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.034 ms
-    #-#
+```console
+$ python3 -m easyprocess.examples.hello
+hello
+```
+
+examples/cmd.py    
+
+```python
+import sys
+
+from easyprocess import EasyProcess
+
+python = sys.executable
+
+print("-- Run program, wait for it to complete, get stdout:")
+s = EasyProcess([python, "-c", "print(3)"]).call().stdout
+print(s)
+
+print("-- Run program, wait for it to complete, get stderr:")
+s = EasyProcess([python, "-c", "import sys;sys.stderr.write('4\\n')"]).call().stderr
+print(s)
+
+print("-- Run program, wait for it to complete, get return code:")
+s = EasyProcess([python, "--version"]).call().return_code
+print(s)
+
+print("-- Run program, wait 1 second, stop it, get stdout:")
+s = EasyProcess(["ping", "localhost"]).start().sleep(1).stop().stdout
+print(s)
+```
+
+Output:
+
+```console
+$ python3 -m easyprocess.examples.cmd
+-- Run program, wait for it to complete, get stdout:
+3
+-- Run program, wait for it to complete, get stderr:
+4
+-- Run program, wait for it to complete, get return code:
+0
+-- Run program, wait 1 second, stop it, get stdout:
+PING localhost (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.022 ms
+```
 
 Shell commands
 --------------
 
 Shell commands are not supported.
 
-.. warning:
-
-  ``echo`` is a shell command on Windows (there is no echo.exe),
-  but it is a program on Linux.
+``echo`` is a shell command on Windows (there is no echo.exe),
+but it is a program on Linux.
 
 return_code
 -----------
@@ -128,22 +121,25 @@ With
 By using `with` statement the process is started
 and stopped automatically:
     
-    from easyprocess import EasyProcess
-    with EasyProcess('ping 127.0.0.1') as proc: # start()
-        # communicate with proc
-        pass
-    # stopped
-    
+```python
+from easyprocess import EasyProcess
+with EasyProcess('ping 127.0.0.1') as proc: # start()
+    # communicate with proc
+    pass
+# stopped
+```
+
 Equivalent with:
     
-    from easyprocess import EasyProcess
-    proc = EasyProcess('ping 127.0.0.1').start()
-    try:
-        # communicate with proc
-        pass
-    finally:
-        proc.stop()
-
+```python
+from easyprocess import EasyProcess
+proc = EasyProcess('ping 127.0.0.1').start()
+try:
+    # communicate with proc
+    pass
+finally:
+    proc.stop()
+```
 
 Timeout
 -------
@@ -153,45 +149,19 @@ This was implemented with "daemon thread".
 "The entire Python program exits when only daemon threads are left."
 http://docs.python.org/library/threading.html:
 
-    #-- include('examples/timeout.py')--#
-    from easyprocess import EasyProcess
+examples/timeout.py
+```python
+from easyprocess import EasyProcess
 
-    s = EasyProcess('ping localhost').call(timeout=2).stdout
-    print(s)
-    #-#
+s = EasyProcess('ping localhost').call(timeout=2).stdout
+print(s)
+```
 
 Output:
 
-    #-- sh('python -m easyprocess.examples.timeout')--#
-    PING localhost (127.0.0.1) 56(84) bytes of data.
-    64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.018 ms
-    64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.037 ms
-    64 bytes from localhost (127.0.0.1): icmp_seq=3 ttl=64 time=0.025 ms
-    #-#
-
-
-Replacing existing functions
-----------------------------
-
-Replacing os.system:
-
-    retcode = os.system("ls -l")
-    ==>
-    p = EasyProcess("ls -l").call()
-    retcode = p.return_code
-    print(p.stdout)
-
-Replacing subprocess.call:
-
-    retcode = subprocess.call(["ls", "-l"])
-    ==>
-    p = EasyProcess(["ls", "-l"]).call()
-    retcode = p.return_code
-    print(p.stdout)
-
-
-
-
-     
-
-   
+```console
+$ python3 -m easyprocess.examples.timeout
+PING localhost (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.018 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.037 ms
+```

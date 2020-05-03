@@ -5,11 +5,11 @@ from easyprocess import EasyProcess
 python = sys.executable
 
 print("-- Run program, wait for it to complete, get stdout:")
-s = EasyProcess([python, "-c", "print 3"]).call().stdout
+s = EasyProcess([python, "-c", "print(3)"]).call().stdout
 print(s)
 
 print("-- Run program, wait for it to complete, get stderr:")
-s = EasyProcess([python, "--version"]).call().stderr
+s = EasyProcess([python, "-c", "import sys;sys.stderr.write('4\\n')"]).call().stderr
 print(s)
 
 print("-- Run program, wait for it to complete, get return code:")
