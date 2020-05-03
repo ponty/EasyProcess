@@ -80,7 +80,7 @@ class EasyProcess(object):
         self.cwd = cwd
         cmd = split_command(cmd)
         self.cmd = cmd
-        self.cmd_as_string = " ".join(self.cmd)  # TODO: not perfect
+        # self.cmd_as_string = " ".join(self.cmd)
         self.enable_stdout_log = True
         self.enable_stderr_log = True
 
