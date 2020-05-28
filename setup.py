@@ -3,21 +3,24 @@ import os
 from setuptools import setup
 
 NAME = "easyprocess"
-PYPI_NAME = "EasyProcess"
-URL = "https://github.com/ponty/easyprocess"
-DESCRIPTION = "Easy to use Python subprocess interface."
-LONG_DESCRIPTION = """Easy to use Python subprocess interface.
-
-home: https://github.com/ponty/easyprocess"""
-PACKAGES = [
-    NAME,
-    NAME + ".examples",
-]
 
 # get __version__
 __version__ = None
 exec(open(os.path.join(NAME, "about.py")).read())
 VERSION = __version__
+
+PYPI_NAME = "EasyProcess"
+URL = "https://github.com/ponty/easyprocess"
+DESCRIPTION = "Easy to use Python subprocess interface."
+LONG_DESCRIPTION = """Easy to use Python subprocess interface.
+
+Documentation: https://github.com/ponty/easyprocess/tree/"""
+LONG_DESCRIPTION += VERSION
+PACKAGES = [
+    NAME,
+    NAME + ".examples",
+]
+
 
 # extra = {}
 # if sys.version_info >= (3,):
