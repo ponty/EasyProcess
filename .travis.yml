@@ -30,7 +30,7 @@ matrix:
       os: osx
       osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
       language: shell       # 'language: python' is an error on Travis CI macOS
-      env: PATH=/Users/travis/Library/Python/3.7/bin:$PATH USER=--user
+      env: PATH=/Users/travis/Library/Python/3.7/bin:$PATH PIPUSER=--user
 
     - name: "Python 3.8 on Windows"
       os: windows           # Windows 10.0.17134 N/A Build 17134
@@ -41,10 +41,11 @@ matrix:
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
 
 install:
- - if [ "$TRAVIS_PYTHON_VERSION" == "2.7" ]; then PIP=pip; else PIP=pip3; fi
- - $PIP install $USER --upgrade -r requirements-test.txt
- - $PIP install $USER --upgrade .
+ - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then PYTHON=python; else PYTHON=python3; fi
+ - if [ ${TRAVIS_OS_NAME} == "windows" ]; then PYTHON=python; fi
+ - $PYTHON -m pip install $PIPUSER --upgrade -r requirements-test.txt
+ - $PYTHON -m pip install $PIPUSER --upgrade .
  
 script:  
  - cd tests
- - pytest -v .
+ - $PYTHON -m pytest -v .
