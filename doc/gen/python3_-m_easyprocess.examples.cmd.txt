@@ -1,0 +1,10 @@
+$ python3 -m easyprocess.examples.cmd
+-- Run program, wait for it to complete, get stdout:
+3
+-- Run program, wait for it to complete, get stderr:
+4
+-- Run program, wait for it to complete, get return code:
+0
+-- Run program, wait 1 second, stop it, get stdout:
+PING localhost (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.012 ms

@@ -30,39 +30,30 @@ $ python3 -m pip install EasyProcess
 Usage
 =====
 
-```pycon
->>> from easyprocess import EasyProcess
->>> EasyProcess('python --version').call().stderr
-'Python 2.7.17'
-```
-
-Example program (examples/hello.py):
-
-```python
-import sys
+Examples:
+```py
+# easyprocess/examples/hello.py
 
 from easyprocess import EasyProcess
 
-python = sys.executable
-cmd = [
-    python,
-    "-c",
-    'print("hello")',
-]
+cmd = ["echo", "hello"]
 s = EasyProcess(cmd).call().stdout
 print(s)
+
 ```
 
 Output:
+<!-- embedme doc/gen/python3_-m_easyprocess.examples.hello.txt -->
 
 ```console
 $ python3 -m easyprocess.examples.hello
 hello
 ```
 
-examples/cmd.py    
 
-```python
+```py
+# easyprocess/examples/cmd.py
+
 import sys
 
 from easyprocess import EasyProcess
@@ -84,9 +75,11 @@ print(s)
 print("-- Run program, wait 1 second, stop it, get stdout:")
 s = EasyProcess(["ping", "localhost"]).start().sleep(1).stop().stdout
 print(s)
+
 ```
 
 Output:
+<!-- embedme doc/gen/python3_-m_easyprocess.examples.cmd.txt -->
 
 ```console
 $ python3 -m easyprocess.examples.cmd
@@ -98,7 +91,7 @@ $ python3 -m easyprocess.examples.cmd
 0
 -- Run program, wait 1 second, stop it, get stdout:
 PING localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.022 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.012 ms
 ```
 
 Shell commands
@@ -149,19 +142,23 @@ This was implemented with "daemon thread".
 "The entire Python program exits when only daemon threads are left."
 http://docs.python.org/library/threading.html:
 
-examples/timeout.py
-```python
+```py
+# easyprocess/examples/timeout.py
+
 from easyprocess import EasyProcess
 
-s = EasyProcess('ping localhost').call(timeout=2).stdout
+s = EasyProcess(["ping", "localhost"]).call(timeout=2).stdout
 print(s)
+
 ```
 
 Output:
 
+<!-- embedme doc/gen/python3_-m_easyprocess.examples.timeout.txt -->
+
 ```console
 $ python3 -m easyprocess.examples.timeout
 PING localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.018 ms
-64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.037 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.013 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.059 ms
 ```

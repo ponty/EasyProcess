@@ -2,3 +2,4 @@ pytest
 pytest-timeout
 six
 pyvirtualdisplay
+entrypoint2

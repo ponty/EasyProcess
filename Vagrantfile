@@ -84,10 +84,13 @@ Vagrant.configure(2) do |config|
   sudo pip3 install tox
   
 # doc dependencies
-#  sudo pip install -r /vagrant/requirements-doc.txt
-  
+  sudo apt-get install -y npm
+  sudo npm install -g npx
+
   "
       config.vm.provision "shell", inline: $script
+
+      config.ssh.extra_args = ["-t", "cd /vagrant; bash --login"]       
           
        
 end
