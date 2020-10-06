@@ -1,4 +1,6 @@
 import sys
+import os
+import time
 
 import pytest
 
@@ -74,3 +76,28 @@ def test_timeout_out():
 @pytest.mark.timeout(0.3)
 def test_time3():
     EasyProcess("sleep 5").start()
+
+
+ignore_term = """
+import signal;
+import time;
+signal.signal(signal.SIGTERM, lambda *args: None);
+while True:
+    time.sleep(0.5);
+"""
+
+
+@pytest.mark.timeout(3)
+def test_force_timeout():
+    proc = EasyProcess(["python", "-c", ignore_term]).start()
+    time.sleep(1)
+    proc.stop(kill_after=1)
+    assert proc.is_alive() is False
+    assert proc.return_code != 0
+
+
+@pytest.mark.timeout(3)
+def test_force_timeout2():
+    proc = EasyProcess(["python", "-c", ignore_term]).call(timeout=1, kill_after=1)
+    assert proc.is_alive() is False
+    assert proc.return_code != 0
