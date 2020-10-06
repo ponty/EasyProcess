@@ -278,7 +278,7 @@ class EasyProcess(object):
             if self.enable_stderr_log:
                 log.debug("stderr=%s", self.stderr)
 
-    def stop(self, kill_after=None):
+    def stop(self, timeout=None, kill_after=None):
         """Kill process and wait for command to complete.
 
         same as:
@@ -288,8 +288,8 @@ class EasyProcess(object):
         :rtype: self
 
         """
-        self.sendstop().wait(timeout=kill_after)
-        if self.is_alive():
+        self.sendstop().wait(timeout=kill_after or timeout)
+        if self.is_alive() and kill_after is not None:
             self.sendstop(kill=True).wait()
         return self
 
@@ -306,7 +306,8 @@ class EasyProcess(object):
         log.debug('stopping process (pid=%s cmd="%s")', self.pid, self.cmd)
         if self.popen:
             if self.is_alive():
-                log.debug("process is active -> sending SIGTERM")
+                signame = "SIGKILL" if kill else "SIGTERM"
+                log.debug("process is active -> sending " + signame)
 
                 try:
                     try:
