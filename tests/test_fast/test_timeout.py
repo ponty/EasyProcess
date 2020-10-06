@@ -112,7 +112,13 @@ def test_stop_wait():
     proc = EasyProcess(["python", "-c", ignore_term]).start()
     time.sleep(1)
     proc.stop(timeout=1)
-    assert proc.is_alive() is True
+    # On windows, Popen.terminate actually behaves like kill,
+    # so don't check that our hanging process code is actually hanging.
+    # The end result is still what we want. On other platforms, leave
+    # this assertion to make sure we are correctly testing the ability
+    # to stop a hung process
+    if not sys.platform.startswith("win"):
+        assert proc.is_alive() is True
     proc.stop(kill_after=1)
     assert proc.is_alive() is False
     assert proc.return_code != 0
