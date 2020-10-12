@@ -100,7 +100,7 @@ def test_force_timeout():
 
 
 @pytest.mark.timeout(2)
-def test_force_timeout():
+def test_force_0_timeout():
     proc = EasyProcess([python, "-c", ignore_term]).start()
     time.sleep(1)
     proc.stop(kill_after=0)
