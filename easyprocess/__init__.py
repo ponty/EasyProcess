@@ -127,7 +127,7 @@ class EasyProcess(object):
         if self.popen:
             return self.popen.returncode
 
-    def call(self, timeout=None):
+    def call(self, timeout=None, kill_after=None):
         """Run command with arguments. Wait for command to complete.
 
         same as:
@@ -140,7 +140,7 @@ class EasyProcess(object):
         """
         self.start().wait(timeout=timeout)
         if self.is_alive():
-            self.stop()
+            self.stop(kill_after=kill_after)
         return self
 
     def start(self):
@@ -278,7 +278,7 @@ class EasyProcess(object):
             if self.enable_stderr_log:
                 log.debug("stderr=%s", self.stderr)
 
-    def stop(self):
+    def stop(self, timeout=None, kill_after=None):
         """Kill process and wait for command to complete.
 
         same as:
@@ -288,9 +288,12 @@ class EasyProcess(object):
         :rtype: self
 
         """
-        return self.sendstop().wait()
+        self.sendstop().wait(timeout=kill_after or timeout)
+        if self.is_alive() and kill_after is not None:
+            self.sendstop(kill=True).wait()
+        return self
 
-    def sendstop(self):
+    def sendstop(self, kill=False):
         """
         Kill process (:meth:`subprocess.Popen.terminate`).
         Do not wait for command to complete.
@@ -303,11 +306,15 @@ class EasyProcess(object):
         log.debug('stopping process (pid=%s cmd="%s")', self.pid, self.cmd)
         if self.popen:
             if self.is_alive():
-                log.debug("process is active -> sending SIGTERM")
+                signame = "SIGKILL" if kill else "SIGTERM"
+                log.debug("process is active -> sending " + signame)
 
                 try:
                     try:
-                        self.popen.terminate()
+                        if kill:
+                            self.popen.kill()
+                        else:
+                            self.popen.terminate()
                     except AttributeError:
                         os.kill(self.popen.pid, signal.SIGKILL)
                 except OSError as oserror:
