@@ -1,5 +1,4 @@
 import sys
-import os
 import time
 
 import pytest
@@ -100,6 +99,15 @@ def test_force_timeout():
     assert proc.return_code != 0
 
 
+@pytest.mark.timeout(2)
+def test_force_timeout():
+    proc = EasyProcess([python, "-c", ignore_term]).start()
+    time.sleep(1)
+    proc.stop(kill_after=0)
+    assert proc.is_alive() is False
+    assert proc.return_code != 0
+
+
 @pytest.mark.timeout(3)
 def test_force_timeout2():
     proc = EasyProcess([python, "-c", ignore_term]).call(timeout=1, kill_after=1)
@@ -111,7 +119,7 @@ def test_force_timeout2():
 def test_stop_wait():
     proc = EasyProcess([python, "-c", ignore_term]).start()
     time.sleep(1)
-    proc.stop(timeout=1)
+    proc.sendstop().wait(timeout=1)
     # On windows, Popen.terminate actually behaves like kill,
     # so don't check that our hanging process code is actually hanging.
     # The end result is still what we want. On other platforms, leave
