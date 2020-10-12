@@ -22,9 +22,13 @@ matrix:
       python: 3.7
       dist: bionic
       
-    - name: 3.8_bionic
+    - name: 3.8_focal
       python: 3.8
-      dist: bionic
+      dist: focal
+      
+    - name: 3.9_focal
+      python: 3.9-dev
+      dist: focal
 
     - name: "Python 3.7 on macOS"
       os: osx
