@@ -89,7 +89,7 @@ while True:
 
 @pytest.mark.timeout(3)
 def test_force_timeout():
-    proc = EasyProcess(["python", "-c", ignore_term]).start()
+    proc = EasyProcess([python, "-c", ignore_term]).start()
     # Calling stop() right away actually stops python before it
     # has a change to actually compile and run the input code,
     # meaning the signal handlers aren't registered yet. Give it
@@ -102,14 +102,14 @@ def test_force_timeout():
 
 @pytest.mark.timeout(3)
 def test_force_timeout2():
-    proc = EasyProcess(["python", "-c", ignore_term]).call(timeout=1, kill_after=1)
+    proc = EasyProcess([python, "-c", ignore_term]).call(timeout=1, kill_after=1)
     assert proc.is_alive() is False
     assert proc.return_code != 0
 
 
 @pytest.mark.timeout(4)
 def test_stop_wait():
-    proc = EasyProcess(["python", "-c", ignore_term]).start()
+    proc = EasyProcess([python, "-c", ignore_term]).start()
     time.sleep(1)
     proc.stop(timeout=1)
     # On windows, Popen.terminate actually behaves like kill,
