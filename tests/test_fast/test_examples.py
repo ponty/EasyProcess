@@ -4,6 +4,11 @@ from easyprocess import EasyProcess
 
 
 def test():
+    """
+    Deter test.
+
+    Args:
+    """
     # skip these tests for Windows/Mac
     if not sys.platform.startswith("linux"):
         return

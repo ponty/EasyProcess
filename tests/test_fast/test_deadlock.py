@@ -16,6 +16,11 @@ VISIBLE = 0
 
 @pytest.mark.timeout(100)
 def test_deadlock():
+    """
+    Waits for ack.
+
+    Args:
+    """
     # skip these tests for Windows/Mac
     if not sys.platform.startswith("linux"):
         return

@@ -21,10 +21,24 @@ USE_POLL = 0
 
 class EasyProcessError(Exception):
     def __init__(self, easy_process, msg=""):
+        """
+        Initialize process
+
+        Args:
+            self: (todo): write your description
+            easy_process: (todo): write your description
+            msg: (str): write your description
+        """
         self.easy_process = easy_process
         self.msg = msg
 
     def __str__(self):
+        """
+        Return a string representation of the message.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.msg + " " + repr(self.easy_process)
 
 
@@ -63,6 +77,16 @@ class EasyProcess(object):
     def __init__(
         self, cmd, cwd=None, use_temp_files=True, env=None,
     ):
+        """
+        Initialize a new command.
+
+        Args:
+            self: (todo): write your description
+            cmd: (int): write your description
+            cwd: (int): write your description
+            use_temp_files: (str): write your description
+            env: (todo): write your description
+        """
         self.use_temp_files = use_temp_files
         self._outputs_processed = False
 
@@ -92,6 +116,12 @@ class EasyProcess(object):
             raise EasyProcessError(self, "empty command!")
 
     def __repr__(self):
+        """
+        Return a representation of the error message.
+
+        Args:
+            self: (todo): write your description
+        """
         msg = (
             '<%s cmd_param=%s cmd=%s oserror=%s return_code=%s stdout="%s" stderr="%s" timeout_happened=%s>'
             % (
@@ -221,10 +251,22 @@ class EasyProcess(object):
         return self
 
     def _wait4process(self):
+        """
+        Wait for stdout stderr
+
+        Args:
+            self: (todo): write your description
+        """
         if self._outputs_processed:
             return
 
         def remove_ending_lf(s):
+            """
+            Removes leading whitespace from the string.
+
+            Args:
+                s: (str): write your description
+            """
             if s.endswith("\n"):
                 s = s[:-1]
             if s.endswith("\r"):
@@ -351,6 +393,11 @@ class EasyProcess(object):
         """
 
         def wrapped():
+            """
+            Start a function to run ().
+
+            Args:
+            """
             self.start()
             if delay:
                 self.sleep(delay)

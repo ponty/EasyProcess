@@ -2,6 +2,11 @@ from easyprocess import EasyProcess
 
 
 def test_return_code():
+    """
+    Returns the return code of a given process.
+
+    Args:
+    """
     # process has finished but no stop() or wait() was called
     assert EasyProcess("echo hello").start().sleep(0.5).return_code is None
 
@@ -19,6 +24,11 @@ def test_return_code():
 
 
 def test_is_alive1():
+    """
+    Returns true if the test is a test.
+
+    Args:
+    """
     # early exit
     p = EasyProcess("echo hello").start().sleep(0.5)
 
@@ -37,6 +47,11 @@ def test_is_alive1():
 
 
 def test_is_alive2():
+    """
+    Return true if code is a test code.
+
+    Args:
+    """
     # no exit
     p = EasyProcess("sleep 10").start()
 

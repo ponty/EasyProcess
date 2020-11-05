@@ -14,6 +14,12 @@ commands = [
 
 
 def empty_dir(dir):
+    """
+    Remove all empty files in dir.
+
+    Args:
+        dir: (str): write your description
+    """
     files = glob.glob(os.path.join(dir, "*"))
     for f in files:
         os.remove(f)
@@ -21,6 +27,11 @@ def empty_dir(dir):
 
 @entrypoint
 def main():
+    """
+    Run the embedme file.
+
+    Args:
+    """
     gendir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen")
     logging.info("gendir: %s", gendir)
     os.makedirs(gendir, exist_ok=True)

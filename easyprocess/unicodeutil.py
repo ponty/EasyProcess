@@ -49,6 +49,12 @@ def split_command(cmd, posix=None):
 
 
 def uniencode(s):
+    """
+    Uniencode a string.
+
+    Args:
+        s: (str): write your description
+    """
     if PY3:
         pass
     #        s=s.encode()
@@ -59,6 +65,12 @@ def uniencode(s):
 
 
 def unidecode(s):
+    """
+    Unide a string.
+
+    Args:
+        s: (str): write your description
+    """
     if PY3:
         s = s.decode("utf-8", "ignore")
     else:
