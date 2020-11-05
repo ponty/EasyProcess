@@ -4,6 +4,11 @@ from easyprocess import EasyProcess, EasyProcessError
 
 
 def test_is_started():
+    """
+    Waits until all jobs are running.
+
+    Args:
+    """
     assert EasyProcess("ls -la").is_started is False
     assert EasyProcess("ls -la").start().is_started
     assert EasyProcess("ls -la").call().is_started
@@ -12,6 +17,11 @@ def test_is_started():
 
 
 def test_raise():
+    """
+    Test if the test.
+
+    Args:
+    """
     with pytest.raises(EasyProcessError):
         EasyProcess("ls -la").start().start()
     with pytest.raises(EasyProcessError):

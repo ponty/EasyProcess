@@ -2,6 +2,11 @@ from easyprocess import EasyProcess
 
 
 def test_call():
+    """
+    Returns the test test.
+
+    Args:
+    """
     for x in range(1000):
         # test for:
         # OSError exception:[Errno 24] Too many open files

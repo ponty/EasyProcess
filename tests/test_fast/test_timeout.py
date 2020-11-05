@@ -9,6 +9,11 @@ python = sys.executable
 
 
 def test_timeout():
+    """
+    Waits for the process to complete.
+
+    Args:
+    """
     p = EasyProcess("sleep 1").start()
     p.wait(0.2)
     assert p.is_alive()
@@ -28,6 +33,11 @@ def test_timeout():
 
 @pytest.mark.timeout(3)
 def test_time_cli1():
+    """
+    Returns the number of the python 2.
+
+    Args:
+    """
     p = EasyProcess(
         [
             python,
@@ -41,6 +51,11 @@ def test_time_cli1():
 
 @pytest.mark.timeout(3)
 def test_time_cli2():
+    """
+    The test for the test.
+
+    Args:
+    """
     p = EasyProcess(
         [
             python,
@@ -54,6 +69,11 @@ def test_time_cli2():
 
 @pytest.mark.timeout(3)
 def test_time2():
+    """
+    Test if the test time in seconds
+
+    Args:
+    """
     p = EasyProcess("sleep 5").call(timeout=1)
     assert p.is_alive() is False
     assert p.timeout_happened
@@ -63,6 +83,11 @@ def test_time2():
 
 @pytest.mark.timeout(3)
 def test_timeout_out():
+    """
+    Waits for a command to be executed.
+
+    Args:
+    """
     p = EasyProcess(
         [python, "-c", "import time;print( 'start');time.sleep(5);print( 'end')"]
     ).call(timeout=1)
@@ -74,6 +99,11 @@ def test_timeout_out():
 
 @pytest.mark.timeout(0.3)
 def test_time3():
+    """
+    Test if the test test time.
+
+    Args:
+    """
     EasyProcess("sleep 5").start()
 
 
@@ -88,6 +118,11 @@ while True:
 
 @pytest.mark.timeout(3)
 def test_force_timeout():
+    """
+    Executes a command and returns the result.
+
+    Args:
+    """
     proc = EasyProcess([python, "-c", ignore_term]).start()
     # Calling stop() right away actually stops python before it
     # has a change to actually compile and run the input code,
@@ -101,6 +136,11 @@ def test_force_timeout():
 
 @pytest.mark.timeout(2)
 def test_force_0_timeout():
+    """
+    Waits a command and waits for the result.
+
+    Args:
+    """
     proc = EasyProcess([python, "-c", ignore_term]).start()
     time.sleep(1)
     proc.stop(kill_after=0)
@@ -110,6 +150,11 @@ def test_force_0_timeout():
 
 @pytest.mark.timeout(3)
 def test_force_timeout2():
+    """
+    Test if the timeout of a timeout.
+
+    Args:
+    """
     proc = EasyProcess([python, "-c", ignore_term]).call(timeout=1, kill_after=1)
     assert proc.is_alive() is False
     assert proc.return_code != 0
@@ -117,6 +162,11 @@ def test_force_timeout2():
 
 @pytest.mark.timeout(4)
 def test_stop_wait():
+    """
+    Waits for a command to stop.
+
+    Args:
+    """
     proc = EasyProcess([python, "-c", ignore_term]).start()
     time.sleep(1)
     proc.sendstop().wait(timeout=1)

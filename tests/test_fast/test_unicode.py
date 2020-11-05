@@ -13,20 +13,40 @@ python = sys.executable
 
 
 def test_str():
+    """
+    Returns the string of the given test code.
+
+    Args:
+    """
     assert EasyProcess(u("ls -la")).call().return_code == 0
 
 
 def test_ls():
+    """
+    List all the files.
+
+    Args:
+    """
     assert EasyProcess([u("ls"), u("-la")]).call().return_code == 0
 
 
 def test_parse():
+    """
+    Run a test test.
+
+    Args:
+    """
     assert EasyProcess(u("ls -la")).cmd == ["ls", "-la"]
     assert EasyProcess(u('ls "abc"')).cmd == ["ls", "abc"]
     assert EasyProcess(u('ls "ab c"')).cmd == ["ls", "ab c"]
 
 
 def test_split():
+    """
+    Run test command.
+
+    Args:
+    """
     # list -> list
     assert split_command([str("x"), str("y")]) == ["x", "y"]
     assert split_command([str("x"), u("y")]) == ["x", "y"]
@@ -49,6 +69,11 @@ def test_split():
 
 
 def test_echo():
+    """
+    Run the test test.
+
+    Args:
+    """
     assert EasyProcess(u("echo hi")).call().stdout == "hi"
 
     if six.PY3:
