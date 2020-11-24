@@ -27,7 +27,7 @@ matrix:
       dist: focal
       
     - name: 3.9_focal
-      python: 3.9-dev
+      python: 3.9
       dist: focal
 
     - name: "Python 3.7 on macOS"
