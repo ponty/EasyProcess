@@ -18,7 +18,7 @@ Features:
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree
  - unicode support
- - supported python versions: 2.7, 3.6, 3.7, 3.8, 3.9
+ - supported python versions: 3.6, 3.7, 3.8, 3.9
  - [Method chaining](https://en.wikipedia.org/wiki/Method_chaining)
  
 Installation:
@@ -91,7 +91,7 @@ $ python3 -m easyprocess.examples.cmd
 0
 -- Run program, wait 1 second, stop it, get stdout:
 PING localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.012 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.014 ms
 ```
 
 Shell commands
@@ -159,6 +159,6 @@ Output:
 ```console
 $ python3 -m easyprocess.examples.timeout
 PING localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.013 ms
-64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.059 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.015 ms
+64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.023 ms
 ```
