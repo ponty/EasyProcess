@@ -214,7 +214,7 @@ class EasyProcess(object):
         if timeout is not None:
             if not self._thread:
                 self._thread = threading.Thread(target=self._wait4process)
-                self._thread.daemon = 1
+                self._thread.daemon = True
                 self._thread.start()
 
         if self._thread:
