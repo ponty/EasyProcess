@@ -9,7 +9,7 @@ import threading
 import time
 
 from easyprocess.about import __version__
-from easyprocess.unicodeutil import split_command, unidecode, uniencode
+from easyprocess.unicodeutil import split_command, unidecode
 
 log = logging.getLogger(__name__)
 
@@ -162,11 +162,11 @@ class EasyProcess(object):
             stdout = subprocess.PIPE
             stderr = subprocess.PIPE
 
-        cmd = list(map(uniencode, self.cmd))
+        # cmd = list(map(uniencode, self.cmd))
 
         try:
             self.popen = subprocess.Popen(
-                cmd, stdout=stdout, stderr=stderr, cwd=self.cwd, env=self.env,
+                self.cmd, stdout=stdout, stderr=stderr, cwd=self.cwd, env=self.env,
             )
         except OSError as oserror:
             log.debug("OSError exception: %s", oserror)
