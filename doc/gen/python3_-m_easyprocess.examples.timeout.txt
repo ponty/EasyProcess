@@ -1,4 +1,12 @@
 $ python3 -m easyprocess.examples.timeout
-PING localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.013 ms
-64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.059 ms
+-- no timeout
+0
+1
+2
+-- timeout=1.5s
+0
+1
+-- timeout=50s
+0
+1
+2

@@ -72,8 +72,14 @@ print("-- Run program, wait for it to complete, get return code:")
 s = EasyProcess([python, "--version"]).call().return_code
 print(s)
 
-print("-- Run program, wait 1 second, stop it, get stdout:")
-s = EasyProcess(["ping", "localhost"]).start().sleep(1).stop().stdout
+print("-- Run program, wait 1.5 second, stop it, get stdout:")
+prog = """
+import time
+for i in range(10):
+    print(i, flush=True)
+    time.sleep(1)
+"""
+s = EasyProcess([python, "-c", prog]).start().sleep(1.5).stop().stdout
 print(s)
 
 ```
@@ -89,9 +95,9 @@ $ python3 -m easyprocess.examples.cmd
 4
 -- Run program, wait for it to complete, get return code:
 0
--- Run program, wait 1 second, stop it, get stdout:
-PING localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.014 ms
+-- Run program, wait 1.5 second, stop it, get stdout:
+0
+1
 ```
 
 Shell commands
@@ -145,10 +151,30 @@ http://docs.python.org/library/threading.html:
 ```py
 # easyprocess/examples/timeout.py
 
+import sys
+
 from easyprocess import EasyProcess
 
-s = EasyProcess(["ping", "localhost"]).call(timeout=2).stdout
-print(s)
+python = sys.executable
+
+prog = """
+import time
+for i in range(3):
+    print(i, flush=True)
+    time.sleep(1)
+"""
+
+print("-- no timeout")
+stdout = EasyProcess([python, "-c", prog]).call().stdout
+print(stdout)
+
+print("-- timeout=1.5s")
+stdout = EasyProcess([python, "-c", prog]).call(timeout=1.5).stdout
+print(stdout)
+
+print("-- timeout=50s")
+stdout = EasyProcess([python, "-c", prog]).call(timeout=50).stdout
+print(stdout)
 
 ```
 
@@ -158,7 +184,15 @@ Output:
 
 ```console
 $ python3 -m easyprocess.examples.timeout
-PING localhost (127.0.0.1) 56(84) bytes of data.
-64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.015 ms
-64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.023 ms
+-- no timeout
+0
+1
+2
+-- timeout=1.5s
+0
+1
+-- timeout=50s
+0
+1
+2
 ```

@@ -16,6 +16,12 @@ print("-- Run program, wait for it to complete, get return code:")
 s = EasyProcess([python, "--version"]).call().return_code
 print(s)
 
-print("-- Run program, wait 1 second, stop it, get stdout:")
-s = EasyProcess(["ping", "localhost"]).start().sleep(1).stop().stdout
+print("-- Run program, wait 1.5 second, stop it, get stdout:")
+prog = """
+import time
+for i in range(10):
+    print(i, flush=True)
+    time.sleep(1)
+"""
+s = EasyProcess([python, "-c", prog]).start().sleep(1.5).stop().stdout
 print(s)
