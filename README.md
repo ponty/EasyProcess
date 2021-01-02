@@ -7,7 +7,7 @@ Links:
 [![Build Status](https://travis-ci.org/ponty/EasyProcess.svg?branch=master)](https://travis-ci.org/ponty/EasyProcess)
 
 Features:
- - layer on top of [subprocess](http://docs.python.org/library/subprocess.html) module
+ - layer on top of [subprocess](https://docs.python.org/library/subprocess.html) module
  - easy to start, stop programs
  - easy to get standard output/error, return code of programs
  - command can be list (preferred) or string (command string is converted to list using shlex.split)
@@ -146,7 +146,7 @@ Timeout
 This was implemented with "daemon thread".
 
 "The entire Python program exits when only daemon threads are left."
-http://docs.python.org/library/threading.html:
+https://docs.python.org/library/threading.html
 
 ```py
 # easyprocess/examples/timeout.py

@@ -204,7 +204,7 @@ class EasyProcess(object):
         """Wait for command to complete.
 
         Timeout:
-         - discussion: http://stackoverflow.com/questions/1191374/subprocess-with-timeout
+         - discussion: https://stackoverflow.com/questions/1191374/subprocess-with-timeout
          - implementation: threading
 
         :rtype: self

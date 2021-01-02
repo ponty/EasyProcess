@@ -28,7 +28,7 @@ PACKAGES = [
 
 classifiers = [
     # Get more strings from
-    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    # https://pypi.python.org/pypi?%3Aaction=list_classifiers
     "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
