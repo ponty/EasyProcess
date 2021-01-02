@@ -48,3 +48,4 @@ install:
 script:  
  - cd tests
  - $PYTHON -m pytest -v .
+ - EASYPROCESS_USE_TEMP_FILES=0 $PYTHON -m pytest -v .
