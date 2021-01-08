@@ -145,9 +145,11 @@ class EasyProcess(object):
         :rtype: self
 
         """
-        self.start().wait(timeout=timeout)
-        if self.is_alive():
-            self.stop(kill_after=kill_after)
+        try:
+            self.start().wait(timeout=timeout)
+        finally:
+            if self.is_alive():
+                self.stop(kill_after=kill_after)
         return self
 
     def start(self):
