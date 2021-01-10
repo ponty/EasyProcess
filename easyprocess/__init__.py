@@ -15,8 +15,7 @@ log = logging.getLogger(__name__)
 
 log.debug("version=%s", __version__)
 
-POLL_TIME = 0.1
-USE_POLL = 0
+USE_POLL = False
 
 
 class EasyProcessError(Exception):
@@ -26,11 +25,6 @@ class EasyProcessError(Exception):
 
     def __str__(self):
         return self.msg + " " + repr(self.easy_process)
-
-
-template = """cmd=%s
-OSError=%s
-Program install error! """
 
 
 class EasyProcess(object):
@@ -247,7 +241,7 @@ class EasyProcess(object):
                             break
                         # if self._stop_thread:
                         #     return
-                        time.sleep(POLL_TIME)
+                        time.sleep(0.1)
 
                 else:
                     # wait() blocks process, timeout not possible
