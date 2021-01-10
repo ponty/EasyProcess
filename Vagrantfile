@@ -89,7 +89,8 @@ Vagrant.configure(2) do |config|
 
 # test dependencies
   sudo pip3 install tox
-  
+  sudo apt-get install -y imagemagick
+
 # doc dependencies
   sudo apt-get install -y npm
   sudo npm install -g npx
