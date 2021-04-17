@@ -26,14 +26,11 @@ def test_is_alive1():
     assert p.stdout is None
     assert p.stderr is None
 
-    assert (p.is_alive(), False)  # is_alive collects ouputs if proc stopped
+    assert p.is_alive() is False  # is_alive collects ouputs if proc stopped
 
     assert p.return_code == 0
     assert p.stdout == "hello"
     assert p.stderr == ""
-
-    assert p.is_alive() is False
-    assert p.is_alive() is False
 
 
 def test_is_alive2():
@@ -49,6 +46,3 @@ def test_is_alive2():
     assert p.return_code is None
     assert p.stdout is None
     assert p.stderr is None
-
-    assert p.is_alive()
-    assert p.is_alive()
