@@ -26,45 +26,45 @@ def test_timeout():
     assert EasyProcess("sleep 0.3").call(timeout=1).timeout_happened is False
 
 
-@pytest.mark.timeout(3)
+@pytest.mark.timeout(10)
 def test_time_cli1():
     p = EasyProcess(
         [
             python,
             "-c",
-            "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 5').start()",
+            "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 15').start()",
         ]
     )
     p.call()
     assert p.return_code == 0
 
 
-@pytest.mark.timeout(3)
+@pytest.mark.timeout(10)
 def test_time_cli2():
     p = EasyProcess(
         [
             python,
             "-c",
-            "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 5').call(timeout=0.5)",
+            "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 15').call(timeout=0.5)",
         ]
     )
     p.call()
     assert p.return_code == 0
 
 
-@pytest.mark.timeout(3)
+@pytest.mark.timeout(10)
 def test_time2():
-    p = EasyProcess("sleep 5").call(timeout=1)
+    p = EasyProcess("sleep 15").call(timeout=1)
     assert p.is_alive() is False
     assert p.timeout_happened
     assert p.return_code != 0
     assert p.stdout == ""
 
 
-@pytest.mark.timeout(3)
+@pytest.mark.timeout(10)
 def test_timeout_out():
     p = EasyProcess(
-        [python, "-c", "import time;print( 'start');time.sleep(5);print( 'end')"]
+        [python, "-c", "import time;print( 'start');time.sleep(15);print( 'end')"]
     ).call(timeout=1)
     assert p.is_alive() is False
     assert p.timeout_happened
@@ -72,9 +72,9 @@ def test_timeout_out():
     assert p.stdout == ""
 
 
-@pytest.mark.timeout(0.3)
+@pytest.mark.timeout(3)
 def test_time3():
-    EasyProcess("sleep 5").start()
+    EasyProcess("sleep 15").start()
 
 
 ignore_term = """
@@ -86,7 +86,7 @@ while True:
 """
 
 
-@pytest.mark.timeout(3)
+@pytest.mark.timeout(10)
 def test_force_timeout():
     proc = EasyProcess([python, "-c", ignore_term]).start()
     # Calling stop() right away actually stops python before it
@@ -99,7 +99,7 @@ def test_force_timeout():
     assert proc.return_code != 0
 
 
-@pytest.mark.timeout(2)
+@pytest.mark.timeout(10)
 def test_force_0_timeout():
     proc = EasyProcess([python, "-c", ignore_term]).start()
     time.sleep(1)
@@ -108,14 +108,14 @@ def test_force_0_timeout():
     assert proc.return_code != 0
 
 
-@pytest.mark.timeout(3)
+@pytest.mark.timeout(10)
 def test_force_timeout2():
     proc = EasyProcess([python, "-c", ignore_term]).call(timeout=1, kill_after=1)
     assert proc.is_alive() is False
     assert proc.return_code != 0
 
 
-@pytest.mark.timeout(4)
+@pytest.mark.timeout(10)
 def test_stop_wait():
     proc = EasyProcess([python, "-c", ignore_term]).start()
     time.sleep(1)
