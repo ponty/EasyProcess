@@ -53,17 +53,15 @@ class EasyProcess(object):
     """
 
     def __init__(
-        self, cmd, cwd=None, use_temp_files=None, env=None,
+        self, cmd, cwd=None, use_temp_files=True, env=None,
     ):
         self.use_temp_files = use_temp_files
+        # for testing
         EASYPROCESS_USE_TEMP_FILES = os.environ.get("EASYPROCESS_USE_TEMP_FILES")
         if EASYPROCESS_USE_TEMP_FILES:
             log.debug("EASYPROCESS_USE_TEMP_FILES=%s", EASYPROCESS_USE_TEMP_FILES)
-        if self.use_temp_files is None:
-            self.use_temp_files = True  # default
-            if EASYPROCESS_USE_TEMP_FILES:
-                # '0'->false, '1'->true
-                self.use_temp_files = bool(int(EASYPROCESS_USE_TEMP_FILES))
+            # '0'->false, '1'->true
+            self.use_temp_files = bool(int(EASYPROCESS_USE_TEMP_FILES))
 
         self._outputs_processed = False
 

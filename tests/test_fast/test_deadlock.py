@@ -1,3 +1,4 @@
+import os
 import sys
 import threading
 from time import sleep
@@ -19,8 +20,16 @@ from PIL import Image
 Image.new("RGB",(99, 99)).show()
 """
 
+EASYPROCESS_USE_TEMP_FILES = os.environ.get("EASYPROCESS_USE_TEMP_FILES")
+
+
+def test_dummy():
+    pass
+
+
 # skip these tests for Windows/Mac
-if sys.platform.startswith("linux"):
+# and when 'use_temp_files' is forced by env variable
+if sys.platform.startswith("linux") and not EASYPROCESS_USE_TEMP_FILES:
 
     def test_has_imagemagick():
         assert EasyProcess(["display", "-version"]).call().return_code == 0
