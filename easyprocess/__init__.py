@@ -1,5 +1,4 @@
 """Easy to use python subprocess interface."""
-
 import logging
 import os.path
 import signal
@@ -7,6 +6,7 @@ import subprocess
 import tempfile
 import threading
 import time
+from typing import Any, List, Optional, Union
 
 from easyprocess.about import __version__
 from easyprocess.unicodeutil import split_command, unidecode
@@ -53,7 +53,11 @@ class EasyProcess(object):
     """
 
     def __init__(
-        self, cmd, cwd=None, use_temp_files=True, env=None,
+        self,
+        cmd: Union[List[str], str],
+        cwd: Optional[str] = None,
+        use_temp_files: bool = True,
+        env=None,
     ):
         self.use_temp_files = use_temp_files
         # for testing
@@ -66,19 +70,18 @@ class EasyProcess(object):
         self._outputs_processed = False
 
         self.env = env
-        self.popen = None
+        self.popen: Optional[subprocess.Popen] = None
         self.stdout = None
         self.stderr = None
-        self._stdout_file = None
-        self._stderr_file = None
+        self._stdout_file: Any = None
+        self._stderr_file: Any = None
         self.is_started = False
-        self.oserror = None
+        self.oserror: Optional[OSError] = None
         self.cmd_param = cmd
-        self._thread = None
+        self._thread: Optional[threading.Thread] = None
         self.timeout_happened = False
         self.cwd = cwd
-        cmd = split_command(cmd)
-        self.cmd = cmd
+        self.cmd = split_command(cmd)
         # self.cmd_as_string = " ".join(self.cmd)
         self.enable_stdout_log = True
         self.enable_stderr_log = True
@@ -87,7 +90,7 @@ class EasyProcess(object):
         log.debug("command: %s", self.cmd)
         # log.debug('joined command: %s', self.cmd_as_string)
 
-        if not len(cmd):
+        if not len(self.cmd):
             raise EasyProcessError(self, "empty command!")
 
     def __repr__(self):
@@ -107,7 +110,7 @@ class EasyProcess(object):
         return msg
 
     @property
-    def pid(self):
+    def pid(self) -> Optional[int]:
         """
         PID (:attr:`subprocess.Popen.pid`)
 
@@ -115,9 +118,10 @@ class EasyProcess(object):
         """
         if self.popen:
             return self.popen.pid
+        return None
 
     @property
-    def return_code(self):
+    def return_code(self) -> Optional[int]:
         """
         returncode (:attr:`subprocess.Popen.returncode`)
 
@@ -125,8 +129,11 @@ class EasyProcess(object):
         """
         if self.popen:
             return self.popen.returncode
+        return None
 
-    def call(self, timeout=None, kill_after=None):
+    def call(
+        self, timeout: Optional[float] = None, kill_after: Optional[float] = None
+    ) -> "EasyProcess":
         """Run command with arguments. Wait for command to complete.
 
         same as:
@@ -144,7 +151,7 @@ class EasyProcess(object):
                 self.stop(kill_after=kill_after)
         return self
 
-    def start(self):
+    def start(self) -> "EasyProcess":
         """start command in background and does not wait for it.
 
         :rtype: self
@@ -153,6 +160,8 @@ class EasyProcess(object):
         if self.is_started:
             raise EasyProcessError(self, "process was started twice!")
 
+        stdout: Any = None
+        stderr: Any = None
         if self.use_temp_files:
             self._stdout_file = tempfile.TemporaryFile(prefix="stdout_")
             self._stderr_file = tempfile.TemporaryFile(prefix="stderr_")
@@ -176,7 +185,7 @@ class EasyProcess(object):
         log.debug("process was started (pid=%s)", self.pid)
         return self
 
-    def is_alive(self):
+    def is_alive(self) -> bool:
         """
         poll process using :meth:`subprocess.Popen.poll`
         It updates stdout/stderr/return_code if process has stopped earlier.
@@ -194,7 +203,7 @@ class EasyProcess(object):
         else:
             return False
 
-    def wait(self, timeout=None):
+    def wait(self, timeout: Optional[float] = None) -> "EasyProcess":
         """Wait for command to complete.
 
         Timeout:
@@ -278,7 +287,7 @@ class EasyProcess(object):
             if self.enable_stderr_log:
                 log.debug("stderr=%s", self.stderr)
 
-    def stop(self, kill_after=None):
+    def stop(self, kill_after: Optional[float] = None) -> "EasyProcess":
         """Kill process and wait for command to complete.
 
         same as:
@@ -293,7 +302,7 @@ class EasyProcess(object):
             self.sendstop(kill=True).wait()
         return self
 
-    def sendstop(self, kill=False):
+    def sendstop(self, kill: bool = False) -> "EasyProcess":
         """
         Kill process (:meth:`subprocess.Popen.terminate`).
         Do not wait for command to complete.
@@ -327,7 +336,7 @@ class EasyProcess(object):
 
         return self
 
-    def sleep(self, sec):
+    def sleep(self, sec: float) -> "EasyProcess":
         """
         sleeping (same as :func:`time.sleep`)
 

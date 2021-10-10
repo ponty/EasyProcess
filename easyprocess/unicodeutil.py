@@ -1,5 +1,6 @@
 import logging
 import shlex
+from typing import List
 
 log = logging.getLogger(__name__)
 
@@ -8,7 +9,7 @@ class EasyProcessUnicodeError(Exception):
     pass
 
 
-def split_command(cmd, posix=None):
+def split_command(cmd, posix=None) -> List[str]:
     """
      - cmd is string list -> nothing to do
      - cmd is string -> split it using shlex
