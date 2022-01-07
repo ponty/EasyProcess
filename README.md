@@ -4,7 +4,7 @@ Links:
  * home: https://github.com/ponty/EasyProcess
  * PYPI: https://pypi.python.org/pypi/EasyProcess
 
-[![Build Status](https://travis-ci.org/ponty/EasyProcess.svg?branch=master)](https://travis-ci.org/ponty/EasyProcess)
+![workflow](https://github.com/ponty/EasyProcess/actions/workflows/main.yml/badge.svg)
 
 Features:
  - layer on top of [subprocess](https://docs.python.org/library/subprocess.html) module
