@@ -1,10 +1,8 @@
 """Easy to use python subprocess interface."""
 import logging
 import os.path
-import signal
 import subprocess
 import tempfile
-import threading
 import time
 from typing import Any, List, Optional, Union
 
@@ -78,7 +76,7 @@ class EasyProcess(object):
         self.is_started = False
         self.oserror: Optional[OSError] = None
         self.cmd_param = cmd
-        self._thread: Optional[threading.Thread] = None
+        # self._thread: Optional[threading.Thread] = None
         self.timeout_happened = False
         self.cwd = cwd
         self.cmd = split_command(cmd)
@@ -131,9 +129,7 @@ class EasyProcess(object):
             return self.popen.returncode
         return None
 
-    def call(
-        self, timeout: Optional[float] = None
-    ) -> "EasyProcess":
+    def call(self, timeout: Optional[float] = None) -> "EasyProcess":
         """Run command with arguments. Wait for command to complete.
 
         same as:
@@ -206,30 +202,29 @@ class EasyProcess(object):
     def wait(self, timeout: Optional[float] = None) -> "EasyProcess":
         """Wait for command to complete.
 
-        Timeout:
-         - discussion: https://stackoverflow.com/questions/1191374/subprocess-with-timeout
-         - implementation: threading
-
         :rtype: self
 
         """
+        # Timeout (threading) discussion: https://stackoverflow.com/questions/1191374/subprocess-with-timeout
 
-        if timeout is not None:
-            if not self._thread:
-                self._thread = threading.Thread(target=self._wait4process)
-                self._thread.daemon = True
-                self._thread.start()
+        self._wait4process(timeout)
 
-        if self._thread:
-            self._thread.join(timeout=timeout)
-            self.timeout_happened = self.timeout_happened or self._thread.is_alive()
-        else:
-            # no timeout and no existing thread
-            self._wait4process()
+        # if timeout is not None:
+        #     if not self._thread:
+        #         self._thread = threading.Thread(target=self._wait4process)
+        #         self._thread.daemon = True
+        #         self._thread.start()
+
+        # if self._thread:
+        #     self._thread.join(timeout=timeout)
+        #     self.timeout_happened = self.timeout_happened or self._thread.is_alive()
+        # else:
+        #     # no timeout and no existing thread
+        #     self._wait4process()
 
         return self
 
-    def _wait4process(self):
+    def _wait4process(self, timeout=None):
         if self._outputs_processed:
             return
 
@@ -251,8 +246,12 @@ class EasyProcess(object):
                         time.sleep(0.1)
 
                 else:
-                    # wait() blocks process, timeout not possible
-                    self.popen.wait()
+                    try:
+                        self.popen.wait(timeout=timeout)
+                    except subprocess.TimeoutExpired:
+                        self.timeout_happened = True
+                        log.debug("timeout")
+                        return
 
                 self._stdout_file.seek(0)
                 self._stderr_file.seek(0)
@@ -270,8 +269,12 @@ class EasyProcess(object):
                 # self.stdout = self.popen.stdout.read()
                 # self.stderr = self.popen.stderr.read()
 
-                # communicate() blocks process, timeout not possible
-                (self.stdout, self.stderr) = self.popen.communicate()
+                try:
+                    (self.stdout, self.stderr) = self.popen.communicate(timeout=timeout)
+                except subprocess.TimeoutExpired:
+                    self.timeout_happened = True
+                    log.debug("timeout")
+                    return
             log.debug("process has ended, return code=%s", self.return_code)
             self.stdout = remove_ending_lf(unidecode(self.stdout))
             self.stderr = remove_ending_lf(unidecode(self.stderr))
