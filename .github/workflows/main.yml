@@ -24,17 +24,25 @@ jobs:
         python-version: 
           - "3.9"
           - "3.10"
+        stdfile: 
+          - "pipe"
+          - "tempfile"
         include:
           - python-version: "3.6"
             os: ubuntu-20.04
+            stdfile: "tempfile"
           - python-version: "3.7"
             os: ubuntu-20.04
+            stdfile: "tempfile"
           - python-version: "3.8"
             os: ubuntu-20.04
+            stdfile: "tempfile"
           - python-version: "3.9"
             os: ubuntu-20.04
+            stdfile: "tempfile"
           - python-version: "3.10"
             os: ubuntu-20.04
+            stdfile: "tempfile"
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -52,7 +60,15 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+    - name: Test with pytest (tempfiles)
+      if: matrix.stdfile == 'tempfile'
       run: |
         cd tests
         pytest -v .
+    - name: Test with pytest (pipes)
+      if: matrix.stdfile == 'pipe'
+      run: |
+        cd tests
+        pytest -v .
+      env:
+        EASYPROCESS_USE_TEMP_FILES: 0        
