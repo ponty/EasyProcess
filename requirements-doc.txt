@@ -1,6 +1,6 @@
 autoflake
 isort
-black
+black>=21.12b0
 
 # pytest
 # pytest-timeout

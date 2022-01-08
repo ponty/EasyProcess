@@ -2,8 +2,9 @@ import glob
 import logging
 import os
 
-from easyprocess import EasyProcess
 from entrypoint2 import entrypoint
+
+from easyprocess import EasyProcess
 
 commands = [
     "python3 -m easyprocess.examples.hello",

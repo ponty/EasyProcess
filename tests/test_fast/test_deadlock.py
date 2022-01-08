@@ -37,7 +37,14 @@ if sys.platform.startswith("linux") and not EASYPROCESS_USE_TEMP_FILES:
     @pytest.mark.timeout(120)
     def test_deadlock_temp_files():
         with Display():
-            p = EasyProcess([python, "-c", PROG,], use_temp_files=True,)
+            p = EasyProcess(
+                [
+                    python,
+                    "-c",
+                    PROG,
+                ],
+                use_temp_files=True,
+            )
             p.start()
             sleep(2)
             # hangs with pipes
@@ -46,7 +53,14 @@ if sys.platform.startswith("linux") and not EASYPROCESS_USE_TEMP_FILES:
     @pytest.mark.timeout(120)
     def test_deadlock_pipe():
         with Display():
-            p = EasyProcess([python, "-c", PROG,], use_temp_files=False,)
+            p = EasyProcess(
+                [
+                    python,
+                    "-c",
+                    PROG,
+                ],
+                use_temp_files=False,
+            )
             p.start()
             sleep(2)
 

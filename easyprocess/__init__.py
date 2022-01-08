@@ -92,18 +92,15 @@ class EasyProcess(object):
             raise EasyProcessError(self, "empty command!")
 
     def __repr__(self):
-        msg = (
-            '<%s cmd_param=%s cmd=%s oserror=%s return_code=%s stdout="%s" stderr="%s" timeout_happened=%s>'
-            % (
-                self.__class__.__name__,
-                self.cmd_param,
-                self.cmd,
-                self.oserror,
-                self.return_code,
-                self.stdout,
-                self.stderr,
-                self.timeout_happened,
-            )
+        msg = '<%s cmd_param=%s cmd=%s oserror=%s return_code=%s stdout="%s" stderr="%s" timeout_happened=%s>' % (
+            self.__class__.__name__,
+            self.cmd_param,
+            self.cmd,
+            self.oserror,
+            self.return_code,
+            self.stdout,
+            self.stderr,
+            self.timeout_happened,
         )
         return msg
 
@@ -171,7 +168,11 @@ class EasyProcess(object):
 
         try:
             self.popen = subprocess.Popen(
-                self.cmd, stdout=stdout, stderr=stderr, cwd=self.cwd, env=self.env,
+                self.cmd,
+                stdout=stdout,
+                stderr=stderr,
+                cwd=self.cwd,
+                env=self.env,
             )
         except OSError as oserror:
             log.debug("OSError exception: %s", oserror)
@@ -185,7 +186,7 @@ class EasyProcess(object):
         """
         poll process using :meth:`subprocess.Popen.poll`
         It updates stdout/stderr/return_code if process has stopped earlier.
-        
+
         :rtype: bool
         """
         if self.popen:
