@@ -86,47 +86,69 @@ while True:
 """
 
 
-@pytest.mark.timeout(10)
-def test_force_timeout():
+# @pytest.mark.timeout(10)
+# def test_force_timeout():
+#     proc = EasyProcess([python, "-c", ignore_term]).start()
+#     # Calling stop() right away actually stops python before it
+#     # has a change to actually compile and run the input code,
+#     # meaning the signal handlers aren't registered yet. Give it
+#     # a moment to setup
+#     time.sleep(1)
+#     proc.stop(kill_after=1)
+#     assert proc.is_alive() is False
+#     assert proc.return_code != 0
+
+
+@pytest.mark.timeout(30)
+def test_kill():
     proc = EasyProcess([python, "-c", ignore_term]).start()
     # Calling stop() right away actually stops python before it
     # has a change to actually compile and run the input code,
     # meaning the signal handlers aren't registered yet. Give it
     # a moment to setup
-    time.sleep(1)
-    proc.stop(kill_after=1)
+    time.sleep(3)
+    proc.stop()
     assert proc.is_alive() is False
     assert proc.return_code != 0
 
 
-@pytest.mark.timeout(10)
-def test_force_0_timeout():
-    proc = EasyProcess([python, "-c", ignore_term]).start()
-    time.sleep(1)
-    proc.stop(kill_after=0)
-    assert proc.is_alive() is False
-    assert proc.return_code != 0
+# @pytest.mark.timeout(10)
+# def test_force_0_timeout():
+#     proc = EasyProcess([python, "-c", ignore_term]).start()
+#     time.sleep(1)
+#     proc.stop(kill_after=0)
+#     assert proc.is_alive() is False
+#     assert proc.return_code != 0
 
 
 @pytest.mark.timeout(10)
 def test_force_timeout2():
-    proc = EasyProcess([python, "-c", ignore_term]).call(timeout=1, kill_after=1)
+    proc = EasyProcess([python, "-c", ignore_term]).call(timeout=1)
     assert proc.is_alive() is False
     assert proc.return_code != 0
 
 
-@pytest.mark.timeout(10)
+# @pytest.mark.timeout(10)
+# def test_stop_wait():
+#     proc = EasyProcess([python, "-c", ignore_term]).start()
+#     time.sleep(1)
+#     proc.sendstop().wait(timeout=1)
+#     # On windows, Popen.terminate actually behaves like kill,
+#     # so don't check that our hanging process code is actually hanging.
+#     # The end result is still what we want. On other platforms, leave
+#     # this assertion to make sure we are correctly testing the ability
+#     # to stop a hung process
+#     if not sys.platform.startswith("win"):
+#         assert proc.is_alive() is True
+#     proc.stop(kill_after=1)
+#     assert proc.is_alive() is False
+#     assert proc.return_code != 0
+
+
+@pytest.mark.timeout(30)
 def test_stop_wait():
     proc = EasyProcess([python, "-c", ignore_term]).start()
-    time.sleep(1)
-    proc.sendstop().wait(timeout=1)
-    # On windows, Popen.terminate actually behaves like kill,
-    # so don't check that our hanging process code is actually hanging.
-    # The end result is still what we want. On other platforms, leave
-    # this assertion to make sure we are correctly testing the ability
-    # to stop a hung process
-    if not sys.platform.startswith("win"):
-        assert proc.is_alive() is True
-    proc.stop(kill_after=1)
+    time.sleep(3)
+    proc.sendstop().wait(timeout=3)
     assert proc.is_alive() is False
     assert proc.return_code != 0
