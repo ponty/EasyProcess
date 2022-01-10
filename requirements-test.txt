@@ -4,3 +4,4 @@ pyvirtualdisplay
 entrypoint2
 pillow
 mypy
+flake8
