@@ -28,11 +28,12 @@ def test_timeout():
 
 @pytest.mark.timeout(10)
 def test_time_cli1():
+    hdr = "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;"
     p = EasyProcess(
         [
             python,
             "-c",
-            "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 15').start()",
+            hdr + "EasyProcess('sleep 15').start()",
         ]
     )
     p.call()
@@ -41,11 +42,12 @@ def test_time_cli1():
 
 @pytest.mark.timeout(10)
 def test_time_cli2():
+    hdr = "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;"
     p = EasyProcess(
         [
             python,
             "-c",
-            "import logging;logging.basicConfig(level=logging.DEBUG);from easyprocess import EasyProcess;EasyProcess('sleep 15').call(timeout=0.5)",
+            hdr + "EasyProcess('sleep 15').call(timeout=0.5)",
         ]
     )
     p.call()

@@ -23,6 +23,14 @@ class EasyProcessError(Exception):
         return self.msg + " " + repr(self.easy_process)
 
 
+def _rm_ending_lf(s):
+    if s.endswith("\n"):
+        s = s[:-1]
+    if s.endswith("\r"):
+        s = s[:-1]
+    return s
+
+
 class EasyProcess(object):
 
     """
@@ -227,58 +235,53 @@ class EasyProcess(object):
         if self._outputs_processed:
             return
 
-        def remove_ending_lf(s):
-            if s.endswith("\n"):
-                s = s[:-1]
-            if s.endswith("\r"):
-                s = s[:-1]
-            return s
+        if not self.popen:
+            return
 
-        if self.popen:
-            if self.use_temp_files:
-                try:
-                    self.popen.wait(timeout=timeout)
-                except subprocess.TimeoutExpired:
-                    self.timeout_happened = True
-                    log.debug("timeout")
-                    return
+        if self.use_temp_files:
+            try:
+                self.popen.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                self.timeout_happened = True
+                log.debug("timeout")
+                return
 
-                self._stdout_file.seek(0)
-                self._stderr_file.seek(0)
-                self.stdout = self._stdout_file.read()
-                self.stderr = self._stderr_file.read()
+            self._stdout_file.seek(0)
+            self._stderr_file.seek(0)
+            self.stdout = self._stdout_file.read()
+            self.stderr = self._stderr_file.read()
 
-                self._stdout_file.close()
-                self._stderr_file.close()
-            else:
-                # This will deadlock when using stdout=PIPE and/or stderr=PIPE
-                # and the child process generates enough output to a pipe such
-                # that it blocks waiting for the OS pipe buffer to accept more data.
-                # Use communicate() to avoid that.
-                # self.popen.wait()
-                # self.stdout = self.popen.stdout.read()
-                # self.stderr = self.popen.stderr.read()
+            self._stdout_file.close()
+            self._stderr_file.close()
+        else:
+            # This will deadlock when using stdout=PIPE and/or stderr=PIPE
+            # and the child process generates enough output to a pipe such
+            # that it blocks waiting for the OS pipe buffer to accept more data.
+            # Use communicate() to avoid that.
+            # self.popen.wait()
+            # self.stdout = self.popen.stdout.read()
+            # self.stderr = self.popen.stderr.read()
 
-                try:
-                    (self.stdout, self.stderr) = self.popen.communicate(timeout=timeout)
-                except subprocess.TimeoutExpired:
-                    self.timeout_happened = True
-                    log.debug("timeout")
-                    return
-            log.debug("process has ended, return code=%s", self.return_code)
-            self.stdout = remove_ending_lf(unidecode(self.stdout))
-            self.stderr = remove_ending_lf(unidecode(self.stderr))
-            self._outputs_processed = True
+            try:
+                (self.stdout, self.stderr) = self.popen.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                self.timeout_happened = True
+                log.debug("timeout")
+                return
+        log.debug("process has ended, return code=%s", self.return_code)
+        self.stdout = _rm_ending_lf(unidecode(self.stdout))
+        self.stderr = _rm_ending_lf(unidecode(self.stderr))
+        self._outputs_processed = True
 
-            #            def limit_str(s):
-            #                if len(s) > self.max_bytes_to_log:
-            #                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
-            #                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
-            #                return s
-            if self.enable_stdout_log:
-                log.debug("stdout=%s", self.stdout)
-            if self.enable_stderr_log:
-                log.debug("stderr=%s", self.stderr)
+        #            def limit_str(s):
+        #                if len(s) > self.max_bytes_to_log:
+        #                    warn = '[middle of output was removed, max_bytes_to_log=%s]'%(self.max_bytes_to_log)
+        #                    s = s[:self.max_bytes_to_log / 2] + warn + s[-self.max_bytes_to_log / 2:]
+        #                return s
+        if self.enable_stdout_log:
+            log.debug("stdout=%s", self.stdout)
+        if self.enable_stderr_log:
+            log.debug("stderr=%s", self.stderr)
 
     def stop(self) -> "EasyProcess":
         """Kill process and wait for command to complete.
