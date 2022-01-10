@@ -13,8 +13,6 @@ log = logging.getLogger(__name__)
 
 log.debug("version=%s", __version__)
 
-USE_POLL = False
-
 
 class EasyProcessError(Exception):
     def __init__(self, easy_process, msg=""):
@@ -238,21 +236,12 @@ class EasyProcess(object):
 
         if self.popen:
             if self.use_temp_files:
-                if USE_POLL:
-                    while True:
-                        if self.popen.poll() is not None:
-                            break
-                        # if self._stop_thread:
-                        #     return
-                        time.sleep(0.1)
-
-                else:
-                    try:
-                        self.popen.wait(timeout=timeout)
-                    except subprocess.TimeoutExpired:
-                        self.timeout_happened = True
-                        log.debug("timeout")
-                        return
+                try:
+                    self.popen.wait(timeout=timeout)
+                except subprocess.TimeoutExpired:
+                    self.timeout_happened = True
+                    log.debug("timeout")
+                    return
 
                 self._stdout_file.seek(0)
                 self._stderr_file.seek(0)
