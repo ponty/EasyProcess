@@ -1,0 +1,23 @@
+$ python3 -m easyprocess.examples.with
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Directory listing for /</title>
+</head>
+<body>
+<h1>Directory listing for /</h1>
+<hr>
+<ul>
+<li><a href="__init__.py">__init__.py</a></li>
+<li><a href="__pycache__/">__pycache__/</a></li>
+<li><a href="cmd.py">cmd.py</a></li>
+<li><a href="hello.py">hello.py</a></li>
+<li><a href="log.py">log.py</a></li>
+<li><a href="timeout.py">timeout.py</a></li>
+<li><a href="ver.py">ver.py</a></li>
+<li><a href="with.py">with.py</a></li>
+</ul>
+<hr>
+</body>
+</html>

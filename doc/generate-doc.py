@@ -10,6 +10,7 @@ commands = [
     "python3 -m easyprocess.examples.hello",
     "python3 -m easyprocess.examples.cmd",
     "python3 -m easyprocess.examples.timeout",
+    "python3 -m easyprocess.examples.with",
 ]
 
 

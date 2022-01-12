@@ -122,17 +122,17 @@ and stopped automatically:
     
 ```python
 from easyprocess import EasyProcess
-with EasyProcess('ping 127.0.0.1') as proc: # start()
+with EasyProcess(["ping", "127.0.0.1"]) as proc: # start()
     # communicate with proc
     pass
 # stopped
 ```
 
-Equivalent with:
+Equivalent:
     
 ```python
 from easyprocess import EasyProcess
-proc = EasyProcess('ping 127.0.0.1').start()
+proc = EasyProcess(["ping", "127.0.0.1"]).start()
 try:
     # communicate with proc
     pass
@@ -140,13 +140,64 @@ finally:
     proc.stop()
 ```
 
+Full example:
+```py
+# easyprocess/examples/with.py
+
+import os
+import sys
+import urllib.request
+from os.path import abspath, dirname
+from time import sleep
+
+from easyprocess import EasyProcess
+
+webserver_code = """
+from http.server import HTTPServer, CGIHTTPRequestHandler
+srv = HTTPServer(server_address=("", 8080), RequestHandlerClass=CGIHTTPRequestHandler)
+srv.serve_forever()
+"""
+os.chdir(dirname(abspath(__file__)))
+with EasyProcess([sys.executable, "-c", webserver_code]):
+    sleep(2)  # wait for server
+    html = urllib.request.urlopen("http://localhost:8080").read().decode("utf-8")
+print(html)
+
+```
+
+Output:
+
+<!-- embedme doc/gen/python3_-m_easyprocess.examples.with.txt -->
+
+```console
+$ python3 -m easyprocess.examples.with
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Directory listing for /</title>
+</head>
+<body>
+<h1>Directory listing for /</h1>
+<hr>
+<ul>
+<li><a href="__init__.py">__init__.py</a></li>
+<li><a href="__pycache__/">__pycache__/</a></li>
+<li><a href="cmd.py">cmd.py</a></li>
+<li><a href="hello.py">hello.py</a></li>
+<li><a href="log.py">log.py</a></li>
+<li><a href="timeout.py">timeout.py</a></li>
+<li><a href="ver.py">ver.py</a></li>
+<li><a href="with.py">with.py</a></li>
+</ul>
+<hr>
+</body>
+</html>
+
+```
+
 Timeout
 -------
-
-This was implemented with "daemon thread".
-
-"The entire Python program exits when only daemon threads are left."
-https://docs.python.org/library/threading.html
 
 ```py
 # easyprocess/examples/timeout.py
