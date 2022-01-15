@@ -22,10 +22,6 @@ PACKAGES = [
 ]
 
 
-# extra = {}
-# if sys.version_info >= (3,):
-#     extra['use_2to3'] = True
-
 classifiers = [
     # Get more strings from
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -55,5 +51,7 @@ setup(
     url=URL,
     license="BSD",
     packages=PACKAGES,
-    # **extra
+    package_data={
+        NAME: ["py.typed"],
+    },
 )
