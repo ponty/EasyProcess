@@ -17,6 +17,7 @@ jobs:
       matrix:
         os: 
           - "ubuntu-18.04"
+          - "ubuntu-22.04"
           - "macos-10.15"
           - "macos-11"
           - "windows-2019"
@@ -24,6 +25,7 @@ jobs:
         python-version: 
           - "3.9"
           - "3.10"
+          # - "3.11-dev" # TODO
         stdfile: 
           - "pipe"
           - "tempfile"
@@ -41,6 +43,9 @@ jobs:
             os: ubuntu-20.04
             stdfile: "tempfile"
           - python-version: "3.10"
+            os: ubuntu-20.04
+            stdfile: "tempfile"
+          - python-version: "3.11-dev"
             os: ubuntu-20.04
             stdfile: "tempfile"
     steps:

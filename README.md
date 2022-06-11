@@ -18,7 +18,7 @@ Features:
  - stdout/stderr is set only after the subprocess has finished
  - stop() does not kill whole subprocess tree
  - unicode support
- - supported python versions: 3.7, 3.8, 3.9, 3.10
+ - supported python versions: 3.7, 3.8, 3.9, 3.10, 3.11
  - [Method chaining](https://en.wikipedia.org/wiki/Method_chaining)
  
 Installation:
