@@ -1,4 +1,5 @@
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# For more information see: 
+#  https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
 name: Python package
 
@@ -16,10 +17,9 @@ jobs:
       fail-fast: false
       matrix:
         os: 
-          - "ubuntu-18.04"
           - "ubuntu-22.04"
-          - "macos-10.15"
           - "macos-11"
+          - "macos-12"
           - "windows-2019"
           - "windows-2022"
         python-version: 
@@ -49,9 +49,9 @@ jobs:
             os: ubuntu-20.04
             stdfile: "tempfile"
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
