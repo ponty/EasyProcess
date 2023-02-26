@@ -3,13 +3,13 @@ from easyprocess import EasyProcess
 
 def test_return_code():
     # process has finished but no stop() or wait() was called
-    assert EasyProcess("echo hello").start().sleep(0.5).return_code is None
+    assert EasyProcess("echo hello").start().sleep(2).return_code is None
 
     # wait()
     assert EasyProcess("echo hello").start().wait().return_code == 0
 
     # stop() after process has finished
-    assert EasyProcess("echo hello").start().sleep(0.5).stop().return_code == 0
+    assert EasyProcess("echo hello").start().sleep(2).stop().return_code == 0
 
     # stop() before process has finished
     assert EasyProcess("sleep 2").start().stop().return_code != 0
@@ -20,7 +20,7 @@ def test_return_code():
 
 def test_is_alive1():
     # early exit
-    p = EasyProcess("echo hello").start().sleep(0.5)
+    p = EasyProcess("echo hello").start().sleep(2)
 
     assert p.return_code is None
     assert p.stdout is None

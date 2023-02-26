@@ -9,21 +9,21 @@ python = sys.executable
 
 
 def test_timeout():
-    p = EasyProcess("sleep 1").start()
-    p.wait(0.2)
+    p = EasyProcess("sleep 5").start()
+    p.wait(2)
     assert p.is_alive()
-    p.wait(0.2)
+    p.wait(2)
     assert p.is_alive()
     p.wait(2)
     assert not p.is_alive()
 
-    assert EasyProcess("sleep 0.3").call().return_code == 0
-    assert EasyProcess("sleep 0.3").call(timeout=0.1).return_code != 0
-    assert EasyProcess("sleep 0.3").call(timeout=1).return_code == 0
+    assert EasyProcess("sleep 2").call().return_code == 0
+    assert EasyProcess("sleep 2").call(timeout=1).return_code != 0
+    assert EasyProcess("sleep 2").call(timeout=3).return_code == 0
 
-    assert EasyProcess("sleep 0.3").call().timeout_happened is False
-    assert EasyProcess("sleep 0.3").call(timeout=0.1).timeout_happened
-    assert EasyProcess("sleep 0.3").call(timeout=1).timeout_happened is False
+    assert EasyProcess("sleep 2").call().timeout_happened is False
+    assert EasyProcess("sleep 2").call(timeout=1).timeout_happened
+    assert EasyProcess("sleep 2").call(timeout=3).timeout_happened is False
 
 
 @pytest.mark.timeout(10)

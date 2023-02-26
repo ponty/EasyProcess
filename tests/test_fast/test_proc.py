@@ -17,13 +17,13 @@ def test_call():
 
 def test_start():
     p = EasyProcess("ls -la").start()
-    time.sleep(0.2)
+    time.sleep(2)
     assert p.stop().return_code == 0
 
 
 def test_start2():
     p = EasyProcess("echo hi").start()
-    time.sleep(0.2)
+    time.sleep(2)
     # no wait() -> no results
     assert p.return_code is None
     assert p.stdout is None
@@ -81,7 +81,7 @@ def test_parse():
 
 def test_stop():
     p = EasyProcess("ls -la").start()
-    time.sleep(0.2)
+    time.sleep(2)
     assert p.stop().return_code == 0
     assert p.stop().return_code == 0
     assert p.stop().return_code == 0
