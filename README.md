@@ -1,4 +1,4 @@
-EasyProcess is an easy to use python subprocess interface.
+EasyProcess is a simple easy to use Python subprocess interface.
 
 Links:
  * home: https://github.com/ponty/EasyProcess
