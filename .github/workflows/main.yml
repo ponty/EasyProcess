@@ -26,6 +26,7 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
         stdfile: 
           - "pipe"
           - "tempfile"
@@ -46,6 +47,9 @@ jobs:
             os: ubuntu-20.04
             stdfile: "tempfile"
           - python-version: "3.11"
+            os: ubuntu-20.04
+            stdfile: "tempfile"
+          - python-version: "3.12"
             os: ubuntu-20.04
             stdfile: "tempfile"
     steps:
