@@ -6,7 +6,7 @@ name: Python package
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '30 5 1 * *'
+    - cron:  '30 5 1 */3 *'
   push:
   pull_request:
 
@@ -20,6 +20,7 @@ jobs:
           - "ubuntu-22.04"
           - "macos-11"
           - "macos-12"
+          - "macos-13"
           - "windows-2019"
           - "windows-2022"
         python-version: 
